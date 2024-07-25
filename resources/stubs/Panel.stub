@@ -1,0 +1,32 @@
+<?php
+
+namespace App\LVP\Panels;
+
+
+class {{class}}Panel extends \LVP\Facades\Panel
+{
+
+    public static function panel(\LVP\Facades\Panel $panel)
+    {
+        $panel->id('{{id}}')
+            ->routeName('{{id}}')
+            ->routePath('{{id}}')
+
+            ->loginPage();
+    }
+
+
+    protected function dashboardHeaderActions(): array
+    {
+        return [
+
+        ];
+    }
+    protected function dashboardWidgets(): array
+    {
+
+       return [
+
+       ];
+    }
+}

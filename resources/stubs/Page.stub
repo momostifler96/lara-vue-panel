@@ -1,0 +1,13 @@
+<?php
+
+namespace App\LVP\Pages{{namespace}};
+
+use LVP\Facades\Page as LVPPage;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class {{class}}Page extends LVPPage
+{
+
+}

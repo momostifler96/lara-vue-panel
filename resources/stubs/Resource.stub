@@ -1,0 +1,99 @@
+<?php
+
+namespace App\LVP\Resources{{namespace}};
+
+use LVP\Facades\Resource as LVPResource;
+use LVP\Facades\TableColumn;
+use LVP\Widgets\DataWidgets\Actions\DataActionButton;
+use LVP\Widgets\DataWidgets\DataFilter;
+use LVP\Facades\FormField;
+use LVP\Facades\BackendField;
+
+class {{class}}Resource extends LVPResource
+{
+    protected string $_model = {{model}};
+    protected string $_base_route = '{{base_route}}';
+
+    /**
+     * settings
+     * @param \LVP\Facades\Resource $resource
+     * @return void
+     */
+    protected function settings(LVPResource $resource)
+    {
+
+    }
+    /**
+     * backendFields
+     * @return FormField[]
+     */
+    protected function formFields(): array
+    {
+        return [
+
+        ];
+    }
+    /**
+     * backendFields
+     * @return BackendField[]
+     */
+    protected function backendFields(): array
+    {
+        return [];
+    }
+    /**
+     * atbleColumns
+     * @return TableColumn[]
+     */
+    protected function tableColumns(): array
+    {
+        return [
+
+        ];
+    }
+    /**
+     * tableFilters
+     * @return TableColumn[]
+     */
+    protected function tableFilters(): array
+    {
+        return [
+
+        ];
+    }
+
+    /**
+    * Summary of dataActions
+    * @return DataActionButton[]
+    */
+    protected function dataActions()
+    {
+        return [
+            DataActionButton::make('edit'),
+            DataActionButton::make('delete')->color('text-lvp-danger'),
+        ];
+    }
+
+    /**
+    * Summary of dataGroupActions
+    * @return DataActionButton[]
+    */
+    protected function dataGroupActions()
+    {
+        return [
+            DataActionButton::make('delete')->color('text-lvp-danger'),
+        ];
+    }
+    
+    protected function dataFilters(): array
+    {
+        return [
+
+        ];
+    }
+
+    protected function relations(): array
+    {
+        return [];
+    }
+}

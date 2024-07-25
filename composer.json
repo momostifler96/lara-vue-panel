@@ -1,0 +1,47 @@
+{
+    "name": "momoledev/laravue-panel",
+    "description": "Buil a fast and robust oanel with laravel vue3 and inertia techlogics",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Mohamed Doumbia",
+            "email": "info@momoledev.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LVP\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "require": {
+        "php": "^8.2",
+        "inertiajs/inertia-laravel": "^1.0",
+        "irazasyed/telegram-bot-sdk": "^3.14",
+        "laravel/framework": "^11.9",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.9",
+        "tightenco/ziggy": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravuepanel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LVP\\Providers\\LVPProvider"
+            ],
+            "aliases": {
+                "AliasDuPackage": "LVP\\Facade"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
