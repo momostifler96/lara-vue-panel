@@ -17,16 +17,25 @@ trait IsFilter
     {
 
         if (!empty($request[$this->_field])) {
-            dd($request[$this->_field], $this);
             if (!empty($this->_on_apply)) {
                 call_user_func_array([$this, '_on_apply',], $query, $request);
             } else if ($this->_is_relation) {
-                dd($this->_is_relation);
                 $query->whereHas($this->_is_relation['relation'], function ($q) use ($request) {
-                    $q->where($this->_is_relation['column'], $request[$this->_field]);
+                    $v = explode(',', $request[$this->_field]);
+                    if (count($v) > 1) {
+                        $q->whereIn($this->_is_relation['table'] . '.' . $this->_is_relation['column'], $v);
+                    } else {
+                        $q->where($this->_is_relation['table'] . '.' . $this->_is_relation['column'], $request[$this->_field]);
+                    }
                 });
             } else {
-                $query->where($this->_field, $request[$this->_field]);
+                $v = explode(',', $request[$this->_field]);
+                if (count($v) > 1) {
+                    $query->whereIn($this->_table . '.' . $this->_column, $v);
+                } else {
+                    $query->where($this->_field, $request[$this->_field]);
+                }
+
             }
         }
 

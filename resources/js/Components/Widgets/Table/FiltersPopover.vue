@@ -72,25 +72,22 @@ const filters_components = <{ [k: string]: any }>{
   date: DatePicker,
 };
 
-const filter_data = computed(() => {
-  console.log("filter_data", props.filterData);
-  const checkboxs = {};
-  const checkboxs_keys = Object.keys(props.options.filters.checkboxs);
-  // for (let index = 0; index < checkboxs_keys.length; index++) {
-  //     if (props.filterData[checkboxs_keys[index]]) {
-  //         checkboxs[checkboxs_keys[index]] = props.filterData[
-  //             checkboxs_keys[index]
-  //         ]
-  //             .split(",")
-  //             .filter((it) => it !== "");
-  //     }
-  // }
+// const filter_data = computed(() => {
+//   const field_dat = {};
+//   props.options.filters.forEach((f) => {
+//     if (props.filterData[f.field]) {
+//       if (f.props.multiple || f.component == "checkbox") {
+//         field_dat[f.field] = props.filterData[f.field].split("|");
+//       } else {
+//         field_dat[f.field] = props.filterData[f.field];
+//       }
+//     }
+//   });
 
-  return props.filterData;
-});
+//   return field_dat;
+// });
 
 const _filters = ref({ ...props.filterData });
-// console.log("filterData " + "-" + " ...", _filters.value, props.filterData);
 
 let search_debounce: any = null;
 const emit = defineEmits(["filtering"]);
@@ -100,5 +97,4 @@ watch(_filters.value, (val) => {
     emit("filtering", val);
   }, 1000);
 });
-// watch(_filters.value, (v) => console.log("watching _filters", v));
 </script>

@@ -67,15 +67,16 @@ class TableFilterDropdown
         $this->_multiple = $multiple;
         return $this;
     }
-    public function isRelation($relation = null, $column = 'id')
+    public function onRelation($relation = null, $column = 'id', $table = null)
     {
-        dd($this->_is_relation);
         $this->_is_relation = $relation ? [
             'relation' => $relation,
-            'column' => $column
+            'column' => $column,
+            'table' => $table ?? str($relation)->snake(),
         ] : [
             'column' => $column,
-            'relation' => $this->_field
+            'relation' => $this->_field,
+            'table' => $table ?? str($relation)->snake(),
         ];
 
         return $this;

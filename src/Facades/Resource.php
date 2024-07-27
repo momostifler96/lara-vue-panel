@@ -2,8 +2,6 @@
 
 namespace LVP\Facades;
 
-use App\Http\Controllers\Controller;
-use LVP\Form\Enums\ModelRelationType;
 use LVP\Form\FileUploadField;
 use LVP\Form\ImageUploadField;
 use Carbon\Carbon;
@@ -13,15 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use LVP\Enums\ActionMenuType;
 use LVP\Enums\LVPAction;
-use LVP\Form\TextField;
-use LVP\Traits\IsFileField;
-use LVP\Widgets\DataWidgets\Actions\DataActionMenu;
-use LVP\Widgets\DataWidgets\DataFilter;
 use LVP\Widgets\DataWidgets\DataGrid;
 use LVP\Widgets\DataWidgets\DataTable;
 use LVP\Widgets\DataWidgets\DataWidget;
@@ -898,7 +891,9 @@ class Resource
                 ->paginated()
                 ->actions($this->dataActions())
                 ->actionsGroup($this->dataGroupActions());
-            $data_widget->filter($data_filters);
+            if (count($data_filters) > 0) {
+                $data_widget->filter($data_filters);
+            }
 
             $widgets[] = [
                 'type' => 'data_table',
@@ -910,7 +905,9 @@ class Resource
                 ->paginated()
                 ->actions($this->dataActions())
                 ->actionsGroup($this->dataGroupActions());
-            $data_widget->filter($data_filters);
+            if (count($data_filters) > 0) {
+                $data_widget->filter($data_filters);
+            }
 
             $widgets[] = [
                 'type' => 'data_grid',

@@ -10,25 +10,7 @@
     </template>
 
     <form class="" @submit.prevent="submit" ref="formRef">
-      <div class="grid grid-cols-2 gap-4 mb-10">
-        <template v-for="(field, i) in props.fields">
-          <component
-            :is="form_fields[field.component]"
-            v-bind="field.props"
-            v-model="_formData[field.field]"
-            :errorText="errorIsArray($page.props.errors, field.field)"
-            @change="
-              updateField(field.field, $event, field.eventsListeners.change)
-            "
-            :class="[
-              `col-span-${field.colspan}`,
-              {
-                'col-span-full': field.colspan == 'full',
-              },
-            ]"
-          />
-        </template>
-      </div>
+      <FormComponent :props="_formData.props" :form-data="_formData.formData" />
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
@@ -81,6 +63,7 @@ import type {
   ResourceFormPageProps,
 } from "../../PropsTypes";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
+import FormComponent from "./FormComponent.vue";
 
 const props = usePage().props as unknown as ResourceFormPageProps;
 
@@ -98,23 +81,22 @@ const form_fields = <{ [k: string]: any }>{
 
 const formRef = ref(null);
 
-const errorIsArray = (errors: any, field: string): string | null => {
-  const error = errors[field];
-  return error ? (Array.isArray(error) ? error[0] : error) : null;
-};
 const submitForm = (type: "reload" | "leave") => {
   _formData.after_save = type;
-  // formRef.value.submit();
 };
 
 const _formData = reactive<{ [k: string]: any }>({
-  ...props.form_data,
-  after_save: "leave",
+  props: props,
+  formData: {
+    ...props.form_data,
+    after_save: "leave",
+  },
 });
+
 const submit = () => {
   router.post(
     route(props.resources_routes[props.action == "edit" ? "update" : "store"]),
-    _formData
+    _formData.formData
   );
 };
 const confirmation_modal = reactive({
@@ -142,32 +124,6 @@ const confirmation_modal = reactive({
 
 const askDeleteConfromation = () => {
   confirmation_modal.show = true;
-};
-
-let field_debounce = <{ [k: string]: any }>{};
-
-const updateField = (
-  field: string,
-  new_val: any,
-  listeners: {
-    fields: string;
-    action: string;
-    func: string;
-    debounce: number;
-  }[][]
-) => {
-  if (field_debounce[field]) clearTimeout(field_debounce[field]);
-  listeners.forEach((listener) => {
-    field_debounce[field] = setTimeout(() => {
-      if (listener.action == "fill") {
-        _formData[listener.fields] = new_val;
-      } else if (listener.action == "clear") {
-        _formData[listener.fields] = null;
-      } else if (listener.action == "call") {
-        const rs = eval(listener.func.replace("params", new_val));
-      }
-    }, listener.debounce);
-  });
 };
 
 // watch(_formData, (val) => {

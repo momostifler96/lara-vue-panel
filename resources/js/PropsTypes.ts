@@ -1,7 +1,7 @@
 interface EventsListeners {
-    change: string[];
-    clear: string[];
-    save: string[];
+    change: { [k: string]: any }[];
+    clear: { [k: string]: any }[];
+    save: { [k: string]: any }[];
 }
 
 interface InputRegex {

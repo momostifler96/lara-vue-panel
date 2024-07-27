@@ -31,7 +31,6 @@ class DataWidget
     public function __construct(array $data)
     {
         $this->_data = $data;
-        $this->_filter = (new DataFilter());
     }
 
     public function dataColumns(array $columns)
@@ -42,6 +41,7 @@ class DataWidget
 
     public function filter(array $filters)
     {
+        $this->_filter = (new DataFilter());
         return $this->_filter->filters($filters);
     }
     public function actions(array $actions)
@@ -103,13 +103,13 @@ class DataWidget
     protected function _render()
     {
         // dd($this);
-        $columns =  array_map(fn ($item) => $item->render(), $this->_columns);
+        $columns = array_map(fn($item) => $item->render(), $this->_columns);
 
         $columns = [...$columns, $this->getTableActionsColumn()];
         // dd($columns);
         return [
             'columns' => $columns,
-            'filter' => $this->_filter->render(),
+            'filter' => isset($this->_filter) ? $this->_filter->render() : null,
             'group_action' => (new DataActionMenu())->type($this->_group_action_type)->actions($this->_group_actions)->render(),
             'label' => $this->_label ?? '',
             'fixe_last_column' => $this->_fixe_last_column,
