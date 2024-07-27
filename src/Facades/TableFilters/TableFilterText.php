@@ -4,6 +4,8 @@ namespace LVP\Facades\TableFilters;
 
 class TableFilterText
 {
+    use IsFilter;
+
 
     protected string $_field;
     protected string $_label;
@@ -43,8 +45,11 @@ class TableFilterText
     {
         return [
             'field' => $this->_field,
-            'placeholder' => $this->_placeholder,
-            'label' => $this->_label,
+            'component' => 'text',
+            'props' => [
+                'placeholder' => $this->_placeholder,
+                'label' => $this->_label,
+            ]
         ];
     }
 }

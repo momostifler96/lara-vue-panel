@@ -24,31 +24,12 @@ interface ImageResponsive {
 interface ResourceFormField {
     component_path: string;
     field: string;
-    label: string;
-    type: string;
-    events_listeners: EventsListeners;
-    input_regex: InputRegex;
-    autofocus: boolean;
-    placeholder: string;
-    ajax_call: string | null;
-    icon: string | null;
-    iconPosition: string | null;
-    showLabel: boolean;
-    helpText: string | null;
-    showHelpText: string | null;
-    showError: boolean;
-    hidden_on: VisibilityOptions;
-    readonly_on: VisibilityOptions;
-    disabled_on: VisibilityOptions;
-    required_on: VisibilityOptions;
-    filter: boolean;
+    component: string;
+    props: { [k: string]: any };
     colspan: string;
+    eventsListeners: EventsListeners;
     rules: string[];
-    file_type: string;
-    max_file_size: string;
-    image_ratio: string;
-    image_responsive: ImageResponsive;
-    options: any; // This can be further defined based on the expected structure of options
+    hiddenOn: { [k: string]: boolean };
 }
 
 interface ResourceRoutes {

@@ -28,4 +28,10 @@ class ToggleField extends FormField
         $this->_false_value = $value;
         return $this;
     }
+
+    protected function beforeRender(array $data): array
+    {
+
+        return $data;
+    }
 }

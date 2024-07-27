@@ -802,7 +802,7 @@ input[type="checkbox"] {
 
 .lvp-text-field,
 .lvp-long-text-field {
-    @apply grid grid-cols-1 gap-3;
+    @apply flex gap-2 items-center;
 
     label {
         @apply text-gray-800;
@@ -810,11 +810,30 @@ input[type="checkbox"] {
 
     input {
         @apply border border-gray-300 dark:border-gray-600 text-gray-800 px-3 py-2;
-        border-radius: var(--lvp-border-radius);
 
         &:enabled:focus {
-            border-color: var(--lvp-color-primary);
+            // border-color: var(--lvp-color-primary);
+            outline: none;
+
         }
+
+        height: 23px;
+        border: none;
+        padding: unset;
+        width:100%;
+        outline: none;
+
+        &:focus,
+        &:where(:not([type])):focus {
+            outline: none;
+            border: none;
+        }
+
+
+    }
+
+    .surfix-icon {
+        @apply w-4 h-4 text-gray-400;
     }
 }
 

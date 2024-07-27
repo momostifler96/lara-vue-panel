@@ -16,29 +16,10 @@ interface TableColumn {
 
 interface TableFilter {
     filters: {
-        groups: [];
-        checkboxs: {
-            [k: string]: {
-                label: string;
-                value: string;
-            }[];
-        }[];
-        dropdowns: {
-            field: string;
-            label: string;
-            placeholder: string;
-            multiple: boolean;
-            filter: boolean;
-            option_value: string;
-            option_label: string;
-            filter_key: string;
-        }[];
-        texts: {
-            field: string;
-            label: string;
-            placeholder: string;
-        }[];
-    };
+        field: string;
+        props: { [k: string]: any };
+        component: string;
+    }[];
     icon: string;
     style: string;
     type: string;

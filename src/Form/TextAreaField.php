@@ -18,4 +18,10 @@ class TextAreaField extends FormField
     {
         $this->_type = 'textarea';
     }
+
+    protected function beforeRender(array $data): array
+    {
+
+        return $data;
+    }
 }

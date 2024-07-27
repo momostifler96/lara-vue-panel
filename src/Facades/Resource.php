@@ -316,7 +316,7 @@ class Resource
 
         foreach ($this->formFields() as $key => $field) {
             if (!$field->isHiddenOnCreate()) {
-                $fields['form_render'][] = $field->render();
+                $fields['form_render'][] = $field->render($action);
                 $fields['form_data'][$field->field()] = $field->defaultValue();
             }
         }
@@ -408,6 +408,10 @@ class Resource
         // dd($this->formFields()[0]->getFieldType());
         return array_map(fn($field) => ['field' => $field->field(), 'type' => $field->getFieldType()], $this->formFields());
     }
+    protected function dataColumns(): array
+    {
+        return [];
+    }
     protected function tableColumns(): array
     {
         return [];
@@ -445,7 +449,9 @@ class Resource
     public function setupCallbacks()
     {
         foreach ($this->formFields() as $key => $field) {
-            $field->setupAjaxCallback();
+            if ($field instanceof FieldHasCallback) {
+                $field->setupAjaxCallback();
+            }
         }
     }
 
@@ -468,22 +474,38 @@ class Resource
     {
         return [
             'items' => array_map(function ($item) use ($columns) {
-                // dd($item->toArray());
                 $_cols = [
                     'id' => $item->id,
                 ];
-
                 foreach ($columns as $key => $column) {
-                    if (str_starts_with($column['field'], 'related.')) {
-                        $related = explode('.', substr($column['field'], strlen('related.')));
-                        if (!empty($column['date_format'])) {
-                            $_cols[$column['field']] = Carbon::parse($item[$related[0]][$related[1]])->format($column['date_format']);
-                        } else {
-                            $_cols[$column['field']] = $item[$related[0]][$related[1]];
+
+                    $_col_segments = explode('.', $column['load_data_from']);
+
+                    if (count($_col_segments) > 1 && $_col_segments[1] == 'count') {
+                        $_cols[$column['field']] = $item[$_col_segments[0]]->count();
+                    } else if (count($_col_segments) > 2) {
+                        $_fd = $item;
+                        foreach ($_col_segments as $key => $value) {
+
+                            if (isset($_col_segments[$key - 1]) && $_col_segments[$key - 1] == '*') {
+                                $_fd = $_fd->map(function ($it) use ($value, $column) {
+                                    if ($column['date_format']) {
+                                        return Carbon::parse($it[$value])->format($column['date_format']);
+                                    } else {
+                                        return $it[$value];
+                                    }
+                                });
+                            } else if ($value != '*' && $_fd) {
+                                if ($column['date_format']) {
+                                    $_fd = Carbon::parse($_fd[$value])->format($column['date_format']);
+                                } else {
+                                    $_fd = $_fd[$value];
+                                }
+                            }
+
                         }
-                    } else if (str_starts_with($column['field'], 'count.')) {
-                        $related = substr($column['field'], strlen('count.'));
-                        $_cols[$column['field']] = count($item[$related]);
+                        $_cols[$column['field']] = $_fd;
+
                     } else {
                         if (!empty($column['date_format'])) {
                             $_cols[$column['field']] = $item[$column['field']]->format($column['date_format']);
@@ -517,10 +539,6 @@ class Resource
             }
         }
     }
-    // http requests controllers
-
-
-
 
     public function getResourceRoutes()
     {
@@ -537,7 +555,6 @@ class Resource
     }
     public function getLabels()
     {
-        // dd($this->getLabel());
 
         return [
             'label' => $this->getLabel(),
@@ -830,8 +847,6 @@ class Resource
          */
 
 
-
-
         // dd($this->_translations, $this->_locale, 'ddd');
 
         // dd($request->all());
@@ -866,8 +881,9 @@ class Resource
         $this->applyQueryFilter($query, $request_array_data);
         $columns = $this->loadTableColumns();
         $this->setupDataQuery($query, $columns);
-        $pagination = $query->paginate($request->input('perPage') ?? 10);
+        $pagination = $query->with($this->_model_with)->paginate($request->input('perPage') ?? 10);
         $data = $this->getResourceTableData($pagination, $columns);
+        // dd($data);
         $table_columns = $this->getTableColumns($columns);
         $table_columns[] = $this->getTableActionsColumn();
         $resources_routes = $this->getResourceRoutes();

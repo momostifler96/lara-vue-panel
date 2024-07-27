@@ -10,7 +10,7 @@ import VueAwesomePaginate from "vue-awesome-paginate";
 import LVPToast from "lvp/Plugins/toast";
 import { createPinia } from "pinia";
 import { createPersistedState } from "pinia-plugin-persistedstate";
-
+import { vMaska } from "maska/vue"
 const pinia = createPinia();
 pinia.use(createPersistedState());
 interface SingleItemActionsOptions {
@@ -83,7 +83,7 @@ const plugin: Plugin = {
             .use(pinia)
             .use(VueApexCharts)
             .use(VueAwesomePaginate)
-            .use(LVPToast);
+            .directive("maska", vMaska).use(LVPToast);
 
         // app.config.globalProperties.lvp_actions = options.actions;
         app.provide("lvp_single_item_actions", options.single_item_actions);

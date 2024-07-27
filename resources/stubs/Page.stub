@@ -9,5 +9,38 @@ use Inertia\Inertia;
 
 class {{class}}Page extends LVPPage
 {
+    protected function settings(LVPPage $page)
+    {
+        
+    }
 
+    public function getPageWidgets(Request $request)
+    {
+        return [];
+    }
+
+    public function getPageActions(Request $request)
+    {
+        return [];
+    }
+
+    public function onGetRequest(Request $request, $sub_path)
+    {
+        return [];
+    }
+
+    public function onPostRequest(Request $request)
+    {
+        return [];
+    }
+
+    public function onPutRequest(Request $request)
+    {
+        return [];
+    }
+    
+    public function onDeleteRequest(Request $request)
+    {
+        return [];
+    }
 }

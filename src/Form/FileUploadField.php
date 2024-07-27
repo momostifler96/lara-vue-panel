@@ -24,4 +24,16 @@ class FileUploadField extends FormField
         $this->_file_type = $type;
         return $this;
     }
+
+    protected function beforeRender(array $data): array
+    {
+        $dt = [
+            ...$data,
+            'file_type' => empty($this->_file_type) ? null : $this->_file_type,
+            'max_file_size' => empty($this->_max_file_size) ? null : $this->_max_file_size,
+        ];
+        return $dt;
+    }
+
+
 }

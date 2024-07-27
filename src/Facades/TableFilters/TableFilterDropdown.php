@@ -2,9 +2,12 @@
 
 namespace LVP\Facades\TableFilters;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class TableFilterDropdown
 {
 
+    use IsFilter;
     protected string $_field;
     protected string $_placeholder = '';
     protected string $_label;
@@ -12,6 +15,7 @@ class TableFilterDropdown
     protected string $_option_value = 'value';
     protected string $_option_label = 'label';
     protected bool $_filter = false;
+    protected array|null $_is_relation = null;
     protected string $_filter_key = 'value';
     protected bool $_multiple = false;
     protected array $_options = [];
@@ -32,9 +36,10 @@ class TableFilterDropdown
     {
         return $this->_field;
     }
-    public function label(array $label)
+    public function label(string $label)
     {
         $this->_label = $label;
+        // dd($this);
         return $this;
     }
     public function optionValue(string $value)
@@ -62,24 +67,42 @@ class TableFilterDropdown
         $this->_multiple = $multiple;
         return $this;
     }
+    public function isRelation($relation = null, $column = 'id')
+    {
+        dd($this->_is_relation);
+        $this->_is_relation = $relation ? [
+            'relation' => $relation,
+            'column' => $column
+        ] : [
+            'column' => $column,
+            'relation' => $this->_field
+        ];
+
+        return $this;
+    }
     public function options(array $options)
     {
         $this->_options = $options;
         return $this;
     }
 
+
     public function render()
     {
         return [
             'field' => $this->_field,
-            'options' => $this->_options,
-            'placeholder' => $this->_placeholder,
-            'label' => $this->_label,
-            'multiple' => $this->_multiple,
-            'filter' => $this->_filter,
-            'option_value' => $this->_option_value,
-            'option_label' => $this->_option_label,
-            'filter_key' => $this->_filter_key,
+            'component' => 'select',
+            'props' => [
+                'options' => $this->_options,
+                'placeholder' => $this->_placeholder,
+                'label' => $this->_label,
+                'multiple' => $this->_multiple,
+                'filter' => $this->_filter,
+                'optionValue' => $this->_option_value,
+                'optionLabel' => $this->_option_label,
+                'filter_key' => $this->_filter_key,
+            ],
+
         ];
     }
 }

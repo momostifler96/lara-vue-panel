@@ -6,6 +6,10 @@ trait IsTextField
 {
     private $_min = 0;
     private $_max = 255;
+
+    protected string $_mask = '';
+    protected string $_placeholder = '';
+
     public function regex(string $value)
     {
         $this->_rules = array_merge($this->_rules, ['regex:' . $value]);
@@ -23,7 +27,11 @@ trait IsTextField
         $this->_rules = array_merge($this->_rules, ['min:' . $value]);
         return $this;
     }
-
+    public function mask(string $mask)
+    {
+        $this->_mask = $mask;
+        return $this;
+    }
     public function placeholder(string $value)
     {
 

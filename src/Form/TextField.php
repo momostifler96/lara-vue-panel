@@ -9,7 +9,10 @@ class TextField extends FormField
 {
     use IsTextField;
 
-    protected string $_component_path = 'text_field';
+    protected string $_component_path = 'text-field';
+    protected string $_icon;
+    protected string $_iconPosition;
+    protected bool $_autofocus = false;
 
 
     /**
@@ -17,7 +20,7 @@ class TextField extends FormField
      */
     public function __construct()
     {
-        $this->_type = 'text';
+        $this->_type = 'text-field';
     }
 
     public function isEmail()
@@ -48,5 +51,36 @@ class TextField extends FormField
         // $this->_rules[] = 'alpha';
         $this->_rules[] = 'regex:/^[\p{L}\s]+$/u';
         return $this;
+    }
+    public function updateFieldsOnSave(string $value)
+    {
+        $this->_label = $value;
+        return $this;
+    }
+    public function updateFieldsOnChange(array $value)
+    {
+        $this->_watch = $value;
+        return $this;
+    }
+
+    public function autofocus(bool $value = true)
+    {
+
+        $this->_autofocus = $value;
+        return $this;
+    }
+
+
+    protected function beforeRender(array $data): array
+    {
+        $dt = [
+            ...$data,
+            'placeholder' => $this->_placeholder,
+            'icon' => empty($this->_icon) ? null : $this->_icon,
+            'iconPosition' => empty($this->_iconPosition) ? null : $this->_iconPosition,
+            'autofocus' => $this->_autofocus,
+            'mask' => $this->_mask,
+        ];
+        return $dt;
     }
 }

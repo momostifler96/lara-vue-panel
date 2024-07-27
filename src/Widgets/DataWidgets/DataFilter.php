@@ -98,15 +98,17 @@ class DataFilter
 
     public function filters(array $filters)
     {
-        foreach ($filters as $filter) {
-            if ($filter instanceof DataFilterDropdown) {
-                $this->dropdowns($filter);
-            } else if ($filter instanceof DataFilterText) {
-                $this->texts($filter);
-            } else if ($filter instanceof DataFilterCheckbox) {
-                $this->checkboxs($filter);
-            }
-        }
+        $this->_filters = $filters;
+        // dd($filters);
+        // foreach ($filters as $filter) {
+        //     if ($filter instanceof DataFilterDropdown) {
+        //         $this->dropdowns($filter);
+        //     } else if ($filter instanceof DataFilterText) {
+        //         $this->texts($filter);
+        //     } else if ($filter instanceof DataFilterCheckbox) {
+        //         $this->checkboxs($filter);
+        //     }
+        // }
     }
 
 
@@ -117,12 +119,14 @@ class DataFilter
 
 
         return [
-            'filters' => [
-                'checkboxs' => array_map(fn ($item) => $item->render(), $this->_checkboxs),
-                'groups' => array_map(fn ($item) => $item->render(), $this->_groups),
-                'dropdowns' => array_map(fn ($item) => $item->render(), $this->_dropdowns),
-                'texts' => array_map(fn ($item) => $item->render(), $this->_texts),
-            ],
+            'filters' => array_map(fn($item) => $item->render(), $this->_filters),
+
+            // [
+            //     'checkboxs' => array_map(fn($item) => $item->render(), $this->_checkboxs),
+            //     'groups' => array_map(fn($item) => $item->render(), $this->_groups),
+            //     'dropdowns' => array_map(fn($item) => $item->render(), $this->_dropdowns),
+            //     'texts' => array_map(fn($item) => $item->render(), $this->_texts),
+            // ],
             'icon' => $this->_icon,
             'style' => $this->_style,
             'show_reset' => $this->_show_reset,

@@ -6,6 +6,8 @@ use InvalidArgumentException;
 
 trait IsFileField
 {
+    protected string $_file_type = 'unknown';
+    protected string $_max_file_size = '5M';
     protected static function convertToBytes($sizeStr)
     {
         // Convertir la chaîne en minuscule et supprimer les espaces blancs

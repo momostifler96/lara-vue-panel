@@ -10,8 +10,8 @@ class DateField extends FormField
 {
     use IsTextField;
 
-    protected string $_component_path = 'date';
-    protected string $_format_type = 'date';
+    protected string $_component_path = 'date-field';
+    protected string $_date_type = 'date';
 
     protected $_max_date = null;
     protected $_min_date = null;
@@ -20,12 +20,12 @@ class DateField extends FormField
 
     public function __construct()
     {
-        $this->_type = 'date';
+        $this->_type = 'date-field';
     }
 
     public function type(DateFieldType $type)
     {
-        $this->_format_type = $type->value;
+        $this->_date_type = $type->value;
         return $this;
 
     }
@@ -50,11 +50,13 @@ class DateField extends FormField
 
     protected function beforeRender(array $field_data): array
     {
-        $field_data['date_type'] = $this->_format_type;
-        $field_data['is_range'] = $this->_is_range;
-        $field_data['min_date'] = $this->_min_date;
-        $field_data['max_date'] = $this->_max_date;
+        $field_data['type'] = $this->_date_type;
+        $field_data['range'] = $this->_is_range;
+        $field_data['minDate'] = $this->_min_date;
+        $field_data['maxDate'] = $this->_max_date;
 
         return $field_data;
     }
+
+
 }

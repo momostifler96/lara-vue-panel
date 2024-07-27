@@ -612,7 +612,6 @@ class Panel
             ]
         ], function () {
             $this->dashboard->setup();
-
             $this->dashboard->headerActions($this->dashboardHeaderActions());
             $this->dashboard->widgets($this->dashboardWidgets());
             // $this->dashboard->title($this->dashboardTitle());

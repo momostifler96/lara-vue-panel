@@ -9,6 +9,12 @@ class ImageUploadField extends FormField
 {
     use IsFileField;
     protected string $_component_path = 'image_uploader';
+    protected string $_image_ratio = '1:1';
+    protected array $_image_responsive = [
+        'sm' => '200px:200px',
+        'md' => '400px:400px',
+        'lg' => '800px:800px',
+    ];
 
     /**
      * Create a new class instance.
@@ -54,5 +60,16 @@ class ImageUploadField extends FormField
     public function onUpdate($field_data, $old_data): string|array
     {
         return $this->onStore($field_data);
+    }
+    protected function beforeRender(array $data): array
+    {
+        $dt = [
+            ...$data,
+            'file_type' => empty($this->_file_type) ? null : $this->_file_type,
+            'max_file_size' => empty($this->_max_file_size) ? null : $this->_max_file_size,
+            'image_ratio' => empty($this->_image_ratio) ? null : $this->_image_ratio,
+            'image_responsive' => empty($this->_image_responsive) ? null : $this->_image_responsive,
+        ];
+        return $dt;
     }
 }

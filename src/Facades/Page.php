@@ -15,12 +15,12 @@ class Page
     private static Page $_instance;
     private $route_name;
     private int $menu_position = 0;
-    public  bool $disabled = false;
-    private  bool $has_full_path = false;
-    private  bool $has_rest_route = false;
-    private  bool $is_sub_page = false;
-    private  string $parent_route_name;
-    private  string $parent_route_path;
+    public bool $disabled = false;
+    private bool $has_full_path = false;
+    private bool $has_rest_route = false;
+    private bool $is_sub_page = false;
+    private string $parent_route_name;
+    private string $parent_route_path;
     private string $page_title;
     private string $meta_title;
     private string $slug;
@@ -42,8 +42,8 @@ class Page
     private array $sub_pages_instances;
     public string $menu_icon = 'stack';
 
-    protected  string $navigation_label;
-    protected  bool $show_on_navigation = true;
+    protected string $navigation_label;
+    protected bool $show_on_navigation = true;
     private string $view_path = 'LVP/Pages/BasePage';
     private string $menu_group;
 
@@ -161,25 +161,25 @@ class Page
     protected function hasPostRequest()
     {
 
-        $this->http_methods[]  = 'post';
+        $this->http_methods[] = 'post';
         return $this;
     }
     protected function hasPutRequest()
     {
 
-        $this->http_methods[]  = 'put';
+        $this->http_methods[] = 'put';
         return $this;
     }
     protected function hasDeleteRequest()
     {
 
-        $this->http_methods[]  = 'delete';
+        $this->http_methods[] = 'delete';
         return $this;
     }
     protected function middlewares(array $middlewares)
     {
 
-        $this->_middlewares[]  = $middlewares;
+        $this->_middlewares[] = $middlewares;
         return $this;
     }
     protected function indexMiddlewares(array $middlewares)
@@ -265,7 +265,7 @@ class Page
         }
         $this->page_title = !empty($this->page_title) ? $this->page_title : $class_base_name_camel;
         $this->meta_title = !empty($this->meta_title) ? $this->meta_title : $class_base_name_camel;
-        $this->slug = !empty($this->slug) ?  $this->slug : $class_base_name_lower;
+        $this->slug = !empty($this->slug) ? $this->slug : $class_base_name_lower;
         $this->route_name = !empty($this->route_name) ? $this->route_name : $class_base_name_lower;
     }
     public function boot()
@@ -393,7 +393,7 @@ class Page
                     Route::match(
                         $route->getMethod(),
                         $route->getPath(),
-                        fn (Request $request) => $route->execController($request)
+                        fn(Request $request) => $route->execController($request)
                     )
                         ->middleware($route->getMiddlewares())
                         ->name($route->getRouteName());
@@ -402,7 +402,7 @@ class Page
         });
         if (!empty($this->sub_pages_instances)) {
             Route::group(['prefix' => $this->slug, 'as' => $this->route_name . '.', 'middleware' => $this->_middlewares], function () {
-                foreach ($this->sub_pages_instances as  $page) {
+                foreach ($this->sub_pages_instances as $page) {
                     $page->makeRoutes();
                 }
             });

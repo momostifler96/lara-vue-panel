@@ -15,4 +15,10 @@ class EditorField extends FormField
     {
         $this->_type = 'editor';
     }
+
+    protected function beforeRender(array $data): array
+    {
+
+        return $data;
+    }
 }
