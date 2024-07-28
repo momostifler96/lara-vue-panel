@@ -463,47 +463,45 @@ class Resource
             ];
         }, $columns);
     }
-    public function getResourceTableData($pagination, $columns): array
+    public function getResourceTableData($pagination, $cols): array
     {
         return [
-            'items' => array_map(function ($item) use ($columns) {
+            'items' => array_map(function ($item) use ($cols) {
                 $_cols = [
                     'id' => $item->id,
                 ];
-                foreach ($columns as $key => $column) {
-
-                    $_col_segments = explode('.', $column['load_data_from']);
-
-                    if (count($_col_segments) > 1 && $_col_segments[1] == 'count') {
-                        $_cols[$column['field']] = $item[$_col_segments[0]]->count();
-                    } else if (count($_col_segments) > 2) {
+                foreach ($cols as $key => $col) {
+                    $_col_sg = explode('.', $col['load_data_from']);
+                    if (count($_col_sg) > 1 && $_col_sg[1] == 'count') {
+                        $_cols[$col['field']] = $item[$_col_sg[0]]->count();
+                    } else if (count($_col_sg) > 1) {
                         $_fd = $item;
-                        foreach ($_col_segments as $key => $value) {
+                        foreach ($_col_sg as $key => $value) {
 
-                            if (isset($_col_segments[$key - 1]) && $_col_segments[$key - 1] == '*') {
-                                $_fd = $_fd->map(function ($it) use ($value, $column) {
-                                    if ($column['date_format']) {
-                                        return Carbon::parse($it[$value])->format($column['date_format']);
+                            if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                                $_fd = $_fd->map(function ($it) use ($value, $col) {
+                                    if ($col['date_format']) {
+                                        return Carbon::parse($it[$value])->format($col['date_format']);
                                     } else {
                                         return $it[$value];
                                     }
                                 });
                             } else if ($value != '*' && $_fd) {
-                                if ($column['date_format']) {
-                                    $_fd = Carbon::parse($_fd[$value])->format($column['date_format']);
+                                if ($col['date_format']) {
+                                    $_fd = Carbon::parse($_fd[$value])->format($col['date_format']);
                                 } else {
                                     $_fd = $_fd[$value];
                                 }
                             }
 
                         }
-                        $_cols[$column['field']] = $_fd;
+                        $_cols[$col['field']] = $_fd;
 
                     } else {
-                        if (!empty($column['date_format'])) {
-                            $_cols[$column['field']] = $item[$column['field']]->format($column['date_format']);
+                        if (!empty($col['date_format'])) {
+                            $_cols[$col['field']] = $item[$col['field']]->format($col['date_format']);
                         } else {
-                            $_cols[$column['field']] = $item[$column['field']];
+                            $_cols[$col['field']] = $item[$col['field']];
                         }
                     }
                 }
@@ -1034,11 +1032,11 @@ class Resource
          * @var Model $model
          */
         $this->onItUpdate($request);
-        $model = $this->_model::where('id', $request->input('resource_id'))->first();
+        $model = $this->_model::where($this->_model_primary_key, $request->input('resource_id'))->first();
         $formData = [$request->field => $request->value];
         return $this->withTransaction(
             function () use ($request, $formData, $model) {
-                $formData = $this->beforeItUpdate($formData, $request);
+                $formData = $this->beforeItUpdate($model, $formData, $request);
                 $model->update($formData);
                 $this->afterItUpdate($model, $formData, $request);
             },
@@ -1052,7 +1050,7 @@ class Resource
         );
     }
 
-    protected function beforeItUpdate(array $formData, Request $request)
+    protected function beforeItUpdate(Model $model, array $formData, Request $request)
     {
         return $formData;
     }

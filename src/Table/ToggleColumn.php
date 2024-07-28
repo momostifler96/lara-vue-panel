@@ -14,6 +14,7 @@ class ToggleColumn extends TableColumn
 
     protected string $_confirmation_title;
     protected string $_confirmation_body;
+
     /**
      * Create a new class instance.
      */

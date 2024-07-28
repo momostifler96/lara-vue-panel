@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="flex">
-      <label for="">{{ label }}</label>
+      <label for="" class="text-sm capitalize">{{ label }}</label>
       <span v-if="required" class="text-red-500">*</span>
     </div>
     <MultiSelect

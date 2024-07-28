@@ -11,6 +11,8 @@ class DropdownColumn extends TableColumn
     protected string $_field;
     protected array $_options = [];
     protected bool $_has_confirmation = false;
+    protected bool $_multiple = false;
+    protected int $_max_show = 2;
 
     protected string $_confirmation_title;
     protected string $_confirmation_body;
@@ -43,6 +45,16 @@ class DropdownColumn extends TableColumn
         $this->_options = $options;
         return $this;
     }
+    public function multiple(bool $multiple = true)
+    {
+        $this->_multiple = $multiple;
+        return $this;
+    }
+    public function maxShow(int $max_show = 2)
+    {
+        $this->_max_show = $max_show;
+        return $this;
+    }
     public function setConfirmationTitle(string $title)
     {
         $this->_confirmation_title = $title;
@@ -61,6 +73,8 @@ class DropdownColumn extends TableColumn
     public function beforeRender(array $data)
     {
         $data['options'] = $this->_options;
+        $data['multiple'] = $this->_multiple;
+        $data['maxShow'] = $this->_max_show;
         $data['value_colors'] = $this->_value_colors;
 
         $data['has_confirmation'] = $this->_has_confirmation;

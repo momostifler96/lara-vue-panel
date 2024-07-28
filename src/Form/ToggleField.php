@@ -6,16 +6,16 @@ use LVP\Facades\FormField;
 
 class ToggleField extends FormField
 {
-    protected string $_component_path = 'toogle_field';
-    protected string $_true_value = 'true';
-    protected string $_false_value = 'false';
+    protected string $_component_path = 'toggle-field';
+    protected string|bool $_true_value = true;
+    protected string|bool $_false_value = false;
 
     /**
      * Create a new class instance.
      */
     public function __construct()
     {
-        $this->_type = 'toggle';
+        $this->_type = 'toggle-field';
     }
 
     public function trueValue(string $value)
@@ -31,7 +31,8 @@ class ToggleField extends FormField
 
     protected function beforeRender(array $data): array
     {
-
+        $data['trueValue'] = $this->_true_value;
+        $data['falseValue'] = $this->_false_value;
         return $data;
     }
 }

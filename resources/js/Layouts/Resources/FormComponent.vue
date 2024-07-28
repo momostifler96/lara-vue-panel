@@ -28,6 +28,7 @@ import FileUploader from "lvp/Components/Forms/FileUploader.vue";
 import { reactive, ref } from "vue";
 import type { ResourceFormPageProps } from "../../PropsTypes";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
+import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 
 const _props = defineProps({
   props: {
@@ -47,7 +48,7 @@ const form_fields = <{ [k: string]: any }>{
   "date-field": DatePicker,
   "file-field": FileUploader,
   "image-field": FileUploader,
-  "toggle-field": TextAreaField,
+  "toggle-field": SwitchToggle,
   "checkbox-field": TextAreaField,
 };
 

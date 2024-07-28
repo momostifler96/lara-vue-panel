@@ -94,6 +94,7 @@ const _formData = reactive<{ [k: string]: any }>({
 });
 
 const submit = () => {
+  // console.log("example", _formData.formData);
   router.post(
     route(props.resources_routes[props.action == "edit" ? "update" : "store"]),
     _formData.formData
