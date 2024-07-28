@@ -231,7 +231,7 @@ input[type="checkbox"] {
 }
 
 .lvp-navbar-bottom {
-    @apply px-5 pt-6 max-h-[calc(100vh-3.5rem)] w-full overflow-y-auto text-gray-500 z-50;
+    @apply px-5 pt-6 h-[calc(100vh-3.5rem)] w-full overflow-y-auto text-gray-500 z-50;
 }
 
 .lvp-panel-theme-color-primary {
