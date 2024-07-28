@@ -454,7 +454,7 @@ class Resource
             return [
                 'label' => $column['label'],
                 'field' => $column['field'],
-                'file_path' => $column['file_path'],
+                // 'file_path' => $column['file_path'],
                 'type' => $column['type'],
                 'align' => $column['align'],
                 'sortable' => $column['sortable'],

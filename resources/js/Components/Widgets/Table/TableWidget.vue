@@ -79,7 +79,14 @@
                 }"
               >
                 <slot :name="column.field" :item="item" :column="column">
+                  <GroupColumn
+                    v-if="column.type == 'group'"
+                    :data="item"
+                    :field="column.field"
+                    :column="column"
+                  />
                   <component
+                    v-else
                     :is="columns_components[column.type]"
                     :data="getItemData(item, column.field)"
                     :field="column.field"
@@ -106,6 +113,7 @@ import TextColumn from "./Columns/TextColumn.vue";
 import BadgeColumn from "./Columns/BadgeColumn.vue";
 import DropdownColumn from "./Columns/DropdownColumn.vue";
 import ToggleColumn from "./Columns/ToggleColumn.vue";
+import GroupColumn from "./Columns/GroupColumn.vue";
 const props = defineProps({
   data: {
     type: Array<any>,
@@ -132,6 +140,7 @@ const columns_components = {
   badge: BadgeColumn,
   dropdown: DropdownColumn,
   toggle: ToggleColumn,
+  group: GroupColumn,
 };
 const emit = defineEmits(["update:selected", "dataEvent"]);
 const selectAll = (event: any) => {

@@ -87,8 +87,6 @@ import TableWidget from "lvp/Components/Widgets/Table/TableWidget.vue";
 import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
 import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
-import { inject } from "vue";
-
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
 import { TableColumn, TableFilter } from "lvp/Types";
 
@@ -160,7 +158,7 @@ const emit = defineEmits([
   "groupAction",
   "dataEvent",
 ]);
-const table_column_widget = {
+const table_column_widget = <{ [k: string]: any }>{
   text: TextColumn,
   image: ImageColumn,
   dropdown: DropdownColumn,

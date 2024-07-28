@@ -38,4 +38,5 @@ class TextColumn extends TableColumn
         $this->_searchable = true;
         return $this;
     }
+
 }

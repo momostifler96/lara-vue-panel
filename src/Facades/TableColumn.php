@@ -12,7 +12,6 @@ class TableColumn
     protected string $_load_data_from;
     protected string $_label;
     protected string $_type;
-    protected string $_file_path = '/';
     protected bool $_editable;
     protected bool $_sortable;
     protected bool $_searchable = false;
@@ -88,13 +87,11 @@ class TableColumn
         $data = [
             'field' => $this->_field,
             'label' => $this->_label,
-            'file_path' => $this->_file_path,
             'align' => $this->_align,
             'type' => $this->_type,
             'editable' => $this->_editable,
             'sortable' => $this->_sortable,
             'searchable' => $this->_searchable,
-            'date_format' => $this->_date_format,
             'date_format' => $this->_date_format,
         ];
 
@@ -105,7 +102,6 @@ class TableColumn
         $data = [
             'field' => $this->_field,
             'label' => $this->_label,
-            'file_path' => $this->_file_path,
             'align' => $this->_align,
             'type' => $this->_type,
             'editable' => $this->_editable,

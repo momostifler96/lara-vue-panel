@@ -255,6 +255,22 @@ class Page
     {
         return (new \ReflectionClass($this))->getNamespaceName();
     }
+    public function loadFormFields($action)
+    {
+        $fields = [
+            'form_render' => [],
+            'form_data' => [],
+        ];
+
+        foreach ($this->formFields() as $key => $field) {
+            if (!$field->isHiddenOnCreate()) {
+                $fields['form_render'][] = $field->render($action);
+                $fields['form_data'][$field->field()] = $field->defaultValue();
+            }
+        }
+
+        return $fields;
+    }
     public function makeNames()
     {
         $base_name = class_basename(get_called_class());
