@@ -22,7 +22,8 @@ class Page
     private string $parent_route_name;
     private string $parent_route_path;
     private string $page_title;
-    private string $meta_title;
+    private string $meta_title = '';
+    private string $meta_description = '';
     private string $slug;
     private array $http_methods = ['get', 'post'];
     /**
@@ -146,6 +147,11 @@ class Page
     {
 
         $this->meta_title = $title;
+        return $this;
+    }
+    protected function setMetaDescription(string $description)
+    {
+        $this->meta_description = $description;
         return $this;
     }
     protected function setViewPath(string $path)
@@ -299,6 +305,7 @@ class Page
         return [
             'title' => $this->page_title,
             'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
         ];
     }
     public function getPageRoutes()
@@ -329,10 +336,16 @@ class Page
     {
         return $request->all();
     }
-    public function getPageWidgets(Request $request)
+    protected function beforeContent(Request $request): array
     {
         return [];
     }
+    protected function afterContent(Request $request): array
+    {
+        return [];
+    }
+
+
     public function getPageActions(Request $request)
     {
         return [];
@@ -411,19 +424,27 @@ class Page
         // dump($this->getRouteName());
 
     }
-
+    private function renderWidgets(array $widgets)
+    {
+        // dd($widgets);
+        $_widgets = [];
+        foreach ($widgets as $key => $_widget) {
+            $_widgets[] = $_widget->render();
+        }
+        return $_widgets;
+    }
     public function index(Request $request, $sub_path = null)
     {
         $custom_data = $this->onGetRequest($request, $sub_path);
-        $widgets = $this->getPageWidgets($request);
+        $before_content_widgets = $this->renderWidgets($this->beforeContent($request));
+        $after_content_widgets = $this->renderWidgets($this->afterContent($request));
         $page_actions = $this->getPageActions($request);
-        $page_titles = $this->getPageTitles();
+        $page_title = $this->getPageTitles();
         $page_data = $this->getPageData($request);
         $route_names = $this->getPageRoutes();
         $route_paths = $this->geFullRoutepath();
-        $page_path = $this->view_path === 'LVP/Pages/BasePage' ? 'LVP/Pages/BasePage' : 'CustomPages/' . $this->view_path;
-        // dd($page_path);
-        return Inertia::render($page_path, compact('page_titles', 'route_paths', 'page_data', 'widgets', 'custom_data', 'route_names'));
+        $page_path = $this->view_path === 'LVP/Pages/BasePage' ? 'LVP/Pages/BasePage' : $this->view_path;
+        return Inertia::render($page_path, compact('before_content_widgets', 'after_content_widgets', 'page_title', 'route_paths', 'page_data', 'custom_data', 'route_names'));
     }
     public function post(Request $request)
     {
