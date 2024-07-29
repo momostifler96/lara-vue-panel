@@ -146,7 +146,6 @@ class FormWidget extends LVPWidget
         $data['confirmationTitle'] = $this->_confirmation_title;
         $data['confirmationMessage'] = $this->_confirmation_message;
         $data['isCard'] = $this->_is_card;
-
         return $data;
     }
 }

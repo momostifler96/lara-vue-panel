@@ -10,6 +10,7 @@ class FormFieldWidget
     protected string $_name;
     protected string $_component;
     protected mixed $_default_value = null;
+    protected bool $_required = false;
     protected string $_label = '';
     protected array $_rules = [];
     public function __construct(string $name)
@@ -38,6 +39,7 @@ class FormFieldWidget
     public function required(bool $required = true)
     {
         $this->_rules = array_merge($this->_rules, ['required']);
+        $this->_required = $required;
         return $this;
     }
 
@@ -52,7 +54,8 @@ class FormFieldWidget
             'name' => $this->_name,
             'label' => $this->_label ?? $this->_label = str($this->_name)->kebab()->replace('-', ' ')->ucfirst(),
             'value' => $this->_default_value,
-            'rules' => $this->_rules
+            'rules' => $this->_rules,
+            'required' => $this->_required,
         ];
         return [
             'name' => $this->_name,
