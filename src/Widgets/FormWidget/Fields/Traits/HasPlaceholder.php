@@ -3,10 +3,9 @@
 namespace LVP\Widgets\FormWidget\Fields\Traits;
 
 
-class IsTextField
+trait HasPlaceholder
 {
     protected string $_placeholder = '';
-    protected string $_type = 'text';
 
     public function placeholder(string $placeholder)
     {
@@ -14,11 +13,6 @@ class IsTextField
         return $this;
     }
 
-    public function type(string $type)
-    {
-        $this->_type = $type;
-        return $this;
-    }
 
 
 }

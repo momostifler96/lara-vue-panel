@@ -50,6 +50,7 @@ import { useToast } from "lvp/Plugins/toast";
 import { ResourceRoutes, ResourceTitles } from "lvp/PropsTypes";
 import LineChart from "lvp/Components/Widgets/Chats/LineChart.vue";
 import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
+import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
 interface Titles {
   title: string;
   meta_title: string;
@@ -81,7 +82,7 @@ const props = computed(() => {
 const widgets_components = <{ [key: string]: any }>{
   data_table: DataTable,
   chart: BaseChart,
-  FormModal: BaseChart,
+  form: FormWidget,
 };
 //------------------Widgets-----------
 </script>

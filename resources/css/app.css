@@ -52,6 +52,10 @@
     --lvp-color-primary: var(--lvp-color-black);
     --lvp-color-primary-hover: var(--lvp-color-black-hover);
     --lvp-color-primary-lite: rgb(0, 0, 0, var(--lvp-lite-transparance));
+    
+    --lvp-color-secondary: var(--lvp-color-black);
+    --lvp-color-secondary-hover: var(--lvp-color-black-hover);
+    --lvp-color-secondary-lite: rgb(0, 0, 0, var(--lvp-lite-transparance));
 
     --lvp-color-danger: rgb(255, 0, 72);
     --lvp-color-danger-hover: rgb(217, 7, 66);

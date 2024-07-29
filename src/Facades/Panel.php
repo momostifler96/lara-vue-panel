@@ -585,7 +585,7 @@ class Panel
                         'id' => $notif->id,
                         'title' => $notif->data['title'],
                         'body' => $notif->data['body'],
-                        'status' => $notif->data['status'],
+                        'status' => $notif->data['status'] ?? 'info',
                     ];
                 }));
             })->name('notifications');

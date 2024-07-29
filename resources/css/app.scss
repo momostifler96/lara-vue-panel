@@ -118,6 +118,125 @@ input[type="checkbox"] {
     border-radius: var(--lvp-widget-border-radius);
 }
 
+//-------Warning color
+.lvp-text-warn {
+    color: var(--lvp-color-warning);
+
+    &.text-lite {
+        color: var(--lvp-color-warning-lite);
+    }
+}
+
+.lvp-bg-warn {
+    background-color: var(--lvp-color-warning);
+
+    &.bg-lite {
+        background: var(--lvp-color-warning-lite);
+    }
+}
+
+.lvp-border-warn {
+    border: var(--lvp-color-warning);
+}
+
+//-------Success color
+.lvp-text-success {
+    color: var(--lvp-color-success);
+
+    &.text-lite {
+        color: var(--lvp-color-success-lite);
+    }
+}
+
+.lvp-bg-success {
+    background-color: var(--lvp-color-success);
+
+    &.bg-lite {
+        background-color: var(--lvp-color-success-lite);
+    }
+}
+
+.lvp-border-success {
+    border: var(--lvp-color-success);
+}
+
+//-------Danger color
+.lvp-text-danger {
+    color: var(--lvp-color-danger);
+
+    &.text-lite {
+        color: var(--lvp-color-danger-lite);
+    }
+}
+
+.lvp-bg-danger {
+    background-color: var(--lvp-color-danger);
+
+    &.bg-lite {
+        background-color: var(--lvp-color-danger-lite);
+    }
+}
+
+.lvp-border-danger {
+    border: var(--lvp-color-danger);
+}
+
+//-------Primary color
+.lvp-text-primary {
+    color: var(--lvp-color-primary);
+
+    &.text-lite {
+        color: var(--lvp-color-primary-lite);
+    }
+}
+
+.lvp-bg-primary {
+    background-color: var(--lvp-color-primary);
+
+    &.bg-lite {
+        background-color: var(--lvp-color-primary-lite);
+    }
+}
+
+.lvp-border-primary {
+    border: var(--lvp-color-primary);
+}
+
+//-------Secondary color
+.lvp-text-secondary {
+    color: var(--lvp-color-secondary);
+}
+
+.lvp-bg-secondary {
+    background-color: var(--lvp-color-secondary);
+}
+
+.lvp-border-secondary {
+    border: var(--lvp-color-secondary);
+}
+
+//-------Info color
+.lvp-text-info {
+    color: var(--lvp-color-info);
+
+    &.text-lite {
+        color: var(--lvp-color-warning-lite);
+    }
+}
+
+.lvp-bg-info {
+    background-color: var(--lvp-color-info);
+
+    &.bg-lite {
+        background-color: var(--lvp-color-info-lite);
+    }
+}
+
+.lvp-border-info {
+    border: var(--lvp-color-info);
+}
+
+
 .lvp-card {
     @apply bg-white shadow;
     border-radius: var(--lvp-widget-border-radius);
