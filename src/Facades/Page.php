@@ -282,7 +282,7 @@ class Page
         $class_base_name_lower = str($class_base_name)->kebab();
         $class_base_name_camel = str(!empty($this->navigation_label) ? $this->navigation_label : $class_base_name)->kebab()->replace('-', ' ')->ucfirst();
 
-        if ($this->show_on_navigation) {
+        if ($this->show_on_navigation && empty($this->navigation_label)) {
             $this->navigation_label = $class_base_name_camel;
         }
         $this->page_title = !empty($this->page_title) ? $this->page_title : $class_base_name_camel;
@@ -317,7 +317,7 @@ class Page
     }
     public function getPageTitles()
     {
-
+        // dd($this);
         return [
             'title' => $this->page_title,
             'meta_title' => $this->meta_title,
@@ -455,12 +455,15 @@ class Page
         $before_content_widgets = $this->renderWidgets($this->beforeContent($request));
         $after_content_widgets = $this->renderWidgets($this->afterContent($request));
         $page_actions = $this->getPageActions($request);
-        $page_title = $this->getPageTitles();
+        // dd($this);
+
+        $page_titles = $this->getPageTitles();
+        // dd($page_title);
         $page_data = $this->getPageData($request);
         $route_names = $this->getPageRoutes();
         $route_paths = $this->geFullRoutepath();
         $page_path = $this->view_path === 'LVP/Pages/BasePage' ? 'LVP/Pages/BasePage' : $this->view_path;
-        return Inertia::render($page_path, compact('before_content_widgets', 'after_content_widgets', 'page_title', 'route_paths', 'page_data', 'custom_data', 'route_names'));
+        return Inertia::render($page_path, compact('before_content_widgets', 'after_content_widgets', 'page_titles', 'route_paths', 'page_data', 'custom_data', 'route_names'));
     }
     public function post(Request $request)
     {

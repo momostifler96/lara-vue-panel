@@ -13,8 +13,13 @@ class {{class}}Page extends LVPPage
     {
         
     }
-
-    public function getPageWidgets(Request $request)
+    
+    protected function beforeContent(Request $request): array
+    {
+        return [];
+    }
+    
+    protected function afterContent(Request $request): array
     {
         return [];
     }

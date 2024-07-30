@@ -2,6 +2,8 @@
 
 namespace LVP\Widgets\DataWidgets;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use LVP\Enums\Alignment;
 use Illuminate\Support\Facades\Storage;
 use LVP\Enums\ActionMenuType;
@@ -15,15 +17,17 @@ class DataTableWidget extends LVPWidget
 
     protected bool $_has_filter = true;
     protected DataFilter $_filter;
+    protected int $_col_span = 3;
 
     protected array $_columns;
     protected array $_actions;
     protected array $_filters;
-    protected string $_widget_type = 'dataTable';
+    protected string $_widget_type = 'data-table';
     protected string $_action_type;
     protected array $_group_actions;
     protected string $_group_action_type;
     protected string $_api_url;
+    protected string $_primary_key = 'id';
     protected array $_data;
 
     protected bool $_paginated = false;
@@ -36,12 +40,28 @@ class DataTableWidget extends LVPWidget
      */
 
 
-    public function __construct()
+    public function __construct(array|Illuminate\Database\Eloquent\Collection|\Illuminate\Pagination\LengthAwarePaginator $data, string $primary_key = 'id')
     {
+        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $this->_data['items'] = $data->items();
+            $this->_data['pagination'] = [
+                'total_items' => $data->total(),
+                'total' => $data->total(),
+                'current_page' => $data->currentPage(),
+                'path' => $data->path(),
+                'per_page' => $data->perPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem(),
+            ];
+            $this->_paginated = true;
+        } else {
+            $this->_data['item'] = $data;
+        }
+        $this->_primary_key = $primary_key;
     }
-    public static function make()
+    public static function make(array|Illuminate\Database\Eloquent\Collection|\Illuminate\Pagination\LengthAwarePaginator $data, string $primary_key = 'id')
     {
-        return new static();
+        return new static($data, $primary_key);
     }
 
 
@@ -66,18 +86,18 @@ class DataTableWidget extends LVPWidget
         return $this;
     }
 
-    public function filter(array $filters)
+    public function filters(array $filters)
     {
-        return $this->_filter->filters($filters);
+        return $this->_filters = $filters;
     }
     public function actions(array $actions)
     {
         $this->_actions = $actions;
         return $this;
     }
-    public function paginated(bool $paginated = true)
+    public function pagination(array $pagination)
     {
-        $this->_paginated = $paginated;
+        $this->_data['pagination'] = $pagination;
         return $this;
     }
     public function actionMenuType(ActionMenuType $type)
@@ -102,25 +122,25 @@ class DataTableWidget extends LVPWidget
     }
     public function beforeRender(array $data): array
     {
-        $columns =  array_map(fn ($item) => $item->render(), $this->_columns);
-        if ($this->_has_action) {
-            $columns = [...$columns, $this->getTableActionsColumn()];
-        }
+        $columns = array_map(fn($item) => $item->render(), $this->_columns);
+        $this->_data['items'] = $this->getColumnsData($columns);
+        // dd($data_rended);
+        // if ($this->_has_action) {
+        //     $columns = [...$columns, $this->getTableActionsColumn()];
+        // }
         // dd($this->getDataFromColumn($columns));
+        // dd($data_rended);
 
-        $data['fixe_first_column'] =   $this->_fixe_first_column;
-        $data['fixe_last_column'] =   $this->_fixe_last_column;
-        $data['filter'] = empty($this->_filter) ? null : $this->_filter;
+        $data['fixe_first_column'] = $this->_fixe_first_column;
+        $data['fixe_last_column'] = $this->_fixe_last_column;
+        $data['filter'] = empty($this->_filters) ? null : $this->_filters;
         $data['columns'] = $columns;
-        $data['data'] = [
-            'items' => $this->_data,
-            'pagination' => null,
-        ];
+        $data['data'] = $this->_data;
         $data['paginated'] = $this->_paginated;
         $data['api_url'] = empty($this->_api_url) ? null : $this->_api_url;
         $data['group_action'] = empty($this->_group_action_type) ? null : (new DataActionMenu())->type($this->_group_action_type)->actions($this->_group_actions)->render();
 
-        return  $data;
+        return $data;
     }
 
     public function getTableActionsColumn(): array
@@ -139,8 +159,6 @@ class DataTableWidget extends LVPWidget
 
         return (new DataActionMenu())->type($this->_action_type)->actions($this->_actions)->render();
     }
-
-
 
     protected function getDataFromColumn(array $columns)
     {
@@ -162,5 +180,114 @@ class DataTableWidget extends LVPWidget
 
             return $col;
         }, $this->_data);
+    }
+
+    // private function renderTableData(array $columns): array
+    // {
+    //     return [
+    //         'items' => array_map(function ($item) use ($columns) {
+    //             $_cols = [
+    //                 'id' => $item[$this->_primary_key],
+    //             ];
+    //             $this->getTableColdata($item, $columns, $_cols);
+    //             return $_cols;
+    //         }, $this->_data['items']),
+    //         'pagination' => null,
+    //     ];
+    // }
+
+    // private function getTableColdata(array $item, array $columns, &$_cols)
+    // {
+    //     // dd($item);
+    //     foreach ($columns as $key => $col) {
+    //         dd($_cols, $_cols[$col['field']], $col['field']);
+
+    //         if (isset($_cols[$col['field']]))
+    //             return;
+    //         $_col_sg = explode('.', $col['load_data_from']);
+    //         if (count($_col_sg) > 1 && $_col_sg[1] == 'count') {
+    //             $_cols[$col['field']] = $item[$_col_sg[0]]->count();
+    //         } else if (count($_col_sg) > 1) {
+    //             $_fd = $item;
+    //             foreach ($_col_sg as $key => $value) {
+    //                 if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+    //                     $_fd = $_fd->map(function ($it) use ($value, $col) {
+    //                         if ($col['date_format']) {
+    //                             return Carbon::parse($it[$value])->format($col['date_format']);
+    //                         } else {
+    //                             return $it[$value];
+    //                         }
+    //                     });
+    //                 } else if ($value != '*' && $_fd) {
+    //                     if ($col['date_format']) {
+    //                         $_fd = Carbon::parse($_fd[$value])->format($col['date_format']);
+    //                     } else {
+    //                         $_fd = $_fd[$value];
+    //                     }
+    //                 }
+
+    //             }
+    //             $_cols[$col['field']] = $_fd;
+
+    //         } else {
+    //             if (!empty($col['date_format'])) {
+    //                 $_cols[$col['field']] = $item[$col['field']]->format($col['date_format']);
+    //             } else if ($col['type'] != 'group') {
+    //                 $_cols[$col['field']] = $item[$col['field']];
+    //             } else {
+    //                 $this->getTableColdata($item, $col['group'], $_cols);
+    //             }
+    //         }
+    //     }
+
+    //     dd($_cols);
+    // }
+
+    private function getColumnsData(array $columns)
+    {
+        return array_map(function ($item) use ($columns) {
+            $_cols = [
+                'id' => $item[$this->_primary_key],
+            ];
+            $this->getTableColdata($item, $columns, $_cols);
+            return $_cols;
+        }, $this->_data['items']);
+    }
+
+    private function getTableColdata(mixed $item, array $columns, &$_cols)
+    {
+        foreach ($columns as $col) {
+            // Avoid overwriting existing column data
+            if (isset($_cols[$col['field']])) {
+                continue;
+            }
+            // Handle nested columns
+            $_col_sg = explode('.', $col['load_data_from']);
+            if (count($_col_sg) > 1) {
+                $_fd = $item;
+                foreach ($_col_sg as $key => $value) {
+                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                        $_fd = $_fd->map(function ($it) use ($value, $col) {
+                            return $col['date_format'] ? Carbon::parse($it[$value])->format($col['date_format']) : $it[$value];
+                        });
+                    } else if ($value != '*' && $_fd) {
+                        $_fd = $col['date_format'] ? Carbon::parse($_fd[$value])->format($col['date_format']) : $_fd[$value];
+                    }
+                }
+                $_cols[$col['field']] = $_fd;
+            } else {
+                // Handle single level columns
+                if (!empty($col['date_format'])) {
+                    $_cols[$col['field']] = Carbon::parse($item[$col['field']])->format($col['date_format']);
+                } else if ($col['type'] != 'group') {
+                    $_cols[$col['field']] = $item[$col['field']];
+                } else {
+                    // Recursively handle grouped columns
+                    foreach ($col['groups'] as $key => $group) {
+                        $this->getTableColdata($item, $group, $_cols);
+                    }
+                }
+            }
+        }
     }
 }

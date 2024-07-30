@@ -500,7 +500,7 @@ class Resource
                     } else {
                         if (!empty($col['date_format'])) {
                             $_cols[$col['field']] = $item[$col['field']]->format($col['date_format']);
-                        } else {
+                        } else if ($item[$col['type']] != 'group') {
                             $_cols[$col['field']] = $item[$col['field']];
                         }
                     }

@@ -1,5 +1,5 @@
 <template>
-  <PanelLayout :pageTitle="props.page_title.title">
+  <PanelLayout :pageTitle="props.page_titles.title">
     <template #actions>
       <slot name="actions" />
     </template>
@@ -40,7 +40,8 @@ import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { computed, inject, reactive, ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
-import DataTable from "lvp/Components/Widgets/Table/DataTable.vue";
+import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
+
 import type {
   TableData,
   ActionsList,
@@ -63,7 +64,7 @@ interface Widget {
 }
 
 interface ResourceIndexPage {
-  page_title: Titles;
+  page_titles: Titles;
   resources_routes: ResourceRoutes;
   data: Object | any;
   table_filters: any;
@@ -80,7 +81,7 @@ const props = computed(() => {
 
 //------------------Widgets-----------
 const widgets_components = <{ [key: string]: any }>{
-  data_table: DataTable,
+  "data-table": DataTableWidget,
   chart: BaseChart,
   form: FormWidget,
 };
