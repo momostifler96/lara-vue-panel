@@ -1,13 +1,11 @@
 import forms from '@tailwindcss/forms'
-import typography from '@tailwindcss/typography'
-import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
     darkMode: 'class',
     content: [
-        './vendor/momoledev/lvp/resources/js/**/*.{js,ts,vue}',
-        './vendor/momoledev/lvp/resources/views/**/*.blade.php',
-        './vendor/momoledev/lvp/src/**/*.php',
+        './vendor/momoledev/laravue-panel/resources/js/**/*.{js,ts,vue}',
+        './vendor/momoledev/laravue-panel/resources/views/**/*.blade.php',
+        './vendor/momoledev/laravue-panel/src/**/*.php',
     ],
     theme: {
         extend: {
@@ -28,5 +26,5 @@ export default {
 
         },
     },
-    plugins: [forms, typography]
+    plugins: [forms]
 };

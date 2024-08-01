@@ -44,7 +44,7 @@
 import Dropdown from "primevue/dropdown";
 import HTTP from "lvp/helpers/http";
 import { ref } from "vue";
-import MultiSelect from "primevue/MultiSelect";
+import MultiSelect from "primevue/multiselect";
 const props = defineProps({
   modelValue: {
     type: [Number, String],

@@ -1,5 +1,5 @@
 import { App, Component, Plugin } from "vue";
-// import "./../../../css/app.scss";
+import "./../../../css/app.scss";
 import { router } from "@inertiajs/vue3";
 import icons from "./../../helpers/lvp_icons";
 import widgets from "./../../Components/Widgets";

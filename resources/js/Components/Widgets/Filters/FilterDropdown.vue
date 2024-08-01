@@ -28,7 +28,7 @@
 </template>
 <script setup lang="ts">
 import Dropdown from "primevue/dropdown";
-import MultiSelect from "primevue/MultiSelect";
+import MultiSelect from "primevue/multiselect";
 import { computed, ref, watch } from "vue";
 const props = defineProps({
   modelValue: {

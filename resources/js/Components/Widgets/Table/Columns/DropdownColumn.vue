@@ -8,7 +8,7 @@
     @change="onSelect"
     class="w-full"
   />
-  <Multiselect
+  <MultiSelect
     v-else
     :options="column.options"
     :modelValue="data"
@@ -21,7 +21,7 @@
 </template>
 <script setup lang="ts">
 import Dropdown from "primevue/dropdown";
-import Multiselect from "primevue/multiselect";
+import MultiSelect from "primevue/multiselect";
 
 const props = defineProps<{
   field: string;

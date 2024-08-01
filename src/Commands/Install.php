@@ -60,11 +60,12 @@ class Install extends Command
             $breez_p->run();
             $this->info('Inertia vue typescript installed successfully.');
             $this->info('Intall npm packages');
-            $npm_pakage = new Process(['npm', 'install', '--save', 'vue3-apexcharts primevue cropperjs @primevue/themes @headlessui/vue @vuepic/vue-datepicker vue-awesome-paginate maska pinia pinia-plugin-persistedstate']);
+            $npm_pakage = new Process(['npm', 'install', '--save', 'apexcharts vue3-apexcharts primevue cropperjs @primevue/themes @headlessui/vue @vuepic/vue-datepicker vue-awesome-paginate maska pinia pinia-plugin-persistedstate ']);
             $npm_pakage->run();
             if ($npm_pakage->isSuccessful()) {
                 $this->info('Inertia installed successfully.');
             }
+
             $npm_dev_pakage = new Process(['npm', 'install', '--dev', 'sass']);
             $npm_pakage->run();
             if ($npm_pakage->isSuccessful()) {

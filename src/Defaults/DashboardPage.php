@@ -60,10 +60,10 @@ class DashboardPage
         $header_actions = array_map(function ($w) {
             return $w->render();
         }, $this->_header_actions);
-        $title =  $this->_title;
+        $title = $this->_title;
         $page_data = compact('widgets', 'header_actions', 'title');
         // dd($page_data, $this->_widgets);
-        return Inertia::render('LVP/Dashboard', $page_data);
+        return Inertia::render('LVP/DashboardTemplate', $page_data);
     }
     public function post(Request $request)
     {

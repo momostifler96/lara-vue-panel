@@ -45,7 +45,7 @@ class Page
 
     protected string $navigation_label;
     protected bool $show_on_navigation = true;
-    private string $view_path = 'LVP/Pages/BasePage';
+    private string $view_path = 'LVP/PageTemplate';
     private string $menu_group;
 
     protected array $_middlewares = [];
@@ -462,7 +462,7 @@ class Page
         $page_data = $this->getPageData($request);
         $route_names = $this->getPageRoutes();
         $route_paths = $this->geFullRoutepath();
-        $page_path = $this->view_path === 'LVP/Pages/BasePage' ? 'LVP/Pages/BasePage' : $this->view_path;
+        $page_path = $this->view_path === 'LVP/PageTemplate' ? 'LVP/PageTemplate' : $this->view_path;
         return Inertia::render($page_path, compact('before_content_widgets', 'after_content_widgets', 'page_titles', 'route_paths', 'page_data', 'custom_data', 'route_names'));
     }
     public function post(Request $request)
