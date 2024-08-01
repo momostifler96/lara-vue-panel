@@ -58,18 +58,42 @@ class Install extends Command
             $this->info('Laravel Breeze installed successfully.');
             $breez_p = new Process(['php', 'artisan', 'breeze:install', 'vue', '--typescript']);
             $breez_p->run();
+
+            $notiftable = new Process(['php', 'artisan', 'notification:table']);
+            $notiftable->run();
+
             $this->info('Inertia vue typescript installed successfully.');
             $this->info('Intall npm packages');
-            $npm_pakage = new Process(['npm', 'install', '--save', 'apexcharts vue3-apexcharts primevue cropperjs @primevue/themes @headlessui/vue @vuepic/vue-datepicker vue-awesome-paginate maska pinia pinia-plugin-persistedstate ']);
-            $npm_pakage->run();
-            if ($npm_pakage->isSuccessful()) {
-                $this->info('Inertia installed successfully.');
-            }
 
-            $npm_dev_pakage = new Process(['npm', 'install', '--dev', 'sass']);
-            $npm_pakage->run();
-            if ($npm_pakage->isSuccessful()) {
-                $this->info('Inertia installed successfully.');
+            $npm_pakages = [
+                'apexcharts',
+                'vue3-apexcharts ',
+                'primevue ',
+                'cropperjs',
+                '@primevue/themes',
+                '@headlessui/vue',
+                '@vuepic/vue-datepicker ',
+                'vue-awesome-paginate',
+                'maska',
+                'pinia',
+                'pinia-plugin-persistedstate'
+            ];
+            foreach ($npm_pakages as $key => $npm_pakage) {
+                $npm_pakage_prc = new Process(['npm', 'install', '--save', $npm_pakage]);
+                $npm_pakage_prc->run();
+                if ($npm_pakage_prc->isSuccessful()) {
+                    $this->info($npm_pakage . ' installed successfully.');
+                }
+            }
+            $npm_dev_pakages = [
+                'sass',
+            ];
+            foreach ($npm_dev_pakages as $key => $npm_pakage) {
+                $npm_pakage_prc = new Process(['npm', 'install', '--dev', $npm_pakage]);
+                $npm_pakage_prc->run();
+                if ($npm_pakage_prc->isSuccessful()) {
+                    $this->info($npm_pakage . ' installed successfully.');
+                }
             }
 
             $this->makeDirectory(base_path('app/LVP/Panels'));
@@ -80,6 +104,7 @@ class Install extends Command
             if ($panel) {
                 $this->call('lvp:create-panel', ['name' => ucfirst($panel)]);
             }
+            $this->info('Laravue panel installed successfully.');
 
 
         } else {

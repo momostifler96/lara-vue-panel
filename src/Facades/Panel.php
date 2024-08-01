@@ -2,11 +2,9 @@
 
 namespace LVP\Facades;
 
-use App\Http\Resources\LVPResource;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\HandleInertiaRequests;
 use Carbon\Carbon;
 use LVP\Middlewares\LVPAuthMiddleware;
 use Illuminate\Session\Middleware\StartSession;
@@ -17,7 +15,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use LVP\Defaults\DashboardPage;
 use LVP\Defaults\LVPLoginPage;
 use LVP\Defaults\LVPRegisterPage;
@@ -34,14 +31,7 @@ class Panel
     public $_id;
     protected $_base_route_name;
     protected $menu_groups = [
-        'Blog' => [
-            'position' => 0,
-            'dismisable' => true,
-        ],
-        'Settings' => [
-            'position' => 1,
-            'dismisable' => true,
-        ],
+
     ];
     public $_base_route_path;
     public Page $_login_page;
@@ -50,7 +40,7 @@ class Panel
     public string $_resources_path;
     public string $_pages_path;
     public string $_clusters_path;
-    public string $_logo_path = '';
+    public string $_logo_path = 'https://momoledev.com/assets/images/momoledev-logo-dark-black.svg';
     /**
      * Summary of _custom_nav_links
      * @var CustomPanelNavLink[]
@@ -61,6 +51,12 @@ class Panel
      * @var CustomPanelNavLink[]
      */
     public array $_user_menu = [];
+
+    /**
+     * Summary of _custom_nav_links
+     * @var array
+     */
+    public array $_nav_menu = [];
 
     /**
      * The resources that should be loaded.
@@ -171,17 +167,11 @@ class Panel
 
         $resourcesPath = $this->_resources_path ?? app_path('LVP/Resources');
 
-        // Get all PHP files in the resources directory
         $resourceFiles = $filesystem->glob($resourcesPath . '/*.php');
 
-        // Initialize an array to hold the command class names
-
-        // Iterate over each file and extract the class name
         foreach ($resourceFiles as $file) {
-            // Get the file contents
             $fileContents = $filesystem->get($file);
 
-            // Use regex to extract the namespace and class name
             if (
                 preg_match('/namespace (.+);/', $fileContents, $namespaceMatches) &&
                 preg_match('/class (\w+)/', $fileContents, $classMatches)
@@ -194,10 +184,6 @@ class Panel
                  */
                 $resource_instance = new $resource_class($this);
                 if (!$resource_instance->disabled) {
-                    // dd($resource_instance);
-
-                    // $resource_instance->settings($resource_instance);
-                    // $resource_instance->makeNames();
                     $resource_instance->setup();
                     $this->_resources[] = $resource_instance;
                 }
@@ -224,21 +210,13 @@ class Panel
 
         $pagesPath = $this->_pages_path ?? app_path('LVP/Pages');
 
-        // Get all PHP files in the pages directory
         $pageFiles = $filesystem->glob($pagesPath . '/*.php');
         $pageDirectoriesFiles = $filesystem->directories(app_path('LVP/Pages'));
         foreach ($pageDirectoriesFiles as $pageDirectory) {
             $pageFiles = array_merge($pageFiles, [$pageDirectory . '/IndexPage.php']);
         }
-
-        // Initialize an array to hold the command class names
-        // dd($pageFiles, $pageDirectoriesFiles, app_path('LVP/Pages'));
-        // Iterate over each file and extract the class name
         foreach ($pageFiles as $file) {
-            // Get the file contents
             $fileContents = $filesystem->get($file);
-
-            // Use regex to extract the namespace and class name
             if (
                 preg_match('/namespace (.+);/', $fileContents, $namespaceMatches) &&
                 preg_match('/class (\w+)/', $fileContents, $classMatches)
@@ -246,14 +224,8 @@ class Panel
                 $namespace = $namespaceMatches[1];
 
                 $class = $classMatches[1];
-                // if ($class == 'IndexPage') {
-                //     $class_base_name = getDirectNameAfterNamespace($namespace, 'App\LVP\Pages');
-                //     $page_class = $namespace . '\\' . $class_base_name . '\\' . $class;
-                // } else {
-                //     $page_class = $namespace . '\\' . $class;
-                // }
-                $page_class = $namespace . '\\' . $class;
 
+                $page_class = $namespace . '\\' . $class;
                 /**
                  * @var Page $page_instance
                  */
@@ -264,18 +236,14 @@ class Panel
                 }
             }
         }
-        // dd('jjjjj');
         return $this;
     }
     public function makeRoutes()
     {
-        // $this->dashboard->makeRoutes();
-
         foreach ($this->_resources as $key => $resource) {
             $resource->makeRoutes();
         }
         foreach ($this->_pages as $key => $page) {
-            // dd($this->_pages);
             $page->makeRoutes();
         }
     }
@@ -356,8 +324,7 @@ class Panel
     public function setupNavMenus()
     {
 
-        $nav_menu = Cache::get('lvp-menus-' . $this->_id, []);
-        // $nav_menu = [];
+        $nav_menu = config('laravue-panel.env') == 'local' ? [] : Cache::get('lvp-menus-' . $this->_id, []);
         if (empty($nav_menu)) {
             $saved_menus = [];
             $simple_menus = [];
@@ -383,7 +350,6 @@ class Panel
                 }
             }
 
-
             usort($simple_menus, function ($a_c, $b_c) {
                 if ($a_c['position'] == $b_c['position']) {
                     return 0;
@@ -391,7 +357,6 @@ class Panel
                 return ($a_c['position'] < $b_c['position']) ? -1 : 1;
             });
             foreach ($simple_menus as $key => $menu) {
-                // $resource_menu = $resource->getNavMenu();
                 if (!empty($menu['group'])) {
                     $this->addChildToGroup($saved_menus, $menu['group'], $menu);
                 } else {
@@ -415,27 +380,40 @@ class Panel
                 ],
                 ...$saved_menus
             ];
-
-            // dd($this->_id, $nav_menu);
-            Cache::forever('lvp-menus-' . $this->_id, $nav_menu);
+            $this->_nav_menu = $nav_menu;
+            if (config('laravue-panel.env') != 'local') {
+                Cache::forever('lvp-menus-' . $this->_id, $nav_menu);
+            }
         }
 
 
-        $user_menu = Cache::get('lvp-menus-user' . $this->_id, []);
+        $user_menu = config('laravue-panel.env') == 'local' ? [] : Cache::get('lvp-menus-user' . $this->_id, []);
         if (empty($user_menu)) {
             if (!empty($this->login)) {
                 $this->_user_menu[] = new CustomPanelNavLink('Profile', 'profile');
             }
-            $user_menu = array_map(function ($menu) {
 
+            $user_menu = array_map(function ($menu) {
                 $menu->setSubpath($this->_base_route_path);
                 return $menu->render();
             }, $this->_user_menu);
-            Cache::forever('lvp-menus-user' . $this->_id, $user_menu);
+
+            if (config('laravue-panel.env') != 'local') {
+                Cache::forever('lvp-menus-user' . $this->_id, $user_menu);
+            }
         }
 
 
         return $nav_menu;
+    }
+
+    public function getNavMenu()
+    {
+        return $this->_nav_menu;
+    }
+    public function getUserMenu()
+    {
+        return $this->_user_menu;
     }
 
     public static function getInstance()
@@ -615,7 +593,6 @@ class Panel
             $this->dashboard->headerActions($this->dashboardHeaderActions());
             $this->dashboard->widgets($this->dashboardWidgets());
             // $this->dashboard->title($this->dashboardTitle());
-
             $this->makeRoutes();
         });
     }
