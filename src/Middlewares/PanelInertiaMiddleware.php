@@ -34,9 +34,7 @@ class PanelInertiaMiddleware extends Middleware
         /**
          * @var \LVP\Facades\Panel  $current_panel
          */
-        // dd($request->session()->get('success'));
-        $nav_menus = Cache::get('lvp-menus-' . 'admin', []);
-        $user_menu = Cache::get('lvp-menus-user' . 'admin', []);
+
         $current_panel = app(LVPCurrentPanel::class)->panel;
         return [
             ...parent::share($request),
@@ -44,7 +42,7 @@ class PanelInertiaMiddleware extends Middleware
                 'user' => $request->user(),
             ],
             'notifications' => fn() => $request->user()->unreadNotifications->count(),
-            'panel_data' => fn() => app(LVPCurrentPanel::class)->panel->getData(),
+            'panel_data' => fn() => $current_panel->getData(),
             'admin_logo' => $current_panel->getlogo(),
             'alert' => fn() => $request->session()->get('alert'),
             'flash' => [
@@ -57,8 +55,8 @@ class PanelInertiaMiddleware extends Middleware
 
             ],
             'currentPath' => $request->path(),
-            'nav_menu' => $nav_menus,
-            'user_menu' => $user_menu
+            'nav_menu' => $current_panel->getNavMenu(),
+            'user_menu' => $current_panel->getUserMenu()
         ];
     }
 }

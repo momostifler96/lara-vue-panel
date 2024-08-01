@@ -29,6 +29,7 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->loadPanels();
+        // dd($this->panels);
         $this->bootPanels();
     }
 
@@ -108,7 +109,7 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
             $panelFiles = $filesystem->glob($panelsPath . '/*.php');
 
             // Initialize an array to hold the command class names
-
+            // dd($panelFiles);
             // Iterate over each file and extract the class name
             foreach ($panelFiles as $file) {
                 // Get the file contents
@@ -125,16 +126,19 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
                     /**
                      * @var Panel
                      */
+
                     $panel_instance = $panel_class::getInstance();
                     $panel_instance->setup();
                     // Combine namespace and class to get the fully qualified class name
-                    $this->panels[$panel_instance->getId()] = $panel_instance;
+                    $panels_cache[$panel_instance->getId()] = $panel_instance;
+                    // dump($class, $panel_instance, $panel_instance->getId());
+
                 }
 
                 // Cache::forever("lvp-panels", $this->panels);
             }
-        } else {
-            $this->panels = $panels_cache;
         }
+        $this->panels = $panels_cache;
+
     }
 }

@@ -380,12 +380,12 @@ class Panel
                 ],
                 ...$saved_menus
             ];
-            $this->_nav_menu = $nav_menu;
             if (config('laravue-panel.env') != 'local') {
                 Cache::forever('lvp-menus-' . $this->_id, $nav_menu);
             }
         }
 
+        $this->_nav_menu = $nav_menu;
 
         $user_menu = config('laravue-panel.env') == 'local' ? [] : Cache::get('lvp-menus-user' . $this->_id, []);
         if (empty($user_menu)) {
@@ -418,10 +418,7 @@ class Panel
 
     public static function getInstance()
     {
-        if (empty(static::$instance)) {
-            static::$instance = new static();
-        }
-        return static::$instance;
+        return new static();
     }
     public static function panel(Panel $panel)
     {
