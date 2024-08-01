@@ -6,25 +6,25 @@
         @click="actions.validate"
         id="cropper-action-validate"
       >
-        <ValidateIcon class="w-4 h-4" />
+        <span v-html="ValidateIcon" class="w-4 h-4" />
       </CropperActionButton>
       <CropperActionButton
         @click="actions.zoomPlus"
         id="cropper-action-zoom-plus"
       >
-        <ZoomPlusIcon class="w-5 h-5" />
+        <span v-html="ZoomInIcon" class="w-5 h-5" />
       </CropperActionButton>
       <CropperActionButton
         @click="actions.zoomMinus"
         id="cropper-action-zoom-minus"
       >
-        <ZoomMinusIcon class="w-5 h-5" />
+        <span v-html="ZoomOutIcon" class="w-5 h-5" />
       </CropperActionButton>
       <CropperActionButton
         @click="actions.center"
         id="cropper-action-zoom-minus"
       >
-        <CenterIcon class="w-5 h-5" />
+        <span v-html="CenterIcon" class="w-5 h-5" />
       </CropperActionButton>
       <CropperActionButton @click="actions.rotateLeft">
         <RotateLeft class="!w-5 !h-5" />
@@ -33,27 +33,32 @@
         <RotateRight class="!w-5 !h-5" />
       </CropperActionButton>
       <CropperActionButton @click="actions.undo" id="cropper-action-undo">
-        <UndoIcon class="w-4 h-4" />
+        <span v-html="UndoIcon" class="w-4 h-4" />
       </CropperActionButton>
       <CropperActionButton @click="actions.redo" id="cropper-action-redo">
-        <RedoIcon class="w-4 h-4" />
+        <span v-html="RedoIcon" class="w-4 h-4" />
       </CropperActionButton>
       <CropperActionButton @click="actions.reset" id="cropper-action-reset">
-        <CloseIcon class="w-4 h-4" />
+        <span v-html="CloseIcon" class="w-4 h-4" />
       </CropperActionButton>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import CloseIcon from "@heroicons/vue/24/outline/XMarkIcon";
-import ValidateIcon from "@heroicons/vue/24/outline/CheckIcon";
-// import ValidateIcon from "@heroicons/vue/24/outline/CheckIcon";
-import UndoIcon from "@heroicons/vue/24/outline/ArrowUturnLeftIcon";
-import RedoIcon from "@heroicons/vue/24/outline/ArrowUturnRightIcon";
-import ZoomPlusIcon from "@heroicons/vue/24/outline/MagnifyingGlassPlusIcon";
-import ZoomMinusIcon from "@heroicons/vue/24/outline/MagnifyingGlassMinusIcon";
-import CenterIcon from "@heroicons/vue/24/outline/ArrowsPointingInIcon";
+
+import {
+  CloseIcon,
+  ValidateIcon,
+  UndoIcon,
+  RedoIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+  CenterIcon,
+  EyeIcon,
+  EditIcon,
+} from "lvp/helpers/lvp_icons";
+
 import CropperActionButton from "./CropperActionButton.vue";
 import RotateLeft from "lvp/Components/Icons/RotateLeft.vue";
 import RotateRight from "lvp/Components/Icons/RotateRight.vue";

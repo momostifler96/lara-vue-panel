@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import CloseIcon from "@heroicons/vue/24/outline/XMarkIcon";
+import { CloseIcon } from "lvp/helpers/lvp_icons";
 const props = defineProps({
   show: Boolean,
   title: {

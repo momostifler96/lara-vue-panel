@@ -29,7 +29,7 @@
             @click="closeCropper"
             class="absolute p-1 text-white transition bg-black rounded-full top-2 right-2 ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
           >
-            <CloseIcon class="w-4 h-4" />
+            <span v-html="CloseIcon" class="w-4 h-4" />
           </button>
           <ImageCropper :image="image" @onCrop="onCrop" />
         </div>
@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import CloseIcon from "@heroicons/vue/24/outline/XMarkIcon";
+import { CloseIcon } from "lvp/helpers/lvp_icons";
 import ImageCropper from "./ImageCropper.vue";
 const props = defineProps({
   show: Boolean,

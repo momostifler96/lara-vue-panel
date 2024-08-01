@@ -70,7 +70,7 @@
   </LVPTable>
 </template>
 <script setup lang="ts">
-import { TrashIcon, PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import { TrashIcon, EditIcon, EyeIcon } from "lvp/helpers/lvp_icons";
 import Select from "lvp/Components/Forms/Select.vue";
 import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";
@@ -194,7 +194,7 @@ const onFiltering = (filter_data: any) => {
   // emit("filtering", filter_data);
 };
 const action_icons = <Record<string, any>>{
-  edit: PencilIcon,
+  edit: EditIcon,
   view: EyeIcon,
   delete: TrashIcon,
 };
@@ -220,7 +220,7 @@ const navigate = (page: number) => {
   queryString.set("page", page.toString());
   router.get("?" + queryString.toString());
 };
-
+const navigatePerpage = () => {};
 let search_debounce: any = null;
 const hasSearchable = computed(() => {
   return props.columns.some((col) => {

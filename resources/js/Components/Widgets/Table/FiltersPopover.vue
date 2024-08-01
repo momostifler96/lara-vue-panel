@@ -48,7 +48,8 @@ import {
   MenuItem,
 } from "@headlessui/vue";
 import { Link } from "@inertiajs/vue3";
-import { FunnelIcon as FilterIcon } from "@heroicons/vue/24/outline";
+import { FilterIcon } from "lvp/helpers/lvp_icons";
+
 import { TableFilter } from "lvp/Types";
 import FilterCheckBox from "../Filters/FilterCheckBox.vue";
 import TextField from "lvp/Components/Forms/TextField.vue";

@@ -15,7 +15,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $name = 'lvp:install';
+    protected $name = 'lvp:install {name}';
 
     /**
      * The console command description.
@@ -31,6 +31,17 @@ class Install extends Command
      */
     protected $files;
 
+    /**
+     * Create a new command instance.
+     *
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @return void
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct();
+        $this->files = $files;
+    }
 
     /**
      * Execute the console command.
@@ -39,65 +50,42 @@ class Install extends Command
      */
     public function handle()
     {
-      
-        $this->info('Intallation des ressources');
-        $composer_pakage = new Process('composer require laravel/breeze --dev');
+
+        $this->info('Intall composer packages');
+        $composer_pakage = new Process(['composer', 'require', 'laravel/breeze', '--dev']);
         $composer_pakage->run();
         if ($composer_pakage->isSuccessful()) {
             $this->info('Laravel Breeze installed successfully.');
-            $this->call('breeze:install vue --typescript');
+            $breez_p = new Process(['php', 'artisan', 'breeze:install', 'vue', '--typescript']);
+            $breez_p->run();
             $this->info('Inertia vue typescript installed successfully.');
-            $npm_pakage = new Process('npm i --save vue3-apexcharts primevue/config @primevue/themes/aura vue-awesome-paginate maska pinia pinia-plugin-persistedstate');
+            $this->info('Intall npm packages');
+            $npm_pakage = new Process(['npm', 'install', '--save', 'vue3-apexcharts primevue cropperjs @primevue/themes @headlessui/vue @vuepic/vue-datepicker vue-awesome-paginate maska pinia pinia-plugin-persistedstate']);
             $npm_pakage->run();
             if ($npm_pakage->isSuccessful()) {
                 $this->info('Inertia installed successfully.');
             }
-        }else{
+            $npm_dev_pakage = new Process(['npm', 'install', '--dev', 'sass']);
+            $npm_pakage->run();
+            if ($npm_pakage->isSuccessful()) {
+                $this->info('Inertia installed successfully.');
+            }
+
+            $this->makeDirectory(base_path('app/LVP/Panels'));
+            $this->makeDirectory(base_path('app/LVP/Pages'));
+            $this->makeDirectory(base_path('app/LVP/Resources'));
+
+            $panel = $this->ask('type default panel name :');
+            if ($panel) {
+                $this->call('lvp:create-panel', ['name' => ucfirst($panel)]);
+            }
+
+
+        } else {
             $this->info('Laravel Breeze not installed.');
         }
     }
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the LVP resource'],
-        ];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the resource already exists'],
-        ];
-    }
-
-    /**
-     * Get the path to where the resource file should be created.
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function getPath($name)
-    {
-        return base_path('app/LVP/Resources/' . $name . 'Resource.php');
-    }
-
-    /**
-     * Create the directory for the resource if it does not exist.
-     *
-     * @param string $path
-     * @return void
-     */
     protected function makeDirectory($path)
     {
         if (!$this->files->isDirectory(dirname($path))) {
@@ -105,19 +93,4 @@ class Install extends Command
         }
     }
 
-    /**
-     * Create the resource file with the given name and path.
-     *
-     * @param string $name
-     * @param string $path
-     * @return void
-     */
-    protected function createResourceFile($name, $path)
-    {
-        $stub = $this->files->get(__DIR__ . '/stubs/Resource.stub');
-
-        $stub = str_replace('{{ class }}', $name . 'Resource', $stub);
-
-        $this->files->put($path, $stub);
-    }
 }

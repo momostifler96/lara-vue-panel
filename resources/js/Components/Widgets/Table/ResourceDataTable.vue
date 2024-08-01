@@ -72,7 +72,6 @@
   </LVPTable>
 </template>
 <script setup lang="ts">
-import { TrashIcon, PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
 import Select from "lvp/Components/Forms/Select.vue";
 import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";
@@ -89,7 +88,7 @@ import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
 import { TableColumn, TableFilter } from "lvp/Types";
-
+import { EditIcon, DeleteIcon, ViewIcon } from "lvp/helpers/lvp_icons";
 interface TableGroupAction {
   type: string;
   actions: {
@@ -174,9 +173,9 @@ const onFiltering = (filter_data: any) => {
   emit("filtering", filter_data);
 };
 const action_icons = <Record<string, any>>{
-  edit: PencilIcon,
-  view: EyeIcon,
-  delete: TrashIcon,
+  edit: EditIcon,
+  view: ViewIcon,
+  delete: DeleteIcon,
 };
 const confirmation_modal = reactive<Record<string, any>>({
   show: false,

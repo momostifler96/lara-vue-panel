@@ -3,7 +3,7 @@
     <nav class="relative flex justify-between w-full my-auto">
       <span class="flex justify-start">
         <span class="lvp-panel-top-bar-drawer-btn" @click="showDrawer">
-          <MenuIcon class="w-6 h-6" />
+          <span v-html="ListIcon" class="w-6 h-6" />
         </span>
         <TextField
           @update:model-value="onSearch"
@@ -31,12 +31,11 @@
 </template>
 <script setup lang="ts">
 import NotificationIcon from "lvp/Components/Icons/Notification.vue";
-import { Bars3Icon as MenuIcon } from "@heroicons/vue/24/outline";
 import UserMenu from "./DropdownMenu/UserMenu.vue";
 import { ref } from "vue";
 import TextField from "lvp/Components/Forms/TextField.vue";
 import icons from "lvp/Assets/Icons";
-import { SearchIcon } from "lvp/helpers/lvp_icons";
+import { SearchIcon, ListIcon } from "lvp/helpers/lvp_icons";
 const openNofications = () => {
   const event = new CustomEvent("open-notification");
   document.dispatchEvent(event);
