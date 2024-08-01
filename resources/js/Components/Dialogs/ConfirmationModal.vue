@@ -23,7 +23,6 @@
   </HeadlessModal>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
 import HeadlessModal from "./HeadlessModal.vue";
 import {
   SuccessIcon,

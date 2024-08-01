@@ -85,7 +85,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import { computed, inject, reactive, ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
-import DataTable from "lvp/Components/Widgets/Table/DataTable.vue";
+import ResourceDataTable from "lvp/Components/Widgets/Table/ResourceDataTable.vue";
 import { AddIcon } from "lvp/helpers/lvp_icons";
 import type {
   TableData,
@@ -129,7 +129,7 @@ const props = computed(() => {
 
 //------------------Widgets-----------
 const widgets_components = <{ [key: string]: any }>{
-  data_table: DataTable,
+  data_table: ResourceDataTable,
   chart: BaseChart,
 };
 //------------------Widgets-----------

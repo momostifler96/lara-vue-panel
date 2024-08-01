@@ -108,7 +108,7 @@
 </template>
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { defineProps, defineEmits, ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, watch } from "vue";
 import CloseIcon from "@heroicons/vue/24/outline/XMarkIcon";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import FormSelectField from "lvp/Components/Forms/FormSelectField.vue";

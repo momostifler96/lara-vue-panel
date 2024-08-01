@@ -78,7 +78,6 @@ interface ResourceIndexPage {
 const props = computed(() => {
   return usePage().props as unknown as ResourceIndexPage;
 });
-
 //------------------Widgets-----------
 const widgets_components = <{ [key: string]: any }>{
   "data-table": DataTableWidget,

@@ -24,7 +24,7 @@ class TableFilterText
         return new static($field);
     }
 
-    public function placeholder(array $placeholder)
+    public function placeholder(string $placeholder)
     {
         $this->_placeholder = $placeholder;
         return $this;

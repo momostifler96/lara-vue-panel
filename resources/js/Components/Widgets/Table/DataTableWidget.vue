@@ -3,7 +3,7 @@
     :data="data.items"
     :columns="columns"
     v-model:selected="seletedItems"
-    :hasHeader="false"
+    :hasHeader="true"
     :hasFooter="paginated"
     fixeLastColumns
     @dataEvent="$emit('dataEvent', $event)"
@@ -15,11 +15,9 @@
         @exec="execGroupAction"
       />
     </template>
-    <template #t_action>
+    <template #t_header>
       <div class="flex gap-2">
-        <SearchTextField v-if="hasSearchable" v-model="_filter.search" />
         <FiltersPopover
-          v-if="filter"
           :options="filter"
           :filterData="filterData"
           :loading="false"
@@ -28,10 +26,10 @@
       </div>
     </template>
     <template #actions="{ column, item }">
-      <template v-if="column.data.type == 'inline'">
+      <template v-if="column.action_type == 'inline'">
         <div class="flex gap-2">
           <TableActionButton
-            v-for="action in column.data.actions"
+            v-for="action in column.actions"
             :icon="action_icons[action.icon]"
             :label="action.label"
             :action="action"
@@ -42,9 +40,9 @@
         </div>
       </template>
       <TableActionMenu
-        v-else-if="column.data.type == 'dropdown'"
+        v-else-if="column.type == 'dropdown'"
         :tableItem="item"
-        :tableActions="column.data.actions"
+        :tableActions="column.actions"
         @exec="
           (action) => {
             emit('action', action, item);
@@ -81,7 +79,7 @@ import TableGroupedActionMenu from "lvp/Components/Widgets/Table/TableGroupedAct
 import { router } from "@inertiajs/vue3";
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import LVPTable from "lvp/Components/Widgets/Table/TableWidget.vue";
-import FiltersPopover from "lvp/Components/Widgets/Table/FiltersPopover.vue";
+import FiltersPopover from "lvp/Components/Widgets/Table/FiltersGrid.vue";
 import SearchTextField from "lvp/Components/Forms/SearchTextField.vue";
 import TableWidget from "lvp/Components/Widgets/Table/TableWidget.vue";
 import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
@@ -158,6 +156,9 @@ const emit = defineEmits([
   "groupAction",
   "dataEvent",
 ]);
+
+console.log("filter", props.filter);
+
 const table_column_widget = <{ [k: string]: any }>{
   text: TextColumn,
   image: ImageColumn,
@@ -169,9 +170,28 @@ const queryString = new URLSearchParams(document.location.search);
 const _filter = ref({
   search: queryString.get("search") ?? "",
 });
+const filterData = ref<{ [k: string]: string }>({});
 
+queryString.forEach((value, key) => {
+  filterData.value[key] = value;
+});
+const execfilters = (filters: any) => {
+  const _filters = Object.keys(filters);
+  console.log("filters", filters);
+  for (let index = 0; index < _filters.length; index++) {
+    queryString.set(
+      _filters[index],
+      Array.isArray(filters[_filters[index]])
+        ? filters[_filters[index]].join("|")
+        : filters[_filters[index]]
+    );
+  }
+  router.get("?" + queryString.toString());
+};
 const onFiltering = (filter_data: any) => {
-  emit("filtering", filter_data);
+  execfilters(filter_data);
+  // router.get("?" + queryString.toString());
+  // emit("filtering", filter_data);
 };
 const action_icons = <Record<string, any>>{
   edit: PencilIcon,
@@ -207,24 +227,13 @@ const hasSearchable = computed(() => {
     return col.searchable;
   });
 });
+
 watch(
   () => _filter.value.search,
   (val) => {
     if (search_debounce) clearTimeout(search_debounce);
-    search_debounce = setTimeout(() => {
-      search(val);
-    }, 1000);
+    search_debounce = setTimeout(() => {}, 1000);
   }
 );
 const seletedItems = ref([]);
-const navigatePerpage = (num: number) => {
-  queryString.set("perPage", num.toString());
-  queryString.set("page", "1");
-  router.get("?" + queryString.toString());
-};
-const search = (val: string) => {
-  queryString.set("search", val);
-  queryString.set("page", "1");
-  router.get("?" + queryString.toString());
-};
 </script>

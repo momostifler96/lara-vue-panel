@@ -88,7 +88,9 @@ class DataTableWidget extends LVPWidget
 
     public function filters(array $filters)
     {
-        return $this->_filters = $filters;
+        $this->_filters = $filters;
+        return $this;
+
     }
     public function actions(array $actions)
     {
@@ -131,9 +133,14 @@ class DataTableWidget extends LVPWidget
         // dd($this->getDataFromColumn($columns));
         // dd($data_rended);
 
+        if (!empty($this->_filters)) {
+            $filter = (new DataFilter());
+            $filter->filters($this->_filters);
+            $data['filter'] = $filter->render();
+        }
+
         $data['fixe_first_column'] = $this->_fixe_first_column;
         $data['fixe_last_column'] = $this->_fixe_last_column;
-        $data['filter'] = empty($this->_filters) ? null : $this->_filters;
         $data['columns'] = $columns;
         $data['data'] = $this->_data;
         $data['paginated'] = $this->_paginated;
@@ -281,8 +288,7 @@ class DataTableWidget extends LVPWidget
                     $_cols[$col['field']] = Carbon::parse($item[$col['field']])->format($col['date_format']);
                 } else if ($col['type'] != 'group') {
                     $_cols[$col['field']] = $item[$col['field']];
-                } else {
-                    // Recursively handle grouped columns
+                } else if ($col['type'] == 'group' && isset($col['groups'])) {
                     foreach ($col['groups'] as $key => $group) {
                         $this->getTableColdata($item, $group, $_cols);
                     }
