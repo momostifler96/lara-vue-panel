@@ -3,9 +3,6 @@
 namespace LVP\Providers;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use LVP\Facades\LVPCurrentPanel;
 use LVP\Facades\Panel;
 
@@ -88,7 +85,6 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
                 });
             }
         }
-        // dd(app(LVPCurrentPanel::class)->panel);
         $current_panel = app(LVPCurrentPanel::class);
         if (!empty($current_panel)) {
             $current_panel->panel->boot();
@@ -99,23 +95,16 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
 
         // Cache::forget("lvp-panels");
         $panels_cache = [];
-        // dd($panels_cache);
         if (empty($panel_cache)) {
             $filesystem = new Filesystem;
 
             $panelsPath = app_path('LVP/Panels');
 
-            // Get all PHP files in the pages directory
             $panelFiles = $filesystem->glob($panelsPath . '/*.php');
 
-            // Initialize an array to hold the command class names
-            // dd($panelFiles);
-            // Iterate over each file and extract the class name
-            foreach ($panelFiles as $file) {
-                // Get the file contents
-                $fileContents = $filesystem->get($file);
 
-                // Use regex to extract the namespace and class name
+            foreach ($panelFiles as $file) {
+                $fileContents = $filesystem->get($file);
                 if (
                     preg_match('/namespace (.+);/', $fileContents, $namespaceMatches) &&
                     preg_match('/class (\w+)/', $fileContents, $classMatches)
@@ -129,12 +118,9 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
 
                     $panel_instance = $panel_class::getInstance();
                     $panel_instance->setup();
-                    // Combine namespace and class to get the fully qualified class name
                     $panels_cache[$panel_instance->getId()] = $panel_instance;
-                    // dump($class, $panel_instance, $panel_instance->getId());
 
                 }
-
                 // Cache::forever("lvp-panels", $this->panels);
             }
         }

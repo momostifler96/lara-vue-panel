@@ -27,7 +27,11 @@
               {{ menu.label }}
             </Link>
             <button type="button" @click="askLogout" class="lvp-popover-link">
-              <LogoutIcon class="w-5 h-5 mr-2" aria-hidden="true" />
+              <span
+                v-html="LogoutIcon"
+                class="w-5 h-5 mr-2"
+                aria-hidden="true"
+              />
               Logout
             </button>
           </div>
@@ -57,7 +61,7 @@ import { Link, router, usePage } from "@inertiajs/vue3";
 
 import { ref } from "vue";
 import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
-import { UserIcon } from "lvp/helpers/lvp_icons";
+import { UserIcon, LogoutIcon } from "lvp/helpers/lvp_icons";
 const page = usePage();
 
 const show_confirmation = ref(false);
