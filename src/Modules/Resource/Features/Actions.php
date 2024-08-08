@@ -211,7 +211,7 @@ trait Actions
             'label' => $this->label,
             'plural_label' => $this->plural_label,
             'meta_title' => $this->meta_title,
-            'meta_description' => $this->label,
+            'meta_description' => $this->plural_label,
             'menu_label' => $this->menu_label
         ];
     }
