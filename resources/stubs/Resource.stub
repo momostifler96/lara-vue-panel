@@ -5,6 +5,8 @@ namespace App\LVP\Resources{{namespace}};
 use LVP\Modules\Resource\Resource;
 use LVP\Table\TextColumn;
 use LVP\Widgets\DataWidgets\Actions\DataActionButton;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class {{class}}Resource extends Resource
 {
@@ -70,7 +72,6 @@ class {{class}}Resource extends Resource
     //Store model hooks 
     public function beforeStoreModel(array $formData, Request $request): array
     {
-        $formData['password'] = 'Password1234';
         return $formData;
     }
     protected function afterStoreModel(Model $model, array $formData, Request $request)

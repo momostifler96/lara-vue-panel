@@ -163,7 +163,7 @@ trait Actions
         }
 
         if (empty($this->menu_label)) {
-            $this->menu_label = $this->label;
+            $this->menu_label = $this->plural_label;
         }
 
         $this->page_title = ucfirst(!empty($this->page_title) ? $this->page_title : $this->label);
