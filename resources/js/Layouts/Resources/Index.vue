@@ -52,14 +52,13 @@
 </template>
 <script setup lang="ts">
 import PanelLayout from "../Partials/PanelLayout.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
-import { computed, inject, reactive } from "vue";
-import { router } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
+import { computed, reactive } from "vue";
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
 import DataComponent from "./DataComponent.vue";
 
-import { ResourceRoutes, ResourceTitles } from "lvp/PropsTypes";
+import { ResourceRoutes } from "lvp/PropsTypes";
 import LineChart from "lvp/Components/Widgets/Chats/LineChart.vue";
 import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
 import FormWidget from "lvp/Components/Widgets/FormWidget.vue";

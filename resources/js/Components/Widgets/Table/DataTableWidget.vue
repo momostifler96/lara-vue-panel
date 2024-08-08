@@ -43,11 +43,7 @@
         v-else-if="column.data.type == 'dropdown'"
         :tableItem="item"
         :tableActions="column.data.actions"
-        @exec="
-          (action) => {
-            emit('action', action, item);
-          }
-        "
+        @exec="execAction($event, item)"
       />
     </template>
     <template #t_footer>
@@ -68,6 +64,13 @@
       </div>
     </template>
   </LVPTable>
+  <ConfirmationModal
+    :show="confirmation_modal.show"
+    icon="delete"
+    :title="confirmation_modal.title"
+    :body="confirmation_modal.body"
+    @onResponse="confirmation_modal.onResponse"
+  />
 </template>
 <script setup lang="ts">
 import { TrashIcon, EditIcon, EyeIcon } from "lvp/helpers/lvp_icons";
@@ -76,19 +79,18 @@ import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";
 import TableActionMenu from "lvp/Components/Widgets/Table/TableActionMenu.vue";
 import TableGroupedActionMenu from "lvp/Components/Widgets/Table/TableGroupedActionMenu.vue";
-import { router } from "@inertiajs/vue3";
 import { ref, reactive, computed, watch, onMounted, inject } from "vue";
 import LVPTable from "lvp/Components/Widgets/Table/TableWidget.vue";
-// import FiltersPopover from "lvp/Components/Widgets/Table/FiltersGrid.vue";
 import FiltersPopover from "lvp/Components/Widgets/Table/FiltersPopover.vue";
-import SearchTextField from "lvp/Components/Forms/SearchTextField.vue";
-import TableWidget from "lvp/Components/Widgets/Table/TableWidget.vue";
 import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
 import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
 import { ActionsList, TableColumn, TableFilter } from "lvp/Types";
 
+import { router } from "@inertiajs/vue3";
+import { useToast } from "lvp/Plugins/toast";
+import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
 interface TableGroupAction {
   type: string;
   actions: {
@@ -147,6 +149,10 @@ const props = defineProps({
     type: Object as () => TableFilter,
     required: true,
   },
+  routes: {
+    type: Object,
+    required: true,
+  },
 });
 const emit = defineEmits([
   "delete",
@@ -157,8 +163,6 @@ const emit = defineEmits([
   "groupAction",
   "dataEvent",
 ]);
-
-console.log("filter", props.group_action);
 
 const table_column_widget = <{ [k: string]: any }>{
   text: TextColumn,
@@ -178,7 +182,6 @@ queryString.forEach((value, key) => {
 });
 const execfilters = (filters: any) => {
   const _filters = Object.keys(filters);
-  console.log("filters", filters);
   for (let index = 0; index < _filters.length; index++) {
     queryString.set(
       _filters[index],
@@ -187,31 +190,17 @@ const execfilters = (filters: any) => {
         : filters[_filters[index]]
     );
   }
+  queryString.set("page", "1");
   router.get("?" + queryString.toString());
 };
 const onFiltering = (filter_data: any) => {
   execfilters(filter_data);
-  // router.get("?" + queryString.toString());
-  // emit("filtering", filter_data);
 };
 const action_icons = <Record<string, any>>{
   edit: EditIcon,
   view: EyeIcon,
   delete: TrashIcon,
 };
-const confirmation_modal = reactive<Record<string, any>>({
-  show: false,
-  title: "",
-  body: "",
-  current_id: "",
-  onConfirm: () => {},
-  onCancel: () => {
-    confirmation_modal.show = false;
-    confirmation_modal.title = "";
-    confirmation_modal.body = "";
-    confirmation_modal.current_id = "";
-  },
-});
 
 const execGroupAction = (action: any) => {
   emit("groupAction", action, seletedItems.value);
@@ -239,7 +228,16 @@ watch(
 const seletedItems = ref([]);
 
 //------------------------—
-const confir_modal = reactive({
+
+const datatable_item_actions = <ActionsList>(
+  inject("lvp.actions.datatable.item")
+);
+const datatable_selected_item_actions = <ActionsList>(
+  inject("lvp.actions.datatable.selected_items")
+);
+
+//------------------Confirmation modal-----------
+const confirmation_modal = reactive({
   show: false,
   title: "create",
   body: "create",
@@ -247,11 +245,7 @@ const confir_modal = reactive({
   confirm_button_label: "Confirm",
   onResponse: (rsp: boolean) => {},
 });
-//------------------------—
-
-const single_item_custom_actions = <ActionsList>(
-  inject("lvp_single_item_actions")
-);
+//------------------Actions-----------
 
 const table_actions_methods = <ActionsList>{
   edit: ({ route_list, item }) => {
@@ -261,18 +255,49 @@ const table_actions_methods = <ActionsList>{
     // router.get(item.view);
   },
   delete: ({ item, route_list, router }) => {
-    confir_modal.show = true;
-    confir_modal.title = "Delete";
-    confir_modal.body = "Are you sure you want to delete this item?";
-    confir_modal.onResponse = (result) => {
+    confirmation_modal.show = true;
+    confirmation_modal.title = "Delete";
+    confirmation_modal.body = "Are you sure you want to delete this item?";
+    confirmation_modal.onResponse = (result: boolean) => {
+      if (result) {
+        console.log("onResponse", item);
+        emit("delete", item);
+      }
+      confirmation_modal.show = false;
+      confirmation_modal.title = "";
+      confirmation_modal.body = "";
+    };
+  },
+  "resource.delete": ({ item, route_list, router }) => {
+    confirmation_modal.show = true;
+    confirmation_modal.title = "Delete";
+    confirmation_modal.body = "Are you sure you want to delete this item?";
+    confirmation_modal.onResponse = (result: boolean) => {
       if (result) {
         router.delete(route(route_list.delete, { id: item.id }));
       }
-      confir_modal.show = false;
-      confir_modal.title = "";
-      confir_modal.body = "";
+      confirmation_modal.show = false;
+      confirmation_modal.title = "";
+      confirmation_modal.body = "";
     };
   },
-  ...single_item_custom_actions,
+  ...datatable_item_actions,
+};
+
+const execAction = (action: string, item: any) => {
+  table_actions_methods[action]({
+    confirmationModal: (option) => {
+      confirmation_modal.title = option.title;
+      confirmation_modal.body = option.body;
+      confirmation_modal.cancel_button_label = option.cancel_button_label;
+      confirmation_modal.confirm_button_label = option.confirm_button_label;
+      confirmation_modal.onResponse = option.onResponse;
+      confirmation_modal.show = option.show;
+    },
+    item,
+    showToast: useToast,
+    route_list: props.routes,
+    router: router,
+  });
 };
 </script>

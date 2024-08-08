@@ -14,7 +14,7 @@
   >
     <FormComponent
       v-bind="{ fields, action }"
-      :formData="_formData"
+      :formData="formData"
       :defaultData="defaultData"
     />
   </FormModal>
@@ -28,11 +28,11 @@ const props = defineProps({
   show: Boolean,
   titles: {
     type: Object,
-    riquired: true,
+    required: true,
   },
   fields: {
     type: Object,
-    riquired: true,
+    required: true,
   },
   action: {
     type: String,
@@ -40,15 +40,15 @@ const props = defineProps({
   },
   routes: {
     type: Object as () => any,
-    riquired: true,
+    required: true,
   },
   defaultData: {
     type: Object as () => any,
-    riquired: true,
+    required: true,
   },
   errors: Object,
 });
-const _formData = ref({});
+const formData = ref({});
 const updateLoadErrors = ($errors: any) => {
   formErrors.value = $errors;
 };
@@ -59,7 +59,7 @@ const errorIsArray = (field: string): string | null => {
   return error ? (Array.isArray(error) ? error[0] : error) : null;
 };
 const submit = () => {
-  router.post(route(props.routes[props.action]), _formData.value, {
+  router.post(route(props.routes[props.action]), formData.value, {
     onSuccess: () => {
       formErrors.value = {};
       emit("close", true);
@@ -74,12 +74,9 @@ watch(
   () => props.show,
   () => {
     if (props.action == "edit") {
-      const form_fields = props.fields.map((field) => field.name);
-      _formData.value.id = props.defaultData.id;
-      for (let index = 0; index < form_fields.length; index++) {
-        _formData.value[form_fields[index]] =
-          props.defaultData[form_fields[index]];
-      }
+      formData.value = props.defaultData;
+    } else {
+      formData.value = {};
     }
   }
 );

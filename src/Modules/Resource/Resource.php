@@ -97,7 +97,7 @@ class Resource
     }
 
     //Store model hooks 
-    public function beforeStoreModel(array $formData, Request $request): array
+    protected function beforeStoreModel(array $formData, Request $request): array
     {
         return $formData;
     }
@@ -110,7 +110,7 @@ class Resource
     }
     //Update model hooks 
 
-    public function beforeUpdateModel(Model $model, array $formData, Request $request): array
+    protected function beforeUpdateModel(Model $model, array $formData, Request $request): array
     {
         return $formData;
     }
@@ -126,6 +126,20 @@ class Resource
 
 
     protected function afterCreateModelTranction(Model $model, Request $request)
+    {
+    }
+
+
+    //Delete model hooks 
+    protected function beforeDeleteModel(array $models_id, Request $request): array
+    {
+        return $models_id;
+    }
+
+    protected function afterDeleteModel(array $models_id, Request $request)
+    {
+    }
+    protected function onDeleteModelFail(\Exception $exception, array $models_id, Request $request)
     {
     }
 

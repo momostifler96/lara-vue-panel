@@ -43,7 +43,7 @@ interface ResourceRoutes {
 }
 
 interface ResourceTitles {
-    delete_button: string;
+    delete: string;
     delete_confirmation_body: string;
     index_page_title: string;
     edit_resource: string;
@@ -53,9 +53,9 @@ interface ResourceTitles {
     form_titles: {
         [key: string]: {
             title: string;
-            submit_button_and_create: string;
-            cancel_button: string;
-            submit_button: string;
+            submit_and_create: string;
+            cancel: string;
+            submit: string;
         }
     };
     plural_label: string;

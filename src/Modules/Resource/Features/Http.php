@@ -10,7 +10,7 @@ use LVP\Enums\LVPAction;
 trait Http
 {
 
-    private function index(Request $request, $id = null)
+    private function index(Request $request)
     {
         $props = [
             'page_titles' => $this->getPageTitles(),
@@ -30,7 +30,7 @@ trait Http
         return Inertia::render('', $props);
 
     }
-    private function create(Request $request, $id = null)
+    private function create()
     {
         $props = [
             'page_titles' => $this->getFormPageTitle(),
@@ -53,9 +53,8 @@ trait Http
     {
         $props = [];
         return Inertia::render('LVP/ResourceForm', $props);
-
     }
-    private function store(Request $request, $id = null)
+    private function store(Request $request)
     {
         $valiator = Validator::make($request->all(), $this->getFieldRuls('create'));
         if ($valiator->fails()) {
@@ -118,15 +117,18 @@ trait Http
     private function delete(Request $request)
     {
         $items = explode(',', $request->input('id'));
+        $ids = $this->beforeDeleteModel($items, $request);
 
         return $this->withTransaction(
-            function () use ($items) {
-                $this->model::whereIn($this->model_primary_key, $items)->delete();
+            function () use ($ids) {
+                $this->model::whereIn($this->model_primary_key, $ids)->delete();
             },
-            function () {
+            function () use ($ids, $request) {
+                $this->afterDeleteModel($ids, $request);
                 return redirect()->back()->with('success', 'Deleted successfully');
             },
-            function (\Exception $exception) {
+            function (\Exception $exception) use ($ids, $request) {
+                $this->onDeleteModelFail($exception, $ids, $request);
                 return redirect()->back()->with('error', 'Something went wrong. errors :' . $exception->getMessage());
             }
         );

@@ -10,7 +10,7 @@
     </template>
 
     <form class="" @submit.prevent="submit" ref="formRef">
-      <FormComponent :props="_formData.props" :form-data="_formData.formData" />
+      <FormComponent v-bind="_formData.props" :form-data="_formData.formData" />
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
@@ -94,7 +94,6 @@ const _formData = reactive<{ [k: string]: any }>({
 });
 
 const submit = () => {
-  // console.log("example", _formData.formData);
   router.post(
     route(props.resources_routes[props.action == "edit" ? "update" : "store"]),
     _formData.formData

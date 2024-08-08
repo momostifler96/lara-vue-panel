@@ -73,23 +73,7 @@ const filters_components = <{ [k: string]: any }>{
   date: DatePicker,
 };
 
-// const filter_data = computed(() => {
-//   const field_dat = {};
-//   props.options.filters.forEach((f) => {
-//     if (props.filterData[f.field]) {
-//       if (f.props.multiple || f.component == "checkbox") {
-//         field_dat[f.field] = props.filterData[f.field].split("|");
-//       } else {
-//         field_dat[f.field] = props.filterData[f.field];
-//       }
-//     }
-//   });
-
-//   return field_dat;
-// });
-
 const _filters = ref({ ...props.filterData });
-console.log("options.filters", props.options.filters);
 let search_debounce: any = null;
 const emit = defineEmits(["filtering"]);
 watch(_filters.value, (val) => {

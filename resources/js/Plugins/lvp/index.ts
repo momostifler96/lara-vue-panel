@@ -50,16 +50,17 @@ interface SelectedItemsActionOptions {
 }
 
 interface LVPPluginOptions {
-    resources_actions: {
-        single_item_actions?: {
-            [key: string]: (options: SingleItemActionsOptions) => any;
-        };
-        selected_items_actions?: {
-            [key: string]: (options: SelectedItemsActionOptions) => any;
-        };
-    };
+
     actions?: {
-        [key: string]: (options: SelectedItemsActionOptions) => any;
+        datatable?: {
+            item?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+            selected_items?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+        },
+        page?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+        resource_detail_page?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+        resource_create_page?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+        resource_edit_page?: { [key: string]: (options: SelectedItemsActionOptions) => any };
+
     };
     svg_icons?: { [key: string]: string };
     widgets?: { [key: string]: Component };
@@ -69,11 +70,14 @@ const plugin: Plugin = {
     install(
         app: App,
         options: LVPPluginOptions = {
-            resources_actions: {
-                single_item_actions: {},
-                selected_items_actions: {},
+            actions: {
+                datatable: {
+                    item: {},
+                    selected_items: {},
+                },
+                page: {},
+                resource_detail_page: {},
             },
-            actions: {},
             svg_icons: {},
             widgets: {},
         }
@@ -94,7 +98,12 @@ const plugin: Plugin = {
             .directive("maska", vMaska).use(LVPToast);
 
         // app.config.globalProperties.lvp_actions = options.actions;
-        app.provide("lvp_resources_actions", options.resources_actions);
+        app.provide("lvp.actions.datatable.item", options.actions?.datatable?.item);
+        app.provide("lvp.actions.datatable.selected_items", options.actions?.datatable?.selected_items);
+        app.provide("lvp.actions.page", options.actions?.page);
+        app.provide("lvp.actions.resource_detail_page", options.actions?.resource_detail_page);
+        app.provide("lvp.actions.resource_create_page", options.actions?.resource_create_page);
+        app.provide("lvp.actions.resource_edit_page", options.actions?.resource_edit_page);
         app.provide("lvp_actions", options.actions);
         app.provide("lvp_widgets", { ...widgets, ...options.widgets });
         app.provide("lvp_icons", { ...icons, ...options.svg_icons });
