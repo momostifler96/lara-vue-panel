@@ -11,29 +11,18 @@ use LVP\Widgets\LVPWidget;
 
 class DashboardPage
 {
-    private Panel $panel;
     /**
      * Summary of panel
      * @var LVPWidget[]
      */
-    private string $_title = 'Dashboard';
-    private array $_widgets = [];
-    private array $_header_actions = [];
-    public function __construct(Panel $panel)
+    public string $title = 'Dashboard';
+    public string $meta_title = 'Dashboard';
+    public string $meta_description = 'Dashboard';
+    public array $widgets = [];
+    public array $header_actions = [];
+    public function __construct()
     {
-        $this->panel = $panel;
-    }
-    public function setInfo(DashboardPage $dashboard)
-    {
-    }
-    public function setup()
-    {
-        Route::get('/', function (Request $request) {
-            return $this->index($request);
-        })->name('index');
-        Route::post('/', function (Request $request) {
-            return $this->post($request);
-        })->name('post');
+
     }
 
     public function widgets(array $widgets)
@@ -54,19 +43,44 @@ class DashboardPage
     }
     public function index(Request $request)
     {
-        $widgets = array_map(function ($w) {
-            return $w->render();
-        }, $this->_widgets);
-        $header_actions = array_map(function ($w) {
-            return $w->render();
-        }, $this->_header_actions);
-        $title = $this->_title;
-        $page_data = compact('widgets', 'header_actions', 'title');
-        // dd($page_data, $this->_widgets);
-        return Inertia::render('LVP/DashboardTemplate', $page_data);
+
+        $widgets = $this->getWidgets();
+        $header_actions = $this->getHeaderActions();
+        $page_titles = $this->getPageTitles();
+        $props = compact('widgets', 'header_actions', 'page_titles');
+        return Inertia::render('LVP/Dashboard', $props);
     }
     public function post(Request $request)
     {
         return back();
+    }
+    public function put(Request $request)
+    {
+        return back();
+    }
+
+    public function delete(Request $request)
+    {
+        return back();
+    }
+    public function getPageTitles()
+    {
+        return [
+            'title' => $this->title,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
+        ];
+    }
+    public function getHeaderActions()
+    {
+        return array_map(function ($a) {
+            return $a->render();
+        }, $this->header_actions);
+    }
+    public function getWidgets()
+    {
+        return array_map(function ($w) {
+            return $w->render();
+        }, $this->widgets);
     }
 }

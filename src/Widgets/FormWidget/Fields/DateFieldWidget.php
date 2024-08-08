@@ -10,9 +10,9 @@ class DateFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
     protected string $_component = 'date-field';
-    protected bool $_range;
-    protected string $_max_date;
-    protected string $_min_date;
+    protected bool $_range = false;
+    protected string|null $_max_date = null;
+    protected string|null $_min_date = null;
     protected string $_type = 'date';
 
     public function type(DateFieldType $type)

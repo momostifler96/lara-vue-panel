@@ -13,12 +13,30 @@ class FormWidget extends LVPWidget
 
     protected array $_fields = [];
     protected array $_formData = [];
+    /**
+     *  @var \LVP\Actions\Action[] 
+     */
+    protected array $_header_left_actions = [];
+    /**
+     * @var \LVP\Actions\Action[]
+     */
+    protected array $_header_right_actions = [];
+    /**
+     * @var \LVP\Actions\Action[]
+     */
+    protected array $_footer_left_actions = [];
+    /**
+     * @var \LVP\Actions\Action[]
+     */
+    protected array $_footer_right_actions = [];
     protected string $_title = '';
+    protected string $_lvp_action = '';
     protected string $_action = '';
-    protected string $_submit_label = '';
+    protected string $_submit_label = 'Submit';
     protected string $_submit_btn_class = '';
     protected bool $_confirm_before_submit = false;
     protected bool $_is_card = true;
+    protected bool $_is_headless = false;
     protected string $_confirmation_title = 'Confirmation';
     protected string $_confirmation_message = 'Are you sure?';
     protected string $_method = 'POST';
@@ -36,7 +54,7 @@ class FormWidget extends LVPWidget
         $this->_title = $title;
     }
 
-    public static function make(string $title)
+    public static function make(string $title = '')
     {
         return new static($title);
     }
@@ -91,6 +109,26 @@ class FormWidget extends LVPWidget
         $this->_confirm_before_submit = $confirm;
         return $this;
     }
+    public function headerLeftActions(array $actions)
+    {
+        $this->_header_left_actions = $actions;
+        return $this;
+    }
+    public function headerRightActions(array $actions)
+    {
+        $this->_header_right_actions = $actions;
+        return $this;
+    }
+    public function footerLeftActions(array $actions)
+    {
+        $this->_footer_left_actions = $actions;
+        return $this;
+    }
+    public function footerRightActions(array $actions)
+    {
+        $this->_footer_right_actions = $actions;
+        return $this;
+    }
 
     public function confirmationTitle(string $title)
     {
@@ -128,11 +166,17 @@ class FormWidget extends LVPWidget
         $this->_formData[$name] = $data;
         return $this;
     }
+    public function lvpAction(string $lvp_action)
+    {
+        $this->_lvp_action = $lvp_action;
+        return $this;
+    }
 
     protected function beforeRender(array $data): array
     {
         $data['fields'] = $this->_fields;
         $data['title'] = $this->_title;
+        $data['lvpAction'] = $this->_lvp_action;
         $data['action'] = $this->_action;
         $data['onSubmit'] = $this->_action;
         $data['method'] = $this->_method;
@@ -146,6 +190,12 @@ class FormWidget extends LVPWidget
         $data['confirmationTitle'] = $this->_confirmation_title;
         $data['confirmationMessage'] = $this->_confirmation_message;
         $data['isCard'] = $this->_is_card;
+        $data['isHeadless'] = $this->_is_headless;
+        $data['headerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_header_left_actions));
+        $data['headerRightActions'] = array_map(fn($it) => ($it->render()), ($this->_header_right_actions));
+        $data['footerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_footer_left_actions));
+        $data['footerRightActions'] = array_map(fn($it) => ($it->render()), ($this->_footer_right_actions));
+
         return $data;
     }
 }

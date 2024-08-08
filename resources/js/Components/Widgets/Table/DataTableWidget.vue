@@ -3,7 +3,6 @@
     :data="data.items"
     :columns="columns"
     v-model:selected="seletedItems"
-    :hasHeader="true"
     :hasFooter="paginated"
     fixeLastColumns
     @dataEvent="$emit('dataEvent', $event)"
@@ -15,9 +14,10 @@
         @exec="execGroupAction"
       />
     </template>
-    <template #t_header>
+    <template #t_action>
       <div class="flex gap-2">
         <FiltersPopover
+          v-if="filter"
           :options="filter"
           :filterData="filterData"
           :loading="false"
@@ -26,10 +26,10 @@
       </div>
     </template>
     <template #actions="{ column, item }">
-      <template v-if="column.action_type == 'inline'">
+      <template v-if="column.data.type == 'inline'">
         <div class="flex gap-2">
           <TableActionButton
-            v-for="action in column.actions"
+            v-for="action in column.data.actions"
             :icon="action_icons[action.icon]"
             :label="action.label"
             :action="action"
@@ -40,9 +40,9 @@
         </div>
       </template>
       <TableActionMenu
-        v-else-if="column.type == 'dropdown'"
+        v-else-if="column.data.type == 'dropdown'"
         :tableItem="item"
-        :tableActions="column.actions"
+        :tableActions="column.data.actions"
         @exec="
           (action) => {
             emit('action', action, item);
@@ -77,16 +77,17 @@ import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vu
 import TableActionMenu from "lvp/Components/Widgets/Table/TableActionMenu.vue";
 import TableGroupedActionMenu from "lvp/Components/Widgets/Table/TableGroupedActionMenu.vue";
 import { router } from "@inertiajs/vue3";
-import { ref, reactive, computed, watch, onMounted } from "vue";
+import { ref, reactive, computed, watch, onMounted, inject } from "vue";
 import LVPTable from "lvp/Components/Widgets/Table/TableWidget.vue";
-import FiltersPopover from "lvp/Components/Widgets/Table/FiltersGrid.vue";
+// import FiltersPopover from "lvp/Components/Widgets/Table/FiltersGrid.vue";
+import FiltersPopover from "lvp/Components/Widgets/Table/FiltersPopover.vue";
 import SearchTextField from "lvp/Components/Forms/SearchTextField.vue";
 import TableWidget from "lvp/Components/Widgets/Table/TableWidget.vue";
 import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
 import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
-import { TableColumn, TableFilter } from "lvp/Types";
+import { ActionsList, TableColumn, TableFilter } from "lvp/Types";
 
 interface TableGroupAction {
   type: string;
@@ -157,7 +158,7 @@ const emit = defineEmits([
   "dataEvent",
 ]);
 
-console.log("filter", props.filter);
+console.log("filter", props.group_action);
 
 const table_column_widget = <{ [k: string]: any }>{
   text: TextColumn,
@@ -236,4 +237,42 @@ watch(
   }
 );
 const seletedItems = ref([]);
+
+//------------------------—
+const confir_modal = reactive({
+  show: false,
+  title: "create",
+  body: "create",
+  cancel_button_label: "Cancel",
+  confirm_button_label: "Confirm",
+  onResponse: (rsp: boolean) => {},
+});
+//------------------------—
+
+const single_item_custom_actions = <ActionsList>(
+  inject("lvp_single_item_actions")
+);
+
+const table_actions_methods = <ActionsList>{
+  edit: ({ route_list, item }) => {
+    emit("edit", item);
+  },
+  view: (item: any) => {
+    // router.get(item.view);
+  },
+  delete: ({ item, route_list, router }) => {
+    confir_modal.show = true;
+    confir_modal.title = "Delete";
+    confir_modal.body = "Are you sure you want to delete this item?";
+    confir_modal.onResponse = (result) => {
+      if (result) {
+        router.delete(route(route_list.delete, { id: item.id }));
+      }
+      confir_modal.show = false;
+      confir_modal.title = "";
+      confir_modal.body = "";
+    };
+  },
+  ...single_item_custom_actions,
+};
 </script>

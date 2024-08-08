@@ -9,6 +9,7 @@ class DataFilterField
 
     protected string $_field;
     protected string $_label;
+    protected string $_component;
 
     public function __construct($field)
     {
@@ -20,6 +21,11 @@ class DataFilterField
         $static = new static($field);
         $static->_label = $label;
         return $static;
+    }
+    public function label(string $label)
+    {
+        $this->_label = $label;
+        return $this;
     }
 
     public function prepareRender(array $render_data)
@@ -36,6 +42,7 @@ class DataFilterField
     {
         $_render_data = [
             'field' => $this->_field,
+            'component' => $this->_component,
             'label' => str($this->_label)->lower()->ucfirst(),
         ];
         $_render_data = $this->prepareRender($_render_data);

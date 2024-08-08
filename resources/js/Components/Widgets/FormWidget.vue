@@ -3,8 +3,11 @@
     @submit.prevent="submitForm"
     :class="[{ 'lvp-card': _props.isCard }, 'col-span-3']"
   >
-    <div class="lvp-card-header" :class="{ 'pb-4': !_props.isCard }">
-      <h3 class="text-xl font-bold">{{ _props.title }}</h3>
+    <div class="lvp-card-header">
+      <h3 v-if="_props.title.length > 1" class="text-xl font-bold pb-4">
+        {{ _props.title }}
+      </h3>
+      <slot name="header"></slot>
 
       <div class=""></div>
     </div>
@@ -34,9 +37,10 @@
       </div>
     </div>
     <div class="lvp-card-footer" :class="{ 'pt-4': !_props.isCard }">
-      <SimpleButton type="submit" :class="_props.submitBtnClass">{{
+      <SimpleButton class="" type="submit" :class="_props.submitBtnClass">{{
         _props.submitBtnLabel
       }}</SimpleButton>
+      <slot name="footer"></slot>
     </div>
   </form>
   <ConfirmationModal
@@ -69,10 +73,19 @@ const _props = defineProps({
     required: true,
   },
   isCard: Boolean,
+  preventSubmit: {
+    type: Boolean,
+    default: false,
+  },
+  isHeadless: Boolean,
   confirmBeforeSubmit: Boolean,
   title: {
     type: String,
     default: "Title",
+  },
+  lvpAction: {
+    type: String,
+    default: "",
   },
   action: {
     type: String,
@@ -130,26 +143,32 @@ const errorIsArray = (errors: any, field: string): string | null => {
 
 const _formData = reactive<{ [k: string]: any }>({
   ..._props.formData,
-  lvp_action: _props.action,
+  lvp_action: _props.lvpAction,
 });
 
 let field_debounce = <{ [k: string]: any }>{};
 
 const submitForm = () => {
   if (_props.confirmBeforeSubmit) {
-    askDeleteConfromation();
+    askConfirmation();
   } else {
-    if (_props.method == "get") {
-      router.get("", _formData);
-    } else if (_props.method == "put") {
-      router.put("", _formData);
-    } else if (_props.method == "post") {
-      router.post("", _formData);
-    } else if (_props.method == "delete") {
-      router.delete("", _formData);
-    } else if (_props.method == "patch") {
-      router.patch("", _formData);
-    }
+    submit();
+  }
+};
+const emit = defineEmits(["onSubmit"]);
+const submit = () => {
+  if (_props.preventSubmit) {
+    emit("onSubmit", _formData);
+  } else if (_props.method == "get") {
+    router.get(_props.action, _formData);
+  } else if (_props.method == "put") {
+    router.put(_props.action, _formData);
+  } else if (_props.method == "post") {
+    router.post(_props.action, _formData);
+  } else if (_props.method == "delete") {
+    router.delete(_props.action, _formData);
+  } else if (_props.method == "patch") {
+    router.patch(_props.action, _formData);
   }
 };
 
@@ -183,17 +202,7 @@ const confirmation_modal = reactive({
   body: _props.confirmationMessage,
   onConfirm: (rsp: boolean) => {
     if (rsp) {
-      if (_props.method == "get") {
-        router.get("", _formData);
-      } else if (_props.method == "put") {
-        router.put("", _formData);
-      } else if (_props.method == "post") {
-        router.post("", _formData);
-      } else if (_props.method == "delete") {
-        router.delete("", _formData);
-      } else if (_props.method == "patch") {
-        router.patch("", _formData);
-      }
+      submit();
     }
     confirmation_modal.show = false;
   },
@@ -204,7 +213,7 @@ const confirmation_modal = reactive({
   },
 });
 
-const askDeleteConfromation = () => {
+const askConfirmation = () => {
   confirmation_modal.show = true;
 };
 </script>

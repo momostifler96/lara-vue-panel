@@ -23,13 +23,14 @@ class DataTableWidget extends LVPWidget
     protected array $_actions;
     protected array $_filters;
     protected string $_widget_type = 'data-table';
-    protected string $_action_type;
+    protected string $_action_type = 'dropdown';
     protected array $_group_actions;
-    protected string $_group_action_type;
+    protected string $_group_action_type = 'dropdown';
     protected string $_api_url;
     protected string $_primary_key = 'id';
     protected array $_data;
 
+    protected array $_props_fields = [];
     protected bool $_paginated = false;
     protected bool $_has_action = false;
     protected bool $_fixe_first_column = false;
@@ -122,26 +123,24 @@ class DataTableWidget extends LVPWidget
         $this->_api_url = $url;
         return $this;
     }
+    public function propsFields(array $propsFields)
+    {
+        $this->_props_fields = $propsFields;
+        return $this;
+    }
     public function beforeRender(array $data): array
     {
         $columns = array_map(fn($item) => $item->render(), $this->_columns);
         $this->_data['items'] = $this->getColumnsData($columns);
-        // dd($data_rended);
-        // if ($this->_has_action) {
-        //     $columns = [...$columns, $this->getTableActionsColumn()];
-        // }
-        // dd($this->getDataFromColumn($columns));
-        // dd($data_rended);
 
         if (!empty($this->_filters)) {
             $filter = (new DataFilter());
             $filter->filters($this->_filters);
             $data['filter'] = $filter->render();
         }
-
         $data['fixe_first_column'] = $this->_fixe_first_column;
         $data['fixe_last_column'] = $this->_fixe_last_column;
-        $data['columns'] = $columns;
+        $data['columns'] = [...$columns, $this->getTableActionsColumn()];
         $data['data'] = $this->_data;
         $data['paginated'] = $this->_paginated;
         $data['api_url'] = empty($this->_api_url) ? null : $this->_api_url;
@@ -155,7 +154,7 @@ class DataTableWidget extends LVPWidget
 
         return [
             'type' => 'actions',
-            'label' => '',
+            'label' => 'Actions',
             'field' => 'actions',
             'align' => 'right',
             'data' => $this->getTableActions(),
@@ -257,6 +256,7 @@ class DataTableWidget extends LVPWidget
                 'id' => $item[$this->_primary_key],
             ];
             $this->getTableColdata($item, $columns, $_cols);
+            $this->getPropsData($item, $_cols);
             return $_cols;
         }, $this->_data['items']);
     }
@@ -264,11 +264,9 @@ class DataTableWidget extends LVPWidget
     private function getTableColdata(mixed $item, array $columns, &$_cols)
     {
         foreach ($columns as $col) {
-            // Avoid overwriting existing column data
             if (isset($_cols[$col['field']])) {
                 continue;
             }
-            // Handle nested columns
             $_col_sg = explode('.', $col['load_data_from']);
             if (count($_col_sg) > 1) {
                 $_fd = $item;
@@ -283,7 +281,6 @@ class DataTableWidget extends LVPWidget
                 }
                 $_cols[$col['field']] = $_fd;
             } else {
-                // Handle single level columns
                 if (!empty($col['date_format'])) {
                     $_cols[$col['field']] = Carbon::parse($item[$col['field']])->format($col['date_format']);
                 } else if ($col['type'] != 'group') {
@@ -295,5 +292,33 @@ class DataTableWidget extends LVPWidget
                 }
             }
         }
+    }
+    private function getPropsData(mixed $item, &$_cols)
+    {
+        $_props = [];
+        // dd($this->_props_fields);
+        foreach ($this->_props_fields as $col) {
+            if (isset($_props[$col['field']])) {
+                continue;
+            }
+            $_col_sg = explode('.', $col['load_data_from']);
+            if (count($_col_sg) > 1) {
+                $_fd = $item;
+                foreach ($_col_sg as $key => $value) {
+                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                        $_fd = $_fd->map(function ($it) use ($value, $col) {
+                            return $it[$value];
+                        });
+                    } else if ($value != '*' && $_fd) {
+                        $_fd = $_fd[$value];
+                    }
+                }
+                $_props[$col['field']] = $_fd;
+            } else {
+                $_props[$col['field']] = $item[$col['field']];
+            }
+
+        }
+        $_cols['props'] = $_props;
     }
 }

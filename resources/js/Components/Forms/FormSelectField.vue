@@ -86,7 +86,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
-
+console.log("filter", props);
 const updateModelValue = (event: Event) => {
   emit("update:modelValue", (event.target as HTMLInputElement).value);
   emit("change", (event.target as HTMLInputElement).value);

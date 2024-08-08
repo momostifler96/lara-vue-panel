@@ -50,10 +50,15 @@ interface SelectedItemsActionOptions {
 }
 
 interface LVPPluginOptions {
-    single_item_actions?: {
-        [key: string]: (options: SingleItemActionsOptions) => any;
+    resources_actions: {
+        single_item_actions?: {
+            [key: string]: (options: SingleItemActionsOptions) => any;
+        };
+        selected_items_actions?: {
+            [key: string]: (options: SelectedItemsActionOptions) => any;
+        };
     };
-    selected_items_actions?: {
+    actions?: {
         [key: string]: (options: SelectedItemsActionOptions) => any;
     };
     svg_icons?: { [key: string]: string };
@@ -64,8 +69,11 @@ const plugin: Plugin = {
     install(
         app: App,
         options: LVPPluginOptions = {
-            single_item_actions: {},
-            selected_items_actions: {},
+            resources_actions: {
+                single_item_actions: {},
+                selected_items_actions: {},
+            },
+            actions: {},
             svg_icons: {},
             widgets: {},
         }
@@ -86,11 +94,8 @@ const plugin: Plugin = {
             .directive("maska", vMaska).use(LVPToast);
 
         // app.config.globalProperties.lvp_actions = options.actions;
-        app.provide("lvp_single_item_actions", options.single_item_actions);
-        app.provide(
-            "lvp_selected_items_actions",
-            options.selected_items_actions
-        );
+        app.provide("lvp_resources_actions", options.resources_actions);
+        app.provide("lvp_actions", options.actions);
         app.provide("lvp_widgets", { ...widgets, ...options.widgets });
         app.provide("lvp_icons", { ...icons, ...options.svg_icons });
     },

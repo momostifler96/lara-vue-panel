@@ -3,10 +3,11 @@
 namespace LVP\Providers;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 use LVP\Facades\LVPCurrentPanel;
 use LVP\Facades\Panel;
 
-class LVPProvider extends \Illuminate\Support\ServiceProvider
+class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     protected $resources = [];
     protected $pages = [];
@@ -19,15 +20,49 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
 
-        $this->load();
+        $this->registerPanelsProviders();
+        $this->loadCommands();
+
+        // $this->load();
 
     }
 
     public function boot()
     {
-        $this->loadPanels();
+        // $this->loadPanels();
         // dd($this->panels);
         $this->bootPanels();
+        // /**
+        //  * @var PanelProvider $current_panel
+        //  */
+        // $current_panel = app(LVPCurrentPanel::class);
+        // dd($current_panel->panel);
+        // $current_panel->setupNavMenus();
+        // dd($current_panel->getNavMenu());
+    }
+
+    protected function registerPanelsProviders()
+    {
+
+        // Chemin vers le dossier contenant les providers personnalisés
+        $customProvidersPath = app_path('Providers/Lvp');
+        // Récupère tous les fichiers PHP du dossier
+        $providerFiles = File::glob($customProvidersPath . '/*.php');
+        // dd($customProvidersPath, $providerFiles, basename($providerFiles[0], '.php'));
+
+        $panels = [];
+        foreach ($providerFiles as $providerFile) {
+            // Obtenir le nom de la classe du provider
+
+            $providerClass = 'App\\Providers\\Lvp\\' . basename($providerFile, '.php');
+
+            // Vérifie si la classe existe et enregistre le provider
+            if (class_exists($providerClass)) {
+                $panels[] = $providerClass;
+                $this->app->register($providerClass);
+            }
+        }
+        // dd($panels);
     }
 
     protected function load()
@@ -42,31 +77,22 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
     protected function loadCommands()
     {
 
-        // dd(request()->path());
         $filesystem = new Filesystem;
         $commandsPath = __DIR__ . '/../Commands';
 
-        // Get all PHP files in the commands directory
         $commandFiles = $filesystem->glob($commandsPath . '/*.php');
 
-        // dd($commandFiles);
-        // Initialize an array to hold the command class names
         $commands = [];
 
-        // Iterate over each file and extract the class name
         foreach ($commandFiles as $file) {
-            // Get the file contents
             $fileContents = $filesystem->get($file);
 
-            // Use regex to extract the namespace and class name
             if (
                 preg_match('/namespace (.+);/', $fileContents, $namespaceMatches) &&
                 preg_match('/class (\w+)/', $fileContents, $classMatches)
             ) {
                 $namespace = $namespaceMatches[1];
                 $class = $classMatches[1];
-
-                // Combine namespace and class to get the fully qualified class name
                 $commands[] = $namespace . '\\' . $class;
             }
         }
@@ -78,17 +104,7 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
 
     protected function bootPanels()
     {
-        foreach ($this->panels as $key => $panel) {
-            if (str_starts_with(request()->path(), $key)) {
-                app()->singleton(LVPCurrentPanel::class, function () use ($key) {
-                    return new LVPCurrentPanel($this->panels[$key]);
-                });
-            }
-        }
-        $current_panel = app(LVPCurrentPanel::class);
-        if (!empty($current_panel)) {
-            $current_panel->panel->boot();
-        }
+
     }
     protected function loadPanels()
     {
@@ -101,7 +117,6 @@ class LVPProvider extends \Illuminate\Support\ServiceProvider
             $panelsPath = app_path('LVP/Panels');
 
             $panelFiles = $filesystem->glob($panelsPath . '/*.php');
-
 
             foreach ($panelFiles as $file) {
                 $fileContents = $filesystem->get($file);

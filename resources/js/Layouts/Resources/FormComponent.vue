@@ -1,20 +1,23 @@
 <template>
   <div class="grid grid-cols-2 gap-4 mb-10">
-    <template v-for="(field, i) in props.fields">
+    <div
+      v-for="(field, i) in fields"
+      :class="`col-span-${field.props.colspan}`"
+    >
       <component
         :is="form_fields[field.component]"
         v-bind="field.props"
-        v-model="formData[field.field]"
-        :errorText="errorIsArray($page.props.errors, field.field)"
-        @change="updateField(field.field, $event, field.eventsListeners.change)"
+        v-model="formData[field.name]"
+        :errorText="errorIsArray($page.props.errors, field.name)"
+        @change="updateField(field.name, $event, field.eventsListeners.change)"
         :class="[
-          `col-span-${field.colspan}`,
+          `col-span-${field.props.colspan}`,
           {
-            'col-span-full': field.colspan == 'full',
+            'col-span-full': field.props.colspan == 'full',
           },
         ]"
       />
-    </template>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -25,17 +28,25 @@ import Select from "lvp/Components/Forms/Select.vue";
 import TextAreaField from "lvp/Components/Forms/TextAreaField.vue";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
 import FileUploader from "lvp/Components/Forms/FileUploader.vue";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import type { ResourceFormPageProps } from "../../PropsTypes";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 
 const _props = defineProps({
-  props: {
+  fields: {
     type: Object,
     required: true,
   },
+  action: {
+    type: String as () => "create" | "edit",
+    required: true,
+  },
   formData: {
+    type: Object,
+    required: true,
+  },
+  defaultData: {
     type: Object,
     required: true,
   },
@@ -73,13 +84,23 @@ const updateField = (
   listeners.forEach((listener) => {
     field_debounce[field] = setTimeout(() => {
       if (listener.action == "fill") {
-        _props.formData[listener.fields] = new_val;
+        _props.defaultData[listener.fields] = new_val;
       } else if (listener.action == "clear") {
-        _props.formData[listener.fields] = null;
+        _props.defaultData[listener.fields] = null;
       } else if (listener.action == "call") {
         const rs = eval(listener.func.replace("params", new_val));
       }
     }, listener.debounce);
   });
 };
+const dataD = computed(() => {
+  console.log("dataD", _props.defaultData);
+  return _props.defaultData;
+});
+watch(
+  () => _props.defaultData,
+  (val) => {
+    console.log("watch", val);
+  }
+);
 </script>

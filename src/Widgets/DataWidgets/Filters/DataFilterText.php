@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 class DataFilterText extends DataFilterField
 {
     protected string $_placeholder = '';
+    protected string $_component = 'text';
+
 
     public function placeholder($placeholder)
     {

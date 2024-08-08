@@ -2,89 +2,31 @@
 
 namespace App\LVP\Resources{{namespace}};
 
-use LVP\Facades\Resource as LVPResource;
-use LVP\Facades\TableColumn;
+use LVP\Modules\Resource\Resource;
+use LVP\Table\TextColumn;
 use LVP\Widgets\DataWidgets\Actions\DataActionButton;
-use LVP\Widgets\DataWidgets\DataFilter;
-use LVP\Facades\FormField;
-use LVP\Facades\BackendField;
 
-class {{class}}Resource extends LVPResource
+class {{class}}Resource extends Resource
 {
-    protected string $_model = {{model}};
-    protected string $_base_route = '{{base_route}}';
+
+    protected string $model = {{model}};
+    protected array $model_appends = [];
+    protected array $model_with = [];
+    protected string $model_primary_key = 'id';
 
     /**
-     * settings
-     * @param \LVP\Facades\Resource $resource
-     * @return void
+     * @return \LVP\Facades\TableColumn[]
      */
-    protected function settings(LVPResource $resource)
-    {
-
-    }
-    /**
-     * backendFields
-     * @return FormField[]
-     */
-    protected function formFields(): array
+    protected function dataColumns(): array
     {
         return [
-
-        ];
-    }
-    /**
-     * backendFields
-     * @return BackendField[]
-     */
-    protected function backendFields(): array
-    {
-        return [];
-    }
-    /**
-     * atbleColumns
-     * @return TableColumn[]
-     */
-    protected function tableColumns(): array
-    {
-        return [
-
-        ];
-    }
-    /**
-     * tableFilters
-     * @return TableColumn[]
-     */
-    protected function tableFilters(): array
-    {
-        return [
-
+           
         ];
     }
 
-    /**
-    * Summary of dataActions
-    * @return DataActionButton[]
-    */
-    protected function dataActions()
-    {
-        return [
-            DataActionButton::make('edit'),
-            DataActionButton::make('delete')->color('text-lvp-danger'),
-        ];
-    }
-
-    /**
-    * Summary of dataGroupActions
-    * @return DataActionButton[]
-    */
-    protected function dataGroupActions()
-    {
-        return [
-            DataActionButton::make('delete')->color('text-lvp-danger'),
-        ];
-    }
-    
+     /**
+     * @return \LVP\Widgets\DataWidgets\Filters\DataFilterField[]
+     */
     protected function dataFilters(): array
     {
         return [
@@ -92,8 +34,24 @@ class {{class}}Resource extends LVPResource
         ];
     }
 
-    protected function relations(): array
+    /**
+     * @return \LVP\Widgets\DataWidgets\Actions\DataActionButton[]
+     */
+
+    protected function dataActions(): array
     {
-        return [];
+        return [
+            DataActionButton::make('edit'),
+            DataActionButton::make('delete')->color('text-lvp-danger'),
+        ];
+    }
+     /**
+     * @return DataActionButton[]
+     */
+    protected function dataActionsGroup(): array
+    {
+        return [
+            DataActionButton::make('delete')->color('text-lvp-danger'),
+        ];
     }
 }

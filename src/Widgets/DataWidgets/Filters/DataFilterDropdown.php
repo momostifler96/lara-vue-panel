@@ -8,6 +8,8 @@ class DataFilterDropdown extends DataFilterField
 {
 
     protected string $_placeholder = '';
+    protected string $_component = 'select';
+
     protected string $_default_value;
     protected string $_option_value = 'value';
     protected string $_option_label = 'label';
@@ -47,6 +49,7 @@ class DataFilterDropdown extends DataFilterField
         return $this;
     }
 
+
     public function apply(Builder $query, array $request_filter)
     {
         if (isset($request_filter[$this->_field]) && !empty($request_filter[$this->_field])) {
@@ -65,8 +68,8 @@ class DataFilterDropdown extends DataFilterField
         $render_data['placeholder'] = $this->_placeholder;
         $render_data['multiple'] = $this->_multiple;
         $render_data['filter'] = $this->_filter;
-        $render_data['option_value'] = $this->_option_value;
-        $render_data['option_label'] = $this->_option_label;
+        $render_data['optionValue'] = $this->_option_value;
+        $render_data['optionLabel'] = $this->_option_label;
         $render_data['filter_key'] = $this->_filter_key;
 
         return $render_data;

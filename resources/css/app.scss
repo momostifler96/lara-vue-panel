@@ -250,8 +250,13 @@ input[type="checkbox"] {
     }
 
     .lvp-card-footer {
-        @apply px-3 py-2 border-t border-gray-200;
+        @apply flex items-center px-3 py-2 border-t border-gray-200;
     }
+}
+
+.lvp-card-header,
+.lvp-card-footer {
+    @apply flex items-center gap-3;
 }
 
 //------------
@@ -1043,7 +1048,8 @@ input[type="checkbox"] {
 
             .p-inputicon {
                 @apply p-0;
-                top: 10px;
+                top: 15px;
+                right: 5px;
             }
         }
     }
@@ -1132,7 +1138,7 @@ input[type="checkbox"] {
 
     .dp__input {
         @extend .lvp-text-field;
-        padding-left: 25px;
+        padding-left: 30px;
     }
 
     .dp__icon {

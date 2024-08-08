@@ -1,7 +1,7 @@
 <template>
   <Popover v-slot="{ open }" class="relative">
     <PopoverButton class="lvp-table-filter-button">
-      <FilterIcon class="w-6 h-6" />
+      <span v-html="FilterIcon" class="w-6 h-6" />
     </PopoverButton>
     <transition
       enter-active-class="transition duration-200 ease-out"
@@ -15,7 +15,7 @@
         <div class="lvp-popover-overlay w-[250px]">
           <div class="lvp-popover-overlay-content">
             <div class="flex items-center justify-between text-sm">
-              <span>Filters</span>
+              <span>Filterss</span>
               <button
                 v-if="options.show_reset"
                 class="text-lvp-danger"
@@ -28,7 +28,7 @@
               <component
                 v-for="(filter, i) in options.filters"
                 :key="i"
-                v-bind="filter.props"
+                v-bind="filter"
                 :is="filters_components[filter.component]"
                 v-model="_filters[filter.field]"
               />
@@ -89,7 +89,7 @@ const filters_components = <{ [k: string]: any }>{
 // });
 
 const _filters = ref({ ...props.filterData });
-
+console.log("options.filters", props.options.filters);
 let search_debounce: any = null;
 const emit = defineEmits(["filtering"]);
 watch(_filters.value, (val) => {

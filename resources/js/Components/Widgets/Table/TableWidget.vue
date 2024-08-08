@@ -1,13 +1,16 @@
 <template>
   <div class="lvp-table-wrapper">
-    <div class="p-3" v-if="hasHeader">
+    <div class="p-3" v-if="$slots.t_header">
       <slot name="t_header" />
     </div>
-    <div v-if="hasHeaderFilter" class="flex justify-between px-2 pt-2 my-2">
+    <div
+      v-if="$slots.t_leading || $slots.t_action"
+      class="flex justify-between px-2 pt-2 my-2"
+    >
       <span class="flex items-center gap-3">
         <slot name="t_leading" />
       </span>
-      <span>
+      <span class="flex items-center gap-3">
         <slot name="t_action" />
       </span>
     </div>
@@ -121,7 +124,6 @@ const props = defineProps({
   },
   hasHeader: Boolean,
   hasFooter: Boolean,
-  hasHeaderFilter: Boolean,
   fixeLastColumns: Boolean,
   fixeFirstColumns: Boolean,
   columns: {

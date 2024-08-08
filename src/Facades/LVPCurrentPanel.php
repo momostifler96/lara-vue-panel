@@ -2,13 +2,14 @@
 
 namespace LVP\Facades;
 
-use LVP\Facades\Panel;
+use LVP\Providers\PanelProvider;
+
 
 class LVPCurrentPanel
 {
-    public Panel $panel;
+    public PanelProvider $panel;
 
-    public function __construct(Panel $panel)
+    public function __construct(PanelProvider $panel)
     {
         $this->panel = $panel;
     }

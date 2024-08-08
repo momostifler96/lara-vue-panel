@@ -5,7 +5,7 @@
         @click="askDeleteConfromation"
         color="danger"
         v-if="props.action == 'edit'"
-        >{{ props.titles.delete_button }}</SimpleButton
+        >{{ props.titles.delete }}</SimpleButton
       >
     </template>
 
@@ -14,7 +14,7 @@
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
-            props.titles.form_titles[props.action].submit_button
+            props.titles.form_titles[props.action].submit
           }}</SimpleButton>
           <SimpleButton
             v-if="props.action == 'create'"
@@ -22,7 +22,7 @@
             @click="submitForm('reload')"
           >
             {{
-              props.titles.form_titles[props.action].submit_button_and_create
+              props.titles.form_titles[props.action].submit_and_create
             }}</SimpleButton
           >
         </div>
@@ -33,7 +33,7 @@
             color="danger"
             class="flex items-center gap-2"
           >
-            {{ props.titles.form_titles[props.action].cancel_button }}
+            {{ props.titles.form_titles[props.action].cancel }}
           </SimpleButton>
         </div>
       </div>

@@ -60,6 +60,7 @@ class Resource
     protected string $submit_button_label;
     protected string $navigation_label;
     protected string $plural_label;
+    #Middleware
     protected array $_middlewares;
     protected array $index_middlewares;
     protected array $create_middlewares;
@@ -313,7 +314,6 @@ class Resource
                 $fields['form_data'][$field->field()] = $field->defaultValue();
             }
         }
-
         return $fields;
     }
     function lvp_translation($word, $translations = null)
@@ -778,7 +778,6 @@ class Resource
 
     private function renderWidgets(array $widgets)
     {
-        // dd($widgets);
         $_widgets = [];
         foreach ($widgets as $key => $_widget) {
             $_widgets[] = $_widget->render();

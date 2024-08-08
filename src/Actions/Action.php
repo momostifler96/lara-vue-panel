@@ -39,7 +39,7 @@ class Action
     {
         return $data;
     }
-    protected function render(): array
+    public function render(): array
     {
 
         $data = [

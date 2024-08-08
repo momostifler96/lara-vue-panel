@@ -62,7 +62,7 @@ const onClickHandler = (page: number) => {
 .paginate-buttons {
   height: 30px;
   min-width: 30px;
-  padding: 0px 10px;
+  padding: 0px 5px;
   border-radius: var(--lvp-border-radius);
   cursor: pointer;
   transition: background-color;

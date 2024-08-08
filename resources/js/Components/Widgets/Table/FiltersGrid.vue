@@ -43,7 +43,7 @@ const filters_components = <{ [k: string]: any }>{
 };
 
 const _filters = ref({ ...props.filterData });
-
+console.log("options", props.options);
 let search_debounce: any = null;
 const emit = defineEmits(["filtering"]);
 watch(_filters.value, (val) => {

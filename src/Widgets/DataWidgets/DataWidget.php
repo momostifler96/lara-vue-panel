@@ -137,4 +137,76 @@ class DataWidget
     {
         return $this->renderPipe($this->_render());
     }
+
+    private function getColumnsData(array $columns)
+    {
+        return array_map(function ($item) use ($columns) {
+            $_cols = [
+                'id' => $item[$this->_primary_key],
+            ];
+            $this->getTableColdata($item, $columns, $_cols);
+            $this->getPropsData($item, $_cols);
+            return $_cols;
+        }, $this->_data['items']);
+    }
+
+    private function getTableColdata(mixed $item, array $columns, &$_cols)
+    {
+        foreach ($columns as $col) {
+            if (isset($_cols[$col['field']])) {
+                continue;
+            }
+            $_col_sg = explode('.', $col['load_data_from']);
+            if (count($_col_sg) > 1) {
+                $_fd = $item;
+                foreach ($_col_sg as $key => $value) {
+                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                        $_fd = $_fd->map(function ($it) use ($value, $col) {
+                            return $col['date_format'] ? Carbon::parse($it[$value])->format($col['date_format']) : $it[$value];
+                        });
+                    } else if ($value != '*' && $_fd) {
+                        $_fd = $col['date_format'] ? Carbon::parse($_fd[$value])->format($col['date_format']) : $_fd[$value];
+                    }
+                }
+                $_cols[$col['field']] = $_fd;
+            } else {
+                if (!empty($col['date_format'])) {
+                    $_cols[$col['field']] = Carbon::parse($item[$col['field']])->format($col['date_format']);
+                } else if ($col['type'] != 'group') {
+                    $_cols[$col['field']] = $item[$col['field']];
+                } else if ($col['type'] == 'group' && isset($col['groups'])) {
+                    foreach ($col['groups'] as $key => $group) {
+                        $this->getTableColdata($item, $group, $_cols);
+                    }
+                }
+            }
+        }
+    }
+    private function getPropsData(mixed $item, &$_cols)
+    {
+        $_props = [];
+        foreach ($this->_props_fields as $col) {
+            if (isset($_cols[$col['field']])) {
+                continue;
+            }
+            $_col_sg = explode('.', $col['load_data_from']);
+            if (count($_col_sg) > 1) {
+                $_fd = $item;
+                foreach ($_col_sg as $key => $value) {
+                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                        $_fd = $_fd->map(function ($it) use ($value, $col) {
+                            return $it[$value];
+                        });
+                    } else if ($value != '*' && $_fd) {
+                        $_fd = $_fd[$value];
+                    }
+                }
+                $_props[$col['field']] = $_fd;
+            } else {
+                $_props[$col['field']] = $item[$col['field']];
+            }
+
+        }
+        $_cols['props'] = $_props;
+    }
 }

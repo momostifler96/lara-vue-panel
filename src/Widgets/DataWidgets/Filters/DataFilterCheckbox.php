@@ -8,6 +8,8 @@ class DataFilterCheckbox extends DataFilterField
 {
 
     protected array $_options = [];
+    protected string $_component = 'checkbox';
+
 
     public function options(array $options)
     {
@@ -16,7 +18,7 @@ class DataFilterCheckbox extends DataFilterField
     }
     public function apply(Builder $query, array $request_filter)
     {
-        if (isset($request_filter[$this->_field]) &&  !empty($request_filter[$this->_field])) {
+        if (isset($request_filter[$this->_field]) && !empty($request_filter[$this->_field])) {
             $query->whereIn($this->_field, explode(',', $request_filter[$this->_field]));
         }
     }

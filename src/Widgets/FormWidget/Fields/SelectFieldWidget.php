@@ -9,11 +9,12 @@ class SelectFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
 
-    protected string $_max_selected = 100;
-    protected string $_max_show_selected = 2;
-    protected string $_mutiple = false;
+    protected int $_max_selected = 100;
+    protected int $_max_show_selected = 2;
+    protected bool $_mutiple = false;
+    protected bool $_filter = false;
 
-    protected string $_component = 'selcted-field';
+    protected string $_component = 'select-field';
     protected array $_options = [];
 
     public function options(array|callable $options)
@@ -26,9 +27,14 @@ class SelectFieldWidget extends FormFieldWidget
         return $this;
     }
 
-    public function multiple(bool $multiple = true)
+    public function multiple()
     {
-        $this->_mutiple = $multiple;
+        $this->_mutiple = true;
+        return $this;
+    }
+    public function filter()
+    {
+        $this->_filter = true;
         return $this;
     }
 
@@ -50,6 +56,7 @@ class SelectFieldWidget extends FormFieldWidget
         $data['options'] = $this->_options;
         $data['multiple'] = $this->_mutiple;
         $data['maxSelected'] = $this->_max_selected;
+        $data['filter'] = $this->_filter;
         $data['maxShowSelected'] = $this->_max_show_selected;
         return $data;
     }

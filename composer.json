@@ -35,10 +35,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LVP\\Providers\\LVPProvider"
+                "LVP\\Providers\\ServiceProvider"
             ],
             "aliases": {
-                "AliasDuPackage": "LVP\\Facade"
+                "AliasDuPackage": "LVP\\Support"
             }
         }
     },
