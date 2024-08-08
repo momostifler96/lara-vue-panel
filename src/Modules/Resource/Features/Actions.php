@@ -166,8 +166,8 @@ trait Actions
             $this->menu_label = $this->plural_label;
         }
 
-        $this->page_title = ucfirst(!empty($this->page_title) ? $this->page_title : $this->label);
-        $this->meta_title = ucfirst(!empty($this->meta_title) ? $this->meta_title : $this->label);
+        $this->page_title = ucfirst(!empty($this->page_title) ? $this->page_title : $this->plural_label);
+        $this->meta_title = ucfirst(!empty($this->meta_title) ? $this->meta_title : $this->plural_label);
 
         $this->slug = $this->_panel_route_path . '/' . str(!empty($this->slug) ? $this->slug : $class_base_name_plural)->kebab()->lower()->toString();
         $this->route_name = $this->_panel_route_name . '.' . str(!empty($this->route_name) ? $this->route_name : $class_base_name_plural)->kebab()->lower()->toString();
@@ -208,6 +208,8 @@ trait Actions
     {
         return [
             'title' => $this->page_title,
+            'label' => $this->label,
+            'plural_label' => $this->plural_label,
             'meta_title' => $this->meta_title,
             'meta_description' => $this->label,
             'menu_label' => $this->menu_label
