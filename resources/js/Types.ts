@@ -1,5 +1,43 @@
 
+
+import { router } from "@inertiajs/vue3";
+import { Component } from "vue";
 type ColumnAlign = "left" | "right" | "center";
+interface ToastOption {
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+}
+interface DataTableItemActionOptions {
+    item: any;
+    route_list: any;
+    router: typeof router;
+    showToast: (option: ToastOption) => void;
+    showConfirmation: {
+        title: string;
+        body: string;
+        cancel_button_label: string;
+        confirm_button_label: string;
+        has_password: boolean;
+        onConfirm: (password: string) => void;
+        onCancel: () => void;
+    };
+}
+interface DataTableSelectedItemsActionOptions {
+    selected_items: any;
+    route_list: any;
+    router: typeof router;
+    showToast: (option: ToastOption) => void;
+    showConfirmation: {
+        title: string;
+        body: string;
+        cancel_button_label: string;
+        confirm_button_label: string;
+        onConfirm: () => void;
+        onCancel: () => void;
+    };
+}
+
 interface TableColumn {
     searchable: boolean;
     sortable: boolean;
@@ -69,7 +107,7 @@ interface TableData {
 }
 
 interface ActionsList {
-    [key: string]: (item: any) => void
+    [key: string]: (item: DataTableItemActionOptions) => void
 }
 interface FileInfo {
     imagePreview?: string;
@@ -115,6 +153,22 @@ interface FolderInterface {
         size: number;
     };
 }
+interface LVPPluginOptions {
+
+    actions?: {
+        datatable?: {
+            item?: { [key: string]: (options: DataTableItemActionOptions) => any };
+            selected_items?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+        },
+        page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+        resource_detail_page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+        resource_create_page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+        resource_edit_page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+
+    };
+    svg_icons?: { [key: string]: string };
+    widgets?: { [key: string]: Component };
+}
 
 
-export type { TableColumn, TableData, ActionsList, ActionMenu, FileInfo, PageProps, FolderInterface, TableFilter }
+export type { LVPPluginOptions, DataTableItemActionOptions, DataTableSelectedItemsActionOptions, TableColumn, TableData, ActionsList, ActionMenu, FileInfo, PageProps, FolderInterface, TableFilter }

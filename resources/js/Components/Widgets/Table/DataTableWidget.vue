@@ -69,6 +69,9 @@
     icon="delete"
     :title="confirmation_modal.title"
     :body="confirmation_modal.body"
+    :hasPassword="confirmation_modal.has_password"
+    :cancelLabel="confirmation_modal.cancel_button_label"
+    :confirmLabel="confirmation_modal.confirm_button_label"
     @onResponse="confirmation_modal.onResponse"
   />
 </template>
@@ -241,6 +244,7 @@ const confirmation_modal = reactive({
   show: false,
   title: "create",
   body: "create",
+  has_password: false,
   cancel_button_label: "Cancel",
   confirm_button_label: "Confirm",
   onResponse: (rsp: boolean) => {},
@@ -254,45 +258,47 @@ const table_actions_methods = <ActionsList>{
   view: (item: any) => {
     // router.get(item.view);
   },
-  delete: ({ item, route_list, router }) => {
-    confirmation_modal.show = true;
-    confirmation_modal.title = "Delete";
-    confirmation_modal.body = "Are you sure you want to delete this item?";
-    confirmation_modal.onResponse = (result: boolean) => {
-      if (result) {
-        console.log("onResponse", item);
-        emit("delete", item);
-      }
-      confirmation_modal.show = false;
-      confirmation_modal.title = "";
-      confirmation_modal.body = "";
-    };
+  delete: (opt) => {
+    opt.showConfirmation({
+      title: "Delete",
+      body: "Are you sure you want to delete this item?",
+      onConfirm: () => {
+        emit("delete", opt.item);
+        // router.delete(route(opt.route_list.delete, { id: opt.item.id }));
+      },
+    });
   },
-  "resource.delete": ({ item, route_list, router }) => {
-    confirmation_modal.show = true;
-    confirmation_modal.title = "Delete";
-    confirmation_modal.body = "Are you sure you want to delete this item?";
-    confirmation_modal.onResponse = (result: boolean) => {
-      if (result) {
-        router.delete(route(route_list.delete, { id: item.id }));
-      }
-      confirmation_modal.show = false;
-      confirmation_modal.title = "";
-      confirmation_modal.body = "";
-    };
+  "resource.delete": (opt) => {
+    opt.showConfirmation({
+      title: "Delete",
+      body: "Are you sure you want to delete this item?",
+      onConfirm: () => {
+        opt.router.delete(route(opt.route_list.delete, { id: opt.item.id }));
+      },
+    });
   },
   ...datatable_item_actions,
 };
 
 const execAction = (action: string, item: any) => {
   table_actions_methods[action]({
-    confirmationModal: (option) => {
+    showConfirmation: (option) => {
       confirmation_modal.title = option.title;
       confirmation_modal.body = option.body;
       confirmation_modal.cancel_button_label = option.cancel_button_label;
       confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.onResponse = option.onResponse;
-      confirmation_modal.show = option.show;
+      confirmation_modal.has_password = option.has_password;
+      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
+        if (rsp) {
+          option.onConfirm(password);
+        } else {
+          option.onCancel();
+        }
+        confirmation_modal.show = false;
+        confirmation_modal.title = "";
+        confirmation_modal.body = "";
+      };
+      confirmation_modal.show = true;
     },
     item,
     showToast: useToast,

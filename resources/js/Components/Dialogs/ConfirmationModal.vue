@@ -11,6 +11,13 @@
     <div class="my-4 mb-10">
       <h4 class="mb-3 text-center">{{ title }}</h4>
       <p class="text-sm text-center text-gray-500">{{ body }}</p>
+      <TextField
+        v-if="hasPassword"
+        id="password"
+        class="mt-5"
+        label="Password"
+        v-model="password"
+      />
     </div>
     <div class="w-full h-full gap-3 flex-center">
       <button @click="cancel" class="w-full lvp-button cancel">
@@ -30,9 +37,12 @@ import {
   InfoIcon,
   DeleteIcon,
 } from "./../../Assets/Icons";
+import TextField from "../Forms/TextField.vue";
+import { ref } from "vue";
 
 const props = defineProps({
   show: Boolean,
+  hasPassword: Boolean,
   icon: {
     type: String,
     default: "info",
@@ -55,16 +65,16 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:show", "onResponse"]);
+const emit = defineEmits(["update:show", "onResponse", "onClose"]);
 
 const confirm = () => {
-  emit("onResponse", true);
+  emit("onResponse", true, password.value);
 };
 
 const cancel = () => {
   emit("onResponse", false);
 };
-
+const password = ref("");
 const icons = {
   info: InfoIcon,
   warning: WarningIcon,

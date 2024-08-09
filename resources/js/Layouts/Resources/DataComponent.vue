@@ -2,6 +2,7 @@
   <component
     :is="dataComponents[props.widget_type]"
     v-bind="$attrs"
+    :routes="routes"
     key="data-widget"
     class="col-span-3"
     @edit="emit('edit', $event)"
