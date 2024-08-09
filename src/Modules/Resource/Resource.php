@@ -90,6 +90,10 @@ class Resource
     {
         return [];
     }
+    protected function infoList(): array
+    {
+        return [];
+    }
     protected function formFields(): array
     {
         return [];

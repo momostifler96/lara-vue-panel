@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use LVP\Form\FileUploadField;
 use LVP\Form\ImageUploadField;
 use LVP\Modules\Panel\Panel;
+use LVP\Support\Info;
 use LVP\Widgets\DataWidgets\DataTableWidget;
 
 trait Actions
@@ -21,11 +22,10 @@ trait Actions
         $model_data = [];
 
         /**
-         * @var \LVP\Facades\FormField[] $fields
+         * @var \LVP\Widgets\FormWidget\Fields\FormFieldWidget[] $fields
          */
 
         $fields = $this->formFields();
-        // dd($request[$fields[0]->field()]);
 
         foreach ($fields as $key => $field) {
             if ($action->value == 'create' && $field->canfillOnCreate()) {
@@ -50,7 +50,6 @@ trait Actions
                 }
             }
         }
-
 
         return $model_data;
     }
@@ -209,6 +208,7 @@ trait Actions
         return [
             'title' => $this->page_title,
             'label' => $this->label,
+            'info' => 'Info ' . $this->label,
             'plural_label' => $this->plural_label,
             'meta_title' => $this->meta_title,
             'meta_description' => $this->plural_label,
@@ -289,6 +289,12 @@ trait Actions
     private function buildAfterDataWidget(Request $request)
     {
         return array_map(fn($_table_column) => $_table_column->render(), $this->afterDataWidgets());
+    }
+    private function buildInfoWidgets(array $data)
+    {
+        return array_map(function ($info) use ($data) {
+            return $info->render($data);
+        }, $this->infoList());
     }
     private function buildItemFormFields()
     {

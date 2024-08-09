@@ -113,6 +113,7 @@ trait Geters
             'create' => $this->getCreatePageTitle(),
             'edit' => $this->getEditPageTitle(),
             'index' => $this->getIndexPageTitle(),
+            'info' => 'Info ' . $this->label,
         ];
     }
     public function getModalLabels()
@@ -145,6 +146,7 @@ trait Geters
             "store" => $this->route_name . '.store',
             "delete" => $this->route_name . '.delete',
             "index" => $this->route_name . '.index',
+            "show" => $this->route_name . '.show',
             "it-update" => $this->route_name . '.it-update',
         ];
     }
@@ -173,6 +175,8 @@ trait Geters
             'update' => $this->route_name . '.update',
             'index' => $this->route_name . '.index',
             'delete' => $this->route_name . '.delete',
+            "show" => $this->route_name . '.show',
+
         ];
 
         if ($route == 'all') {

@@ -26,8 +26,18 @@ trait Http
     }
     private function show(Request $request, $id = null)
     {
-        $props = [];
-        return Inertia::render('', $props);
+        $model_infos = $this->model::where($this->model_primary_key, $id)->with($this->model_with)->first();
+        $model_infos->append($this->model_appends);
+        $props = [
+            'model_infos' => $model_infos,
+            'page_titles' => $this->getPageTitles(),
+            'labels' => $this->getLabels(),
+            'routes' => $this->getRoutes(),
+            'info_widgets' => $this->buildInfoWidgets($model_infos->toArray()),
+            'before_data_widgets' => $this->buildBeforeDataWidget($request),
+            'after_data_widgets' => $this->buildAfterDataWidget($request),
+        ];
+        return Inertia::render('LVP/ResourceInfo', $props);
 
     }
     private function create()

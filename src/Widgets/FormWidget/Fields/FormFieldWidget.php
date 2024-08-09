@@ -145,6 +145,12 @@ class FormFieldWidget
         $this->_fill_on['edit'] = $fill;
         return $this;
     }
+    public function fill(bool $fill = true)
+    {
+        $this->_fill_on['edit'] = $fill;
+        $this->_fill_on['create'] = $fill;
+        return $this;
+    }
 
     public function canfillOnCreate(bool $fill = true)
     {
