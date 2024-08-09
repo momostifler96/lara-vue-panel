@@ -202,11 +202,10 @@ trait Actions
             if (!empty($this->login)) {
                 $this->_user_menu[] = PanelNavLink::make('Profile', 'profile');
             }
-
             $user_menu = array_map(function ($menu) {
                 return $menu->getNavMenu();
             }, $this->_user_menu);
-
+            $this->_user_menu = $user_menu;
             if (config('laravue-panel.env') != 'local') {
                 cache()->forever($user_menu_cache_id, $user_menu);
             }

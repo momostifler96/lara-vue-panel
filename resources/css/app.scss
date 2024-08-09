@@ -1047,9 +1047,8 @@ input[type="checkbox"] {
             }
 
             .p-inputicon {
-                @apply p-0;
-                top: 15px;
-                right: 5px;
+                top: 15px !important;
+                right: 5px !important;
             }
         }
     }
@@ -1063,6 +1062,11 @@ input[type="checkbox"] {
 
         .p-multiselect-filter {
             @apply p-1 pr-2;
+        }
+
+        .p-inputicon {
+            top: 17px !important;
+            right: 7px !important;
         }
     }
 

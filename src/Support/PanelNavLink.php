@@ -10,11 +10,15 @@ class PanelNavLink
     protected $group;
     public function __construct(string $name, string $path, string $icon = 'stack', int $position = 0, string|null $group)
     {
-
+        $this->name = $name;
+        $this->path = $path;
+        $this->icon = $icon;
+        $this->position = $position;
+        $this->group = $group;
     }
-    public static function make(string $name, string $path, string $icon = 'stack', int $position = 0, string|null $group)
+    public static function make(string $name, string $path, string $icon = 'stack', int $position = 0, string|null $group = null)
     {
-        return new PanelNavLink($name, $path, $icon, $position, $group);
+        return new self($name, $path, $icon, $position, $group);
     }
 
     public function getNavMenu()

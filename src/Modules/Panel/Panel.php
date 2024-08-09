@@ -27,6 +27,12 @@ class Panel
     protected $_label = '';
     protected $_id = '';
     protected $_local = 'en';
+    protected $_settings = [
+        'has_notifications' => true,
+        'has_messages' => true,
+        'menu_position' => 'top',
+        'has_spotlight' => true,
+    ];
     protected $_gender = 'male';
     protected $_logo = 'https://momoledev.com/assets/images/momoledev-logo-dark-black.svg';
     protected array $_middlewares = [

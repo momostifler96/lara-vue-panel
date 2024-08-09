@@ -55,6 +55,26 @@ trait Fluents
         $this->_pages_path = $path;
         return $this;
     }
+    public function userMenu(array $menu)
+    {
+        $this->_user_menu = $menu;
+        return $this;
+    }
+    public function hasNotifications()
+    {
+        $this->_settings['has_notifications'] = true;
+        return $this;
+    }
+    public function hasMessages()
+    {
+        $this->_settings['has_messages'] = true;
+        return $this;
+    }
+    public function menuPosition($position = 'right')
+    {
+        $this->_settings['menu_position'] = $position;
+        return $this;
+    }
     public function dashboard(string $class)
     {
         $this->_dashboard_class = $class;
