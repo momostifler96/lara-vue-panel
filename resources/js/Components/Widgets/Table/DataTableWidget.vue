@@ -256,8 +256,7 @@ const table_actions_methods = <ActionsList>{
     emit("edit", item);
   },
   view: (opt: any) => {
-    console.log("view", opt, opt.item.id);
-    router.get(route(opt.route_list.view, { id: opt.item.id }));
+    opt.router.get(route(opt.route_list.show, { id: opt.item.id }));
   },
   delete: (opt) => {
     opt.showConfirmation({

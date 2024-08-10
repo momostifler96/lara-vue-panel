@@ -4,6 +4,7 @@ namespace LVP\Middlewares;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 use Inertia\Middleware;
 use LVP\Facades\LVPCurrentPanel;
 
@@ -24,6 +25,8 @@ class PanelGuestInertiaMiddleware extends Middleware
         return parent::version($request);
     }
 
+
+
     /**
      * Define the props that are shared by default.
      *
@@ -34,15 +37,6 @@ class PanelGuestInertiaMiddleware extends Middleware
         return [
             ...parent::share($request),
             'admin_logo' => asset('/img/momoledev-logo-dark-black.svg'),
-            'alert' => fn () => $request->session()->get('alert'),
-            'flash' => [
-                'info' => fn () => $request->session()->get('info'),
-                'status' => fn () => $request->session()->get('status'),
-                'error' => fn () => $request->session()->get('error'),
-                'success' => fn () => $request->session()->get('success'),
-                'warning' => fn () => $request->session()->get('warning'),
-                'alert' => fn () => $request->session()->get('alert'),
-            ]
         ];
     }
 }

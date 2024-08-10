@@ -19,13 +19,17 @@ class LVPWidget
         return $this;
     }
 
-    public function render()
+    public function render(array &$data = [])
     {
         $_render_data = [
-            'widget_type' => $this->_widget_type,
+            'type' => $this->_widget_type,
             'label' => $this->_label,
-            'col_span' => $this->_col_span,
+            'colSpan' => $this->_col_span,
         ];
-        return $this->beforeRender($_render_data);
+        return [
+            'type' => $this->_widget_type,
+            'label' => $this->_label,
+            'props' => $this->beforeRender($_render_data)
+        ];
     }
 }

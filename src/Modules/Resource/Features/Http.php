@@ -33,7 +33,7 @@ trait Http
             'page_titles' => $this->getPageTitles(),
             'labels' => $this->getLabels(),
             'routes' => $this->getRoutes(),
-            'info_widgets' => $this->buildInfoWidgets($model_infos->toArray()),
+            'widgets' => $this->buildInfoWidgets($model_infos->toArray()),
             'before_data_widgets' => $this->buildBeforeDataWidget($request),
             'after_data_widgets' => $this->buildAfterDataWidget($request),
         ];
@@ -81,7 +81,7 @@ trait Http
                 if ($request->input('after_save') === 'reload') {
                     return redirect()->back()->with('success', 'Created successfully');
                 } else {
-                    return to_route($this->getRoute('name') . '.index')->with('success', 'Created successfully');
+                    return to_route($this->getRoutes('index'))->with('success', 'Created successfully');
                 }
             },
             function ($exception) use ($request, $formData) {
@@ -135,7 +135,13 @@ trait Http
             },
             function () use ($ids, $request) {
                 $this->afterDeleteModel($ids, $request);
-                return redirect()->back()->with('success', 'Deleted successfully');
+
+                if ($request->has('redirect_to')) {
+                    session()->flash('success', 'Deleted successfully');
+                    return to_route($request->input('redirect_to'));
+                } else {
+                    return redirect()->back()->with('success', 'Deleted successfully');
+                }
             },
             function (\Exception $exception) use ($ids, $request) {
                 $this->onDeleteModelFail($exception, $ids, $request);

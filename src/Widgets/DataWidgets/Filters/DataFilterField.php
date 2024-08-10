@@ -11,9 +11,13 @@ class DataFilterField
     protected string $_label;
     protected string $_component;
 
+    protected string $_query;
+
+
     public function __construct($field)
     {
         $this->_field = $field;
+        $this->_query = $field;
     }
 
     public static function make(string $field, string $label = '')
@@ -35,8 +39,28 @@ class DataFilterField
     public function apply(Builder $query, array $request_filter)
     {
         if (isset($request_filter[$this->_field]) && !empty($request_filter[$this->_field])) {
-            $query->where($this->_field, $request_filter[$this->_field]);
+            $query->where($this->_query, $request_filter[$this->_field]);
+            $cols = explode('.', $this->_query);
+            if (count($cols) == 1) {
+                $query->where($cols[0], $request_filter[$this->_field]);
+            } else if ($cols[1] == 'count') {
+                $query->whereHas($cols[0], function (Builder $q) use ($cols, $request_filter) {
+                });
+            } else if ($cols[1] == 'sum') {
+                $query->where($cols[0], function (Builder $q) use ($cols, $request_filter) {
+                });
+            } else if (count($cols) == 2 && $cols[1] != 'count') {
+                $query->whereHas($cols[0], function ($q) use ($cols, $request_filter) {
+                    $q->where($cols[1], $request_filter[$this->_field]);
+                });
+            }
         }
+
+    }
+    public function query(string $query)
+    {
+        $this->_query = $query;
+        return $this;
     }
     public function render()
     {

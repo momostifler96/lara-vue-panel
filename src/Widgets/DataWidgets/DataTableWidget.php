@@ -272,6 +272,8 @@ class DataTableWidget extends LVPWidget
                 $_fd = $item;
                 if ($_col_sg[1] == 'count') {
                     $_cols[$col['field']] = $item[$_col_sg[0]]->count();
+                } else if ($_col_sg[1] == 'sum') {
+                    $_cols[$col['field']] = $item[$_col_sg[0]]->pluck($_col_sg[2])->sum();
                 } else {
                     foreach ($_col_sg as $key => $value) {
                         if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {

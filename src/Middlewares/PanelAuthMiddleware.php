@@ -4,6 +4,7 @@ namespace LVP\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use LVP\Facades\Panel;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,6 +17,7 @@ class PanelAuthMiddleware
      */
     public function handle(Request $request, Closure $next, string $panel_id): Response
     {
+
         /**
          * @var \LVP\Providers\PanelProvider $current_panel
          */

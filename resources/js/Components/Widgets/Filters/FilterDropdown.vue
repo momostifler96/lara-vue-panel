@@ -1,6 +1,8 @@
 <template>
   <div>
-    <label for="" class="text-sm capitalize">{{ label }}</label>
+    <label for="" class="text-sm capitalize"
+      >{{ label }}{{ selected_values }}</label
+    >
     <MultiSelect
       v-if="props.multiple"
       v-model="selected_values"
@@ -49,7 +51,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue"]);
-// console.log("props.modelValue dropdown filter", props.modelValue);
 const selected_values = ref(
   props.multiple
     ? props.modelValue
@@ -57,7 +58,6 @@ const selected_values = ref(
       : []
     : props.modelValue
 );
-// console.log("value filter drop-down", value.value);
 
 watch(
   () => selected_values.value,

@@ -3,7 +3,7 @@
     <component
       v-for="info in props.infos"
       :is="infos_list[info.type]"
-      :key="info.label"
+      :key="info.type"
       v-bind="info.props"
       :data="props.data"
     />
@@ -15,6 +15,9 @@ import BadgeInfo from "./BadgeInfo.vue";
 import ImageInfo from "./ImageInfo.vue";
 import TextInfo from "./TextInfo.vue";
 import GridInfo from "./GridInfo.vue";
+import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
+import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
+import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 const props = defineProps({
   infos: {
     type: Array as () => Array<any>,
@@ -32,7 +35,10 @@ const infos_list = <{ [k: string]: any }>{
   image: ImageInfo,
   badge: BadgeInfo,
   grid: GridInfo,
+  "data-table": DataTableWidget,
+  chart: BaseChart,
+  form: FormWidget,
 };
 
-console.log("Infos lites", props.data);
+console.log("Infos lites", props.infos);
 </script>

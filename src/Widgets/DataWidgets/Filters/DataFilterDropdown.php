@@ -50,14 +50,27 @@ class DataFilterDropdown extends DataFilterField
     }
 
 
+
     public function apply(Builder $query, array $request_filter)
     {
         if (isset($request_filter[$this->_field]) && !empty($request_filter[$this->_field])) {
-            if ($this->_multiple) {
-                $query->whereIn($this->_field, explode(',', $request_filter[$this->_field]));
-            } else {
-                $query->where($this->_field, $request_filter[$this->_field]);
+            $cols = explode('.', $this->_query);
+            if (count($cols) == 1) {
+                if ($this->_multiple) {
+                    $query->whereIn($cols[0], explode(',', $request_filter[$this->_field]));
+                } else {
+                    $query->where($cols[0], $request_filter[$this->_field]);
+                }
+            } else if (count($cols) == 2 && $cols[1] != 'sum' && $cols[1] != 'count') {
+                $query->whereHas($cols[0], function ($q) use ($cols, $request_filter) {
+                    if ($this->_multiple) {
+                        $q->whereIn($cols[1], explode(',', $request_filter[$this->_field]));
+                    } else {
+                        $q->where($cols[1], $request_filter[$this->_field]);
+                    }
+                });
             }
+
         }
     }
 

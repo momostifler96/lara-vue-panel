@@ -24,9 +24,6 @@ interface ToastPluginOptions {
 }
 const plugin: Plugin = {
     install(app: App, options: ToastPluginOptions = { position: 'top-right', duration: 500 }) {
-        // Inject your plugin here
-        // app.config.globalProperties.$myPlugin = new MyPlugin(options);
-        console.log('Toast options', options);
         const _useToast = ($data: ToastWidget, $position: ToastPostion = options.position, $duration: number = options.duration) => {
             const event = new CustomEvent('lvp-toast', {
                 detail: {

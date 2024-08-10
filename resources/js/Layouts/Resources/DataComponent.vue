@@ -1,7 +1,7 @@
 <template>
   <component
-    :is="dataComponents[props.widget_type]"
-    v-bind="$attrs"
+    :is="dataComponents[props.type]"
+    v-bind="props.props"
     :routes="routes"
     key="data-widget"
     class="col-span-3"
@@ -14,7 +14,11 @@ import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
-  widget_type: {
+  type: {
+    type: String,
+    required: true,
+  },
+  props: {
     type: String,
     required: true,
   },

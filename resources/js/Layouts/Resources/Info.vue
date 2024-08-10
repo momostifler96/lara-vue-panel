@@ -4,39 +4,17 @@
       <slot name="actions" />
     </template>
 
-    <div
-      v-if="props.before_data_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10 tt"
-    >
-      <!-- <component
-        v-for="(widget, i) in props.before_data_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        :class="`col-span-${widget.col_span}`"
-      /> -->
-    </div>
-    <div class=""></div>
-    <InfoBlock :infos="props.info_widgets" :data="props.model_infos" />
-    <div
-      v-if="props.after_data_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10"
-    >
-      <!-- <component
-        v-for="(widget, i) in props.after_data_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        :class="`col-span-${widget.col_span}`"
-      /> -->
-    </div>
+    <InfoBlock :infos="props.widgets" :data="props.model_infos" />
+
     <div class="flex justify-between mt-10">
       <SimpleButton buttonType="link" :href="route(props.routes.index)"
         >Retour</SimpleButton
       >
       <div class="flex gap-3">
         <SimpleButton>Modifier</SimpleButton>
-        <SimpleButton color="danger">Supprimer</SimpleButton>
+        <SimpleButton color="danger" @click="item_actions.delete"
+          >Supprimer</SimpleButton
+        >
       </div>
     </div>
   </PanelLayout>
@@ -47,10 +25,20 @@
     :action="form_modal.action"
     v-bind="props.modal_form"
   /> -->
+  <ConfirmationModal
+    :show="confirmation_modal.show"
+    icon="delete"
+    :title="confirmation_modal.title"
+    :body="confirmation_modal.body"
+    :hasPassword="confirmation_modal.has_password"
+    :cancelLabel="confirmation_modal.cancel_button_label"
+    :confirmLabel="confirmation_modal.confirm_button_label"
+    @onResponse="confirmation_modal.onResponse"
+  />
 </template>
 <script setup lang="ts">
 import PanelLayout from "../Partials/PanelLayout.vue";
-import { usePage } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 import { computed, reactive } from "vue";
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
@@ -62,6 +50,8 @@ import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
 import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
 import ModalForm from "./ModalForm.vue";
 import InfoBlock from "./InfoBlocks/InfoBlock.vue";
+import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
+import { ActionsList } from "lvp/helpers/types";
 interface Titles {
   title: string;
   meta_title: string;
@@ -88,5 +78,43 @@ interface ResourceIndexPage {
 const props = computed(() => {
   return usePage().props as unknown as ResourceIndexPage;
 });
-console.log("props model_infos", props.value.model_infos);
+console.log("props", props.value);
+const confirmation_modal = reactive({
+  show: false,
+  title: "",
+  body: "",
+  has_password: false,
+  cancel_button_label: "Annuler",
+  confirm_button_label: "Confirmer",
+  onResponse: (rsp: boolean, password: string) => {},
+});
+
+const item_actions = <ActionsList>{
+  edit: ({ route_list, item }) => {
+    // emit("edit", item);
+  },
+
+  delete: (opt) => {
+    confirmation_modal.title = "Delete";
+    confirmation_modal.body = "Are you sure you want to delete this item?";
+    confirmation_modal.cancel_button_label = "Annuler";
+    confirmation_modal.confirm_button_label = "Confirmer";
+    confirmation_modal.has_password = false;
+    confirmation_modal.onResponse = (rsp: boolean, password: string) => {
+      if (rsp) {
+        router.delete(
+          route(props.value.routes.delete, {
+            id: props.value.model_infos.id,
+            redirect_to: props.value.routes.index,
+          })
+        );
+      } else {
+      }
+      confirmation_modal.show = false;
+      confirmation_modal.title = "";
+      confirmation_modal.body = "";
+    };
+    confirmation_modal.show = true;
+  },
+};
 </script>

@@ -6,6 +6,7 @@ use LVP\Defaults\DashboardPage;
 use LVP\Defaults\LoginPage;
 use LVP\Middlewares\PanelGuestInertiaMiddleware;
 use LVP\Middlewares\PanelInertiaMiddleware;
+use LVP\Middlewares\PanelMiddleware;
 use LVP\Modules\Panel\Features\Actions;
 use LVP\Modules\Panel\Features\Fluents;
 use LVP\Modules\Panel\Features\Geters;
@@ -43,6 +44,7 @@ class Panel
         ShareErrorsFromSession::class,
         VerifyCsrfToken::class,
         SubstituteBindings::class,
+        PanelMiddleware::class,
     ];
 
     protected array $_guest_middlewares = [

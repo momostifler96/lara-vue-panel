@@ -123,7 +123,13 @@ trait Actions
                 return $onError($th);
             }
         } else {
-            return $callback();
+            try {
+                $callback();
+                return $onCommit();
+            } catch (\Throwable $th) {
+                return $onError($th);
+            }
+
         }
     }
 

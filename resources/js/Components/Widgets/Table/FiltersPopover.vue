@@ -15,7 +15,7 @@
         <div class="lvp-popover-overlay w-[250px]">
           <div class="lvp-popover-overlay-content">
             <div class="flex items-center justify-between text-sm">
-              <span>Filterss</span>
+              <span>Filters</span>
               <button
                 v-if="options.show_reset"
                 class="text-lvp-danger"
