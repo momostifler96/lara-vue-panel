@@ -270,16 +270,21 @@ class DataTableWidget extends LVPWidget
             $_col_sg = explode('.', $col['load_data_from']);
             if (count($_col_sg) > 1) {
                 $_fd = $item;
-                foreach ($_col_sg as $key => $value) {
-                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
-                        $_fd = $_fd->map(function ($it) use ($value, $col) {
-                            return $col['date_format'] ? Carbon::parse($it[$value])->format($col['date_format']) : $it[$value];
-                        });
-                    } else if ($value != '*' && $_fd) {
-                        $_fd = $col['date_format'] ? Carbon::parse($_fd[$value])->format($col['date_format']) : $_fd[$value];
+                if ($_col_sg[1] == 'count') {
+                    $_cols[$col['field']] = $item[$_col_sg[0]]->count();
+                } else {
+                    foreach ($_col_sg as $key => $value) {
+                        if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                            $_fd = $_fd->map(function ($it) use ($value, $col) {
+                                return $col['date_format'] ? Carbon::parse($it[$value])->format($col['date_format']) : $it[$value];
+                            });
+                        } else if ($value != '*' && $_fd) {
+                            $_fd = $col['date_format'] ? Carbon::parse($_fd[$value])->format($col['date_format']) : $_fd[$value];
+                        }
                     }
+                    $_cols[$col['field']] = $_fd;
                 }
-                $_cols[$col['field']] = $_fd;
+
             } else {
                 if (!empty($col['date_format'])) {
                     $_cols[$col['field']] = Carbon::parse($item[$col['field']])->format($col['date_format']);
@@ -304,16 +309,22 @@ class DataTableWidget extends LVPWidget
             $_col_sg = explode('.', $col['load_data_from']);
             if (count($_col_sg) > 1) {
                 $_fd = $item;
-                foreach ($_col_sg as $key => $value) {
-                    if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
-                        $_fd = $_fd->map(function ($it) use ($value, $col) {
-                            return $it[$value];
-                        });
-                    } else if ($value != '*' && $_fd) {
-                        $_fd = $_fd[$value];
+                if ($_col_sg[1] == 'count') {
+                    $_props[$col['field']] = $item[$_col_sg[0]]->count();
+                } else {
+                    foreach ($_col_sg as $key => $value) {
+                        if (isset($_col_sg[$key - 1]) && $_col_sg[$key - 1] == '*') {
+                            $_fd = $_fd->map(function ($it) use ($value, $col) {
+                                return $it[$value];
+                            });
+                        } else if ($value != '*' && $_fd) {
+                            $_fd = $_fd[$value];
+                        }
                     }
+                    $_props[$col['field']] = $_fd;
+
                 }
-                $_props[$col['field']] = $_fd;
+
             } else {
                 $_props[$col['field']] = $item[$col['field']];
             }
