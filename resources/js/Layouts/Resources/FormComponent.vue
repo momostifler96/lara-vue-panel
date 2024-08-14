@@ -21,15 +21,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { router, usePage } from "@inertiajs/vue3";
 import FormSelectField from "lvp/Components/Forms/FormSelectField.vue";
 import TextField from "lvp/Components/Forms/TextField.vue";
-import Select from "lvp/Components/Forms/Select.vue";
 import TextAreaField from "lvp/Components/Forms/TextAreaField.vue";
-import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
 import FileUploader from "lvp/Components/Forms/FileUploader.vue";
-import { computed, reactive, ref, watch } from "vue";
-import type { ResourceFormPageProps } from "../../PropsTypes";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 
@@ -93,14 +88,4 @@ const updateField = (
     }, listener.debounce);
   });
 };
-const dataD = computed(() => {
-  console.log("dataD", _props.defaultData);
-  return _props.defaultData;
-});
-watch(
-  () => _props.defaultData,
-  (val) => {
-    console.log("watch", val);
-  }
-);
 </script>

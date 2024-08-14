@@ -272,7 +272,7 @@ const table_actions_methods = <ActionsList>{
     opt.showConfirmation({
       title: "Delete",
       body: "Are you sure you want to delete this item?",
-      onConfirm: () => {
+      onConfirm: (password: string) => {
         opt.router.delete(route(opt.route_list.delete, { id: opt.item.id }));
       },
     });

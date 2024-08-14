@@ -74,6 +74,7 @@ watch(
   () => props.show,
   () => {
     if (props.action == "edit") {
+      console.log("props.defaultData", props.defaultData);
       formData.value = props.defaultData;
     } else {
       formData.value = {};

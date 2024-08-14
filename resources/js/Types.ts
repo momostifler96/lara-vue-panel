@@ -16,11 +16,11 @@ interface DataTableItemActionOptions {
     showConfirmation: {
         title: string;
         body: string;
-        cancel_button_label: string;
-        confirm_button_label: string;
-        has_password: boolean;
+        cancel_button_label?: string;
+        confirm_button_label?: string;
+        has_password?: boolean;
         onConfirm: (password: string) => void;
-        onCancel: () => void;
+        onCancel?: () => void;
     };
 }
 interface DataTableSelectedItemsActionOptions {
