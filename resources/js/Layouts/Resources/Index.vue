@@ -7,52 +7,27 @@
       }}</SimpleButton>
     </template>
 
-    <div
-      v-if="props.before_data_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10 tt"
-    >
-      <component
-        v-for="(widget, i) in props.before_data_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        @edit="edit"
-        :class="`col-span-${widget.col_span}`"
-      />
+    <div v-if="props.before_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
+      <component v-for="(widget, i) in props.before_data_widgets" :is="widgets_components[widget.widget_type]"
+        v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" @edit="edit"
+        :class="`col-span-${widget.col_span}`" />
     </div>
     <div class="">
-      <DataComponent
-        v-bind="props.data_widget"
-        key="data-widget"
-        :routes="props.routes"
-        @edit="editResource"
-      />
+      <DataComponent v-bind="props.data_widget" key="data-widget" :routes="props.routes" @edit="editResource" />
     </div>
 
-    <div
-      v-if="props.after_data_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10"
-    >
-      <component
-        v-for="(widget, i) in props.after_data_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        :class="`col-span-${widget.col_span}`"
-      />
+    <div v-if="props.after_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10">
+      <component v-for="(widget, i) in props.after_data_widgets" :is="widgets_components[widget.widget_type]"
+        v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
     </div>
   </PanelLayout>
-  <ModalForm
-    @close="form_modal.show = false"
-    :show="form_modal.show"
-    :defaultData="form_modal.data"
-    :action="form_modal.action"
-    v-bind="props.modal_form"
-  />
+  <ModalForm @close="form_modal.show = false" :show="form_modal.show" :defaultData="form_modal.data"
+    :action="form_modal.action" v-bind="props.modal_form" />
+
 </template>
 <script setup lang="ts">
 import PanelLayout from "../Partials/PanelLayout.vue";
-import { usePage } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 import { computed, reactive } from "vue";
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
@@ -109,6 +84,8 @@ interface ResourceIndexPage {
 const props = computed(() => {
   return usePage().props as unknown as ResourceIndexPage;
 });
+console.log('props.modal_form', props.value.modal_form);
+
 //------------------Widgets-----------
 const widgets_components = <{ [key: string]: any }>{
   "data-table": DataTableWidget,
@@ -122,14 +99,23 @@ const form_modal = reactive({
 });
 
 const creatResource = () => {
-  form_modal.show = true;
-  form_modal.data = null;
-  form_modal.action = "create";
+  if (props.value.form_type === "modal") {
+    form_modal.show = true;
+    form_modal.data = null;
+    form_modal.action = "create";
+  } else {
+    router.get(route(props.value.routes.create));
+  }
+
 };
 const editResource = (item: any) => {
-  form_modal.show = true;
-  form_modal.data = { ...item.props, id: item.id };
-  form_modal.action = "edit";
+  if (props.value.form_type === "modal") {
+    form_modal.show = true;
+    form_modal.data = { ...item.props, id: item.id };
+    form_modal.action = "edit";
+  } else {
+    router.get(route(props.value.routes.edit, { id: item.id }));
+  }
 };
 
 //------------------Widgets-----------

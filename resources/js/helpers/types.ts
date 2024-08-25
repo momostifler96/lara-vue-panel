@@ -11,6 +11,35 @@ interface TableColumn {
     data: any;
     file_path?: string;
 }
+interface FormField {
+    props: {
+        label: string;
+        name: string;
+        required: boolean;
+        placeholder: string;
+    };
+    eventsListeners: {
+        change: {
+            fields: string;
+            action: string;
+            func: string;
+            debounce: number;
+        }[];
+        save: {
+            fields: string;
+            action: string;
+            func: string;
+            debounce: number;
+        }[];
+        clear: {
+            fields: string;
+            action: string;
+            func: string;
+            debounce: number;
+        }[];
+    };
+    type: string;
+}
 
 interface ActionMenu {
     type: "inline" | "dropdown";
@@ -136,4 +165,4 @@ interface FolderInterface {
 }
 
 
-export type { TableColumn, TableData, ActionsList, SelectedActionsList, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface }
+export type { TableColumn, TableData, ActionsList, SelectedActionsList, FormField, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface }

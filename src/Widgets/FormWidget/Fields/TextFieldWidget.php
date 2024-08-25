@@ -9,7 +9,7 @@ class TextFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
     protected string $_name;
-    protected string $_component = 'text-field';
+    protected string $_component = 'text';
     protected string $_mask = '';
     protected string $_label;
     protected string $_type = 'text';

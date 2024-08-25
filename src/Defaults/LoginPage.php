@@ -58,7 +58,7 @@ class LoginPage
             $this->beforeLogin($request, $credentials);
             auth($current_panel->getId())->login($user, $credentials['remember_me']);
             $this->afterLogin($request);
-            return to_route($current_panel->getPanelRouteName())->with('success', 'You are logind');
+            return redirect()->intended(route($current_panel->getPanelRouteName()))->with('success', 'You are logind');
 
         } else {
             return back()->withErrors([

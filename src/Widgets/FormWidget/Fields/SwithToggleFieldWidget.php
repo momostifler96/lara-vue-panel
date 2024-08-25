@@ -9,9 +9,9 @@ use LVP\Widgets\FormWidget\Fields\Traits\HasType;
 class SwithToggleFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
-    protected string $_component = 'toggle-field';
-    protected string $_true_value = true;
-    protected string $_false_value = false;
+    protected string $_component = 'toggle';
+    protected mixed $_true_value = true;
+    protected mixed $_false_value = false;
 
 
     public function trueValue($value)

@@ -26,5 +26,20 @@ export default {
 
         },
     },
+    safelist: [
+        {
+            pattern: /grid-cols-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /grid-rows-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /gap-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /col-span-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }
+    ],
     plugins: [forms]
 };

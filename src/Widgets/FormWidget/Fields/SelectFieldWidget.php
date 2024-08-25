@@ -14,7 +14,7 @@ class SelectFieldWidget extends FormFieldWidget
     protected bool $_mutiple = false;
     protected bool $_filter = false;
 
-    protected string $_component = 'select-field';
+    protected string $_component = 'select';
     protected array $_options = [];
 
     public function options(array|callable $options)

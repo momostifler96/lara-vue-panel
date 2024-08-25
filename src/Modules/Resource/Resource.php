@@ -46,6 +46,8 @@ class Resource
     protected string $short_label;
     protected string $menu_label;
     protected int $menu_position = 0;
+    protected int $form_grid_cols = 1;
+    protected int $form_grid_gap = 1;
     protected string $menu_icon = 'stack';
     protected string $menu_group;
 

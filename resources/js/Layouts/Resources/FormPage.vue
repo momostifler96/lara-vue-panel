@@ -1,50 +1,32 @@
 <template>
-  <PanelLayout :page-title="props.titles.form_titles[props.action].title">
+  <PanelLayout :page-title="props.page_titles.title">
     <template #actions>
-      <SimpleButton
-        @click="askDeleteConfromation"
-        color="danger"
-        v-if="props.action == 'edit'"
-        >{{ props.titles.delete }}</SimpleButton
-      >
+      <SimpleButton @click="askDeleteConfromation" color="danger" v-if="props.action == 'edit'">{{ props.titles.delete
+        }}</SimpleButton>
     </template>
 
     <form class="" @submit.prevent="submit" ref="formRef">
-      <FormComponent v-bind="_formData.props" :form-data="_formData.formData" />
+      <FormEngine v-bind="props.form_component.props" :form-data="_formData.formData" />
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
-            props.titles.form_titles[props.action].submit
+            props.page_titles.submit
           }}</SimpleButton>
-          <SimpleButton
-            v-if="props.action == 'create'"
-            type="submit"
-            @click="submitForm('reload')"
-          >
+          <SimpleButton v-if="props.action == 'create'" type="submit" @click="submitForm('reload')">
             {{
-              props.titles.form_titles[props.action].submit_and_create
-            }}</SimpleButton
-          >
+              props.page_titles.submit_and_create
+            }}</SimpleButton>
         </div>
         <div class="">
-          <SimpleButton
-            button-type="link"
-            :href="route(props.resources_routes.index)"
-            color="danger"
-            class="flex items-center gap-2"
-          >
-            {{ props.titles.form_titles[props.action].cancel }}
+          <SimpleButton button-type="link" :href="route(props.routes.index)" color="danger"
+            class="flex items-center gap-2">
+            {{ props.page_titles.cancel }}
           </SimpleButton>
         </div>
       </div>
     </form>
-    <ConfirmationModal
-      :show="confirmation_modal.show"
-      icon="delete"
-      :title="confirmation_modal.title"
-      :body="confirmation_modal.body"
-      @onResponse="confirmation_modal.onConfirm"
-    />
+    <ConfirmationModal :show="confirmation_modal.show" icon="delete" :title="confirmation_modal.title"
+      :body="confirmation_modal.body" @onResponse="confirmation_modal.onConfirm" />
   </PanelLayout>
 </template>
 <script setup lang="ts">
@@ -64,9 +46,9 @@ import type {
 } from "../../PropsTypes";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import FormComponent from "./FormComponent.vue";
+import FormEngine from "lvp/Components/Widgets/FormEngine.vue";
 
 const props = usePage().props as unknown as ResourceFormPageProps;
-
 const form_fields = <{ [k: string]: any }>{
   "text-field": TextField,
   "text-area-field": TextAreaField,
@@ -83,6 +65,7 @@ const formRef = ref(null);
 
 const submitForm = (type: "reload" | "leave") => {
   _formData.after_save = type;
+  submit();
 };
 
 const _formData = reactive<{ [k: string]: any }>({
@@ -94,20 +77,23 @@ const _formData = reactive<{ [k: string]: any }>({
 });
 
 const submit = () => {
+  console.log('_formData.formData', _formData.formData);
   router.post(
-    route(props.resources_routes[props.action == "edit" ? "update" : "store"]),
+    route(props.routes.submit),
     _formData.formData
   );
 };
 const confirmation_modal = reactive({
   show: false,
-  title: props.titles.delete_confirmation_title,
-  body: props.titles.delete_confirmation_body,
+  title: '',
+  body: '',
+  // title: props.titles['edit'].delete_confirmation_title,
+  // body: props.titles['edit'].delete_confirmation_body,
   current_id: "",
   onConfirm: (rsp: boolean) => {
     if (rsp) {
       router.delete(
-        route(props.resources_routes.delete, {
+        route(props.routes.delete, {
           id: props.form_data.id,
         })
       );

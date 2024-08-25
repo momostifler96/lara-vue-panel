@@ -22,6 +22,16 @@ interface DataTableItemActionOptions {
         onConfirm: (password: string) => void;
         onCancel?: () => void;
     };
+    showFormModal: {
+        title: string;
+        description: string;
+        cancel_button_label?: string;
+        submit_button_label?: string;
+        fields: { type: string, props: { [k: string]: any } }[];
+        has_password?: boolean;
+        onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
+        onCancel?: () => void;
+    };
 }
 interface DataTableSelectedItemsActionOptions {
     selected_items: any;

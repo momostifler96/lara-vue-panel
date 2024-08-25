@@ -18,10 +18,12 @@ trait Http
             'modal_labels' => $this->getModalLabels(),
             'routes' => $this->getRoutes(),
             'modal_form' => $this->getModalForm(),
+            'form_type' => $this->getFormType(),
             'before_data_widgets' => $this->buildBeforeDataWidget($request),
             'data_widget' => $this->buildDataWidget($request),
             'after_data_widgets' => $this->buildAfterDataWidget($request),
         ];
+        // dd($props);
         return Inertia::render('LVP/ResourcePage', $props);
     }
     private function show(Request $request, $id = null)
@@ -54,6 +56,7 @@ trait Http
             'routes' => [
                 'submit' => $this->getRoutes('store'),
                 'cancel' => $this->getRoutes('index'),
+                'index' => $this->getRoutes('index'),
             ],
             'form_component' => $this->buildFormComponent('create'),
         ];

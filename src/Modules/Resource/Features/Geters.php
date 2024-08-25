@@ -95,7 +95,7 @@ trait Geters
     }
     public function buildFormFields(): array
     {
-        return array_map(fn($field) => $field->render(), $this->formFields());
+        return FormWidget::make()->cols($this->form_grid_cols)->colSpan($this->form_grid_gap)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('create')))->render();
     }
 
 

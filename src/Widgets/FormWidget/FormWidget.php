@@ -8,7 +8,6 @@ use LVP\Widgets\LVPWidget;
 class FormWidget extends LVPWidget
 {
 
-
     protected string $_widget_type = 'form';
 
     protected array $_fields = [];
@@ -47,7 +46,7 @@ class FormWidget extends LVPWidget
         'md' => 1,
         'lg' => 3,
     ];
-    protected int $_gap = 10;
+    protected int $_gap = 3;
 
     public function __construct(string $title)
     {
@@ -182,7 +181,8 @@ class FormWidget extends LVPWidget
         $data['method'] = $this->_method;
         $data['submitBtnLabel'] = $this->_submit_label;
         $data['submitBtnClass'] = $this->_submit_btn_class;
-        $data['cols'] = $this->_cols;
+        $data['grid_cols'] = $this->_cols['all'];
+        $data['grid_cols_'] = $this->_cols;
         $data['gap'] = $this->_gap;
         $data['fields'] = array_map(fn($it) => ($it->render($this)), ($this->_fields));
         $data['formData'] = $this->_formData;

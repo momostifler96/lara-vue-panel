@@ -9,7 +9,7 @@ use LVP\Widgets\FormWidget\Fields\Traits\HasType;
 class DateFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
-    protected string $_component = 'date-field';
+    protected string $_component = 'date';
     protected bool $_range = false;
     protected string|null $_max_date = null;
     protected string|null $_min_date = null;

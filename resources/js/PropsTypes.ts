@@ -60,14 +60,35 @@ interface ResourceTitles {
     };
     plural_label: string;
 }
+interface ResourceFormTitles {
+    delete: string;
+    cancel: string;
+    submit: string;
+    submit_and_create: string;
+    title: string;
+}
 
 interface ResourceFormPageProps {
     action: "create" | "edit";
-    titles: ResourceTitles;
+    page_titles: ResourceFormTitles;
     form_data: { [key: string]: any };
-    resources_routes: ResourceRoutes;
+    form_component: {
+        type: string;
+        label: string;
+        props: {
+            fields: ResourceFormField[];
+            type: string;
+            label: string;
+            formData: { [key: string]: any };
+        };
+    };
+    routes: {
+        submit: string;
+        index: string;
+        cancel: string;
+    };
     resource_data: { [key: string]: any };
     fields: ResourceFormField[];
 }
 
-export type { ResourceFormField, ResourceFormPageProps, ResourceTitles, ResourceRoutes }
+export type { ResourceFormField, ResourceFormPageProps, ResourceTitles, ResourceRoutes, ResourceFormTitles }

@@ -1,45 +1,52 @@
 <template>
-  <template v-if="$page.props.errors">
-    <span>
-      {{ updateLoadErrors($page.props.errors) }}
-    </span>
-  </template>
-  <FormModal :show="show" @submit="submit" @close="cancel" :modalTitle="titles[action].title"
-    :cancelLabel="titles[action].cancel" :submitLabel="titles[action].submit">
-    <FormEngine v-bind="props.fields.props" :form-data="formData" />
+  <FormModal :show="show" @submit="submit" @close="cancel" :modalTitle="title" :cancelLabel="cancel_button_label"
+    :submitLabel="submit_button_label">
+    <FormEngine :fields="fields" :grid_cols="grid_cols" :gap="gap" :formData="formData" :defaultData="defaultData" />
   </FormModal>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import FormModal from "lvp/Components/Dialogs/FormModal.vue";
-import FormComponent from "./FormComponent.vue";
 import FormEngine from "lvp/Components/Widgets/FormEngine.vue";
 const props = defineProps({
   show: Boolean,
-  titles: {
-    type: Object,
+  title: {
+    type: String,
+    required: true,
+  },
+  submit_button_label: {
+    type: String,
+    required: true,
+  }, cancel_button_label: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
     required: true,
   },
   fields: {
     type: Object,
     required: true,
+  }, grid_cols: {
+    type: Number,
+    default: 1,
+  }, gap: {
+    type: Number,
+    default: 3,
   },
-  action: {
-    type: String,
-    default: "create",
+  has_password: {
+    type: Boolean,
+    default: false,
   },
-  routes: {
-    type: Object as () => any,
-    required: true,
-  },
+
   defaultData: {
     type: Object as () => any,
     required: true,
   },
   errors: Object,
 });
-console.log('props datra', props.titles, props.fields, props.action);
 const formData = ref({});
 const updateLoadErrors = ($errors: any) => {
   formErrors.value = $errors;
@@ -51,28 +58,13 @@ const errorIsArray = (field: string): string | null => {
   return error ? (Array.isArray(error) ? error[0] : error) : null;
 };
 const submit = () => {
-  router.post(route(props.routes[props.action]), formData.value, {
-    onSuccess: () => {
-      formErrors.value = {};
-      emit("close", true);
-    },
-  });
+  emit("submit", { formData: formData.value, password: null });
 };
 const cancel = () => {
   formErrors.value = {};
   emit("close", true);
 };
-watch(
-  () => props.show,
-  () => {
-    if (props.action == "edit") {
-      console.log("props.defaultData", props.defaultData);
-      formData.value = props.defaultData;
-    } else {
-      formData.value = {};
-    }
-  }
-);
+
 
 onMounted(() => { });
 </script>

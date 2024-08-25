@@ -259,7 +259,7 @@ class FormFieldWidget
         ];
         return [
             'name' => $this->_name,
-            'component' => $this->_component,
+            'type' => $this->_component,
             'eventsListeners' => $this->_events,
             'props' => $this->beforeRender($props)
         ];

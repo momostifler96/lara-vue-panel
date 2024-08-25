@@ -14,6 +14,7 @@ use LVP\Form\ImageUploadField;
 use LVP\Modules\Panel\Panel;
 use LVP\Support\Info;
 use LVP\Widgets\DataWidgets\DataTableWidget;
+use LVP\Widgets\FormWidget\Fields\SwithToggleFieldWidget;
 
 trait Actions
 {
@@ -29,7 +30,11 @@ trait Actions
 
         foreach ($fields as $key => $field) {
             if ($action->value == 'create' && $field->canfillOnCreate()) {
-                $model_data[$field->field()] = $field->onStore($request[$field->field()]);
+                if ($field instanceof SwithToggleFieldWidget && empty($request[$field->field()])) {
+                    $model_data[$field->field()] = $field->onStore(0);
+                } else {
+                    $model_data[$field->field()] = $field->onStore($request[$field->field()]);
+                }
             } else if ($action->value == 'edit' && $field->canfillOnEdit()) {
                 if (!empty($field->onEditData())) {
                     $_fields = explode('.', $field->onEditData());
