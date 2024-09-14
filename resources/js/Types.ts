@@ -67,12 +67,15 @@ interface TableFilter {
         field: string;
         props: { [k: string]: any };
         component: string;
+        col_span: string;
     }[];
     icon: string;
     style: string;
     type: string;
     show_reset: boolean;
+    auto_submit: boolean;
     reset_button_label: string;
+    submit_button_label: string;
 }
 interface ActionMenu {
     type: "inline" | "dropdown";

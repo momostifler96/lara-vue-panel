@@ -1,18 +1,9 @@
 <template>
-  <div class="">
+  <div :class="`col-span-${col_span}`" class="flex flex-col">
     <h5 class="text-sm capitalize">{{ label }}</h5>
-    <label
-      v-for="(val, i) in options"
-      class="flex gap-2 mb-1 text-sm select-none"
-      :for="`filter-${i}-${val.value}`"
-    >
-      <input
-        :id="`filter-${i}-${val.value}`"
-        type="checkbox"
-        v-model="selected_values"
-        :value="val.value"
-        class="lvp-checkbox"
-      />
+    <label v-for="(val, i) in options" class="flex gap-2 mb-1 text-sm select-none" :for="`filter-${i}-${val.value}`">
+      <input :id="`filter-${i}-${val.value}`" type="checkbox" v-model="selected_values" :value="val.value"
+        class="lvp-checkbox" />
       <span>{{ val.label }}</span>
     </label>
   </div>
@@ -34,6 +25,9 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
+    type: String,
+    required: true,
+  }, col_span: {
     type: String,
     required: true,
   },

@@ -79,9 +79,9 @@ const updateField = (
     listeners.forEach((listener) => {
         field_debounce[field] = setTimeout(() => {
             if (listener.action == "fill") {
-                _props.defaultData[listener.fields] = new_val;
+                _props.formData[listener.fields] = new_val;
             } else if (listener.action == "clear") {
-                _props.defaultData[listener.fields] = null;
+                _props.formData[listener.fields] = null;
             } else if (listener.action == "call") {
                 const rs = eval(listener.func.replace("params", new_val));
             }

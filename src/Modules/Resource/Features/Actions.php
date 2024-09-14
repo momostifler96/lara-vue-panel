@@ -247,7 +247,7 @@ trait Actions
     {
         $columns = $this->buildDataColumns();
         $query = $this->buildQuery($request, $columns);
-        $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
+        $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
 
         // $data->withQuery($this->query);
         // $data->withColumns($this->columns);

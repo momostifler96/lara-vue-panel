@@ -465,6 +465,10 @@ input[type="checkbox"] {
     background-color: var(--lvp-color-primary);
     outline: 1px solid var(--lvp-color-primary);
 
+    &.small {
+        @apply px-0.5 py-0.5 text-sm;
+    }
+
     &:hover {
         background-color: var(--lvp-color-primary-hover);
     }

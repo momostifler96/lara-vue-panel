@@ -8,18 +8,9 @@
     </div>
     <div class="relative lvp-text-field">
       <slot name="prefix" />
-      <input
-        :type="type"
-        class="text-sm"
-        @input="updateModelValue"
-        :value="modelValue"
-        :id="id ?? ''"
-        :required="required"
-        :disabled="disabled"
-        :readonly="readonly"
-        v-maska="mask"
-        :placeholder="placeholder ?? ''"
-      />
+      <input :type="type" class="text-sm" @input="updateModelValue" :value="modelValue" :id="id ?? ''"
+        :required="required" :disabled="disabled" :readonly="readonly" v-maska="mask"
+        :placeholder="placeholder ?? ''" />
       <slot name="surfix" />
     </div>
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
@@ -69,5 +60,15 @@ const emit = defineEmits(["update:modelValue", "change"]);
 const updateModelValue = (event: Event) => {
   emit("update:modelValue", (event.target as HTMLInputElement).value);
   emit("change", (event.target as HTMLInputElement).value);
+};
+
+
+const slugMask = (value: string) => {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '') // Autorise uniquement les caractères alphanumériques, tirets et underscores
+    .replace(/--+/g, '-').replace(/---+/g, '-') // Remplace les doubles tirets par un seul
+    .replace(/_+/g, '-') // Remplace les underscores par des tirets
+    .trim(); // Supprime les espaces en début et fin
 };
 </script>

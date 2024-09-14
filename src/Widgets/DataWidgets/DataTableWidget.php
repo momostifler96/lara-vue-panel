@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use LVP\Enums\Alignment;
 use Illuminate\Support\Facades\Storage;
 use LVP\Enums\ActionMenuType;
+use LVP\Enums\DataFilterType;
 use LVP\Facades\TableColumn;
 use LVP\Facades\TableFilters\TableFilter;
 use LVP\Widgets\DataWidgets\Actions\DataActionMenu;
@@ -22,7 +23,9 @@ class DataTableWidget extends LVPWidget
     protected array $_columns;
     protected array $_actions;
     protected array $_filters;
+    protected DataFilterType $_filter_type = DataFilterType::POPOVER;
     protected string $_widget_type = 'data-table';
+    protected bool $_auto_submit_filter = true;
     protected string $_action_type = 'dropdown';
     protected array $_group_actions;
     protected string $_group_action_type = 'dropdown';
@@ -87,10 +90,23 @@ class DataTableWidget extends LVPWidget
         return $this;
     }
 
+    public function autoSubmitFilter(bool $auto_submit)
+    {
+        $this->_auto_submit_filter = $auto_submit;
+        return $this;
+
+    }
+    public function filterType(DataFilterType $filter_type)
+    {
+        $this->_filter_type = $filter_type;
+        return $this;
+
+    }
     public function filters(array $filters)
     {
         $this->_filters = $filters;
         return $this;
+
 
     }
     public function actions(array $actions)
@@ -135,8 +151,9 @@ class DataTableWidget extends LVPWidget
 
         if (!empty($this->_filters)) {
             $filter = (new DataFilter());
-            $filter->filters($this->_filters);
+            $filter->filters($this->_filters)->autoSubmit($this->_auto_submit_filter);
             $data['filter'] = $filter->render();
+            $data['filter_type'] = $this->_filter_type->value;
         }
         $data['fixe_first_column'] = $this->_fixe_first_column;
         $data['fixe_last_column'] = $this->_fixe_last_column;

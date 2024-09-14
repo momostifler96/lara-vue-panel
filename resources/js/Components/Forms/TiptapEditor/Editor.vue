@@ -8,25 +8,7 @@
         </div>
         <div class="lvp-text-editor lvp-widget-rouned">
             <div class="toolbar" v-if="editor">
-                <UndoBtn :editor="editor" />
-                <RedoBtn :editor="editor" />
-                <TextTypeBtn :editor="editor" />
-                <BoldBtn :editor="editor" />
-                <HorizontalRuleBtn :editor="editor" />
-                <ItalicBtn :editor="editor" />
-                <CodeBtn :editor="editor" />
-                <TextAlignGroup :editor="editor" />
-                <StrikeBtn :editor="editor" />
-                <UnderlineBtn :editor="editor" />
-                <HightLineBtn :editor="editor" />
-                <LinkBtn :editor="editor" />
-                <ImageBtn :editor="editor" />
-                <!-- <Underline :editor="editor" />
-            <Strike :editor="editor" />
-            <Code :editor="editor" />
-            <Link :editor="editor" />
-            <Image :editor="editor" /> -->
-                <!-- <FontSize :editor="editor" /> -->
+                <component :is="tools_list[tool]" v-for="tool in tools" :key="tool" :editor="editor" />
             </div>
             <editor-content :editor="editor" />
         </div>
@@ -86,6 +68,9 @@ const props = defineProps({
     helperText: {
         type: String as () => string | null | undefined,
         default: null,
+    }, tools: {
+        type: Array,
+        default: [],
     },
 
     required: Boolean,
@@ -102,6 +87,23 @@ watch(() => props.modelValue, (newValue) => {
         editor.value.commands.setContent(newValue, false)
     }
 })
+
+const tools_list = <{ [k: string]: any }>{
+    undo: UndoBtn,
+    redo: RedoBtn,
+    'text-types': TextTypeBtn,
+    bold: BoldBtn,
+    'divider': HorizontalRuleBtn,
+    italic: ItalicBtn,
+    code: CodeBtn,
+    'text-align': TextAlignGroup,
+    strike: StrikeBtn,
+    underline: UnderlineBtn,
+    'hightline': HightLineBtn,
+    link: LinkBtn,
+    image: ImageBtn,
+}
+
 onMounted(() => {
     editor.value = new Editor({
         content: props.modelValue,
@@ -114,11 +116,7 @@ onMounted(() => {
             defaultProtocol: 'https',
         }), Highlight, Dropcursor],
         onUpdate: (ed) => {
-            // HTML
             emit('update:modelValue', editor.value.getHTML())
-
-            // JSON
-            // this.$emit('update:modelValue', this.editor.getJSON())
         },
     })
 })

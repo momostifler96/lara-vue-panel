@@ -9,7 +9,22 @@ class TextEditorFieldWidget extends FormFieldWidget
 {
     use HasPlaceholder;
     protected string $_component = 'text-editor';
-    protected array $_tools = [];
+    protected array $_tools = [
+        'undo',
+        'redo',
+        'text-types',
+        'bold',
+        'divider',
+        'italic',
+        'code',
+        'text-align',
+        'hightline',
+        'strike',
+        'underline',
+        'color',
+        'link',
+        'image'
+    ];
 
     public function maxLength(int $max = 255)
     {
@@ -20,6 +35,11 @@ class TextEditorFieldWidget extends FormFieldWidget
     public function minLength(int $min = 0)
     {
         $this->_rules = array_merge($this->_rules, ['min:' . $min]);
+        return $this;
+    }
+    public function tools(array $tools)
+    {
+        $this->_tools = $tools;
         return $this;
     }
 

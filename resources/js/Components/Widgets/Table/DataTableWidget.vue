@@ -1,4 +1,6 @@
 <template>
+  <FiltersGrid v-if="filter && filter_type == 'grid'" :options="filter" :filterData="filterData" :loading="false"
+    @filtering="onFiltering" @reset="onResetFilter" />
   <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated" fixeLastColumns
     @dataEvent="$emit('dataEvent', $event)">
     <template #t_leading>
@@ -6,8 +8,8 @@
     </template>
     <template #t_action>
       <div class="flex gap-2">
-        <FiltersPopover v-if="filter" :options="filter" :filterData="filterData" :loading="false"
-          @filtering="onFiltering" />
+        <FiltersPopover v-if="filter && filter_type == 'popover'" :options="filter" :filterData="filterData"
+          :loading="false" @filtering="onFiltering" @reset="onResetFilter" />
       </div>
     </template>
     <template #actions="{ column, item }">
@@ -46,6 +48,7 @@ import TableGroupedActionMenu from "lvp/Components/Widgets/Table/TableGroupedAct
 import { ref, reactive, computed, watch, onMounted, inject } from "vue";
 import LVPTable from "lvp/Components/Widgets/Table/TableWidget.vue";
 import FiltersPopover from "lvp/Components/Widgets/Table/FiltersPopover.vue";
+import FiltersGrid from "lvp/Components/Widgets/Table/FiltersGrid.vue";
 import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
 import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
@@ -119,6 +122,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  filter_type: {
+    type: Object as () => 'popover' | 'grid',
+    required: true,
+  },
 });
 const emit = defineEmits([
   "delete",
@@ -161,6 +168,9 @@ const execfilters = (filters: any) => {
 };
 const onFiltering = (filter_data: any) => {
   execfilters(filter_data);
+};
+const onResetFilter = () => {
+  router.get("?page=1");
 };
 const action_icons = <Record<string, any>>{
   edit: EditIcon,

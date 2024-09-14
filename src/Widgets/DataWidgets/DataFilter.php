@@ -22,7 +22,9 @@ class DataFilter
     protected string $_title = 'Filter';
     protected string $_value;
     protected bool $_show_reset = false;
+    protected bool $_auto_submit = false;
     protected string $_reset_button_label = 'Reset all';
+    protected string $_submit_button_label = 'Submit';
 
 
     public static function make()
@@ -40,9 +42,23 @@ class DataFilter
         $this->_show_reset = $show;
         return $this;
     }
+    public function autoSubmit(bool $auto_submit)
+    {
+        $this->_auto_submit = $auto_submit;
+        return $this;
+
+    }
     public function resetButtonLabel(string $label)
     {
         $this->_reset_button_label = $label;
+        return $this;
+
+    }
+    public function submitButtonLabel(string $label)
+    {
+        $this->_submit_button_label = $label;
+        return $this;
+
     }
 
     public function title(string $title)
@@ -99,16 +115,8 @@ class DataFilter
     public function filters(array $filters)
     {
         $this->_filters = $filters;
-        // dd($filters);
-        // foreach ($filters as $filter) {
-        //     if ($filter instanceof DataFilterDropdown) {
-        //         $this->dropdowns($filter);
-        //     } else if ($filter instanceof DataFilterText) {
-        //         $this->texts($filter);
-        //     } else if ($filter instanceof DataFilterCheckbox) {
-        //         $this->checkboxs($filter);
-        //     }
-        // }
+        return $this;
+
     }
 
 
@@ -120,17 +128,12 @@ class DataFilter
 
         return [
             'filters' => array_map(fn($item) => $item->render(), $this->_filters),
-
-            // [
-            //     'checkboxs' => array_map(fn($item) => $item->render(), $this->_checkboxs),
-            //     'groups' => array_map(fn($item) => $item->render(), $this->_groups),
-            //     'dropdowns' => array_map(fn($item) => $item->render(), $this->_dropdowns),
-            //     'texts' => array_map(fn($item) => $item->render(), $this->_texts),
-            // ],
             'icon' => $this->_icon,
             'style' => $this->_style,
             'show_reset' => $this->_show_reset,
             'reset_button_label' => $this->_reset_button_label,
+            'submit_button_label' => $this->_submit_button_label,
+            'auto_submit' => $this->_auto_submit,
         ];
     }
 }

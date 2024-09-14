@@ -10,6 +10,7 @@ class DataFilterField
     protected string $_field;
     protected string $_label;
     protected string $_component;
+    protected string $_col_span = "1";
 
     protected string $_query;
 
@@ -29,6 +30,11 @@ class DataFilterField
     public function label(string $label)
     {
         $this->_label = $label;
+        return $this;
+    }
+    public function colSpan(string $col_span)
+    {
+        $this->_col_span = $col_span;
         return $this;
     }
 
@@ -66,6 +72,7 @@ class DataFilterField
     {
         $_render_data = [
             'field' => $this->_field,
+            'col_span' => $this->_col_span,
             'component' => $this->_component,
             'label' => str($this->_label)->lower()->ucfirst(),
         ];
