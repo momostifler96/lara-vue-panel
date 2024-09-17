@@ -4,33 +4,13 @@
       <label for="" class="text-sm capitalize">{{ label }}</label>
       <span v-if="required" class="text-red-500">*</span>
     </div>
-    <MultiSelect
-      v-if="multiple"
-      :modelValue="modelValue"
-      @update:modelValue="emit('update:modelValue', $event)"
-      :options="options"
-      :placeholder="placeholder"
-      option-label="label"
-      option-value="value"
-      :filter="filter"
-      :loading="loading"
-      :max-selected-labels="2"
-      class="w-full"
-      @filter="search"
-    />
-    <Dropdown
-      v-else
-      :modelValue="modelValue"
-      @update:modelValue="emit('update:modelValue', $event)"
-      :options="options"
-      :placeholder="placeholder"
-      option-label="label"
-      option-value="value"
-      :filter="filter"
-      :loading="loading"
-      class="w-full"
-      @filter="search"
-    />
+    <MultiSelect v-if="multiple" :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)"
+      :options="options" :placeholder="placeholder" option-label="label" option-value="value" :filter="filter"
+      :loading="loading" :max-selected-labels="2" class="w-full" @filter="search"
+      selectedItemsLabel="{0} éléments sélectionnés" />
+    <Dropdown v-else :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)" :options="options"
+      :placeholder="placeholder" option-label="label" option-value="value" :filter="filter" :loading="loading"
+      class="w-full" @filter="search" />
 
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText

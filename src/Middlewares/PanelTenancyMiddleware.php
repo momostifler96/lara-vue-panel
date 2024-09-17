@@ -4,11 +4,11 @@ namespace LVP\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use LVP\Facades\Panel;
+use Spatie\Multitenancy\Contracts\IsTenant;
 use Symfony\Component\HttpFoundation\Response;
 
-class PanelAuthMiddleware
+class PanelTenancyMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,12 +17,8 @@ class PanelAuthMiddleware
      */
     public function handle(Request $request, Closure $next, string $panel_id): Response
     {
-
-        /**
-         * @var \LVP\Providers\PanelProvider $current_panel
-         */
-        if (!auth($panel_id)->check()) {
-            return to_route($panel_id . '.login');
+        if (empty(app(IsTenant::class)::checkCurrent())) {
+            abort(404);
         }
         return $next($request);
     }

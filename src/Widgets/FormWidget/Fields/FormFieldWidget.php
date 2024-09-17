@@ -244,15 +244,15 @@ class FormFieldWidget
      * @param FormWidget|null $formWidget The form widget instance.
      * @return array The rendered form field data.
      */
-    public function render(FormWidget|null $formWidget = null)
+    public function render(FormWidget|null $formWidget = null, $field_data = null)
     {
         if ($formWidget) {
             $this->getValue($formWidget);
         }
         $props = [
             'name' => $this->_name,
-            'label' => $this->_label ?? $this->_label = str($this->_name)->kebab()->replace('-', ' ')->ucfirst(),
-            'value' => $this->_default_value,
+            'label' => !empty($this->_label) ? ucfirst($this->_label) : str($this->_name)->kebab()->replace('-', ' ')->ucfirst(),
+            'value' => !empty($field_data) ? $field_data : $this->_default_value,
             'rules' => $this->_rules,
             'required' => $this->_required,
             'colspan' => $this->_colspan,

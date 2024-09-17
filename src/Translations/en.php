@@ -32,6 +32,23 @@ return [
     'update' => 'Mettre à jour',
     'back' => "Retour",
     'failed' => "Échoué",
+    'male' => "Homme",
+    'female' => "Femme",
+    'children' => "Children",
+    'child' => "Child",
     'create_and_create_another' => 'Créer et crée {gender} autre',
+    'auth' => [
+        'credential_error' => 'The provided credentials do not match our records.',
+        'you_are_loged' => 'You are logged',
+        'login_fail' => 'Login fail',
+        'logout' => 'Se déconnecter',
+        'login' => 'Se connecter',
+        'register' => "S'inscrir",
+        'identifiant' => "Email ou numéro de téléphone",
+        'password' => "Mot de passe",
+        'remember_me' => "Resté connecter",
+        'login_page_title' => "Cennexion",
+        'login_page_description' => "Siaisez vos information pour vous connecter a votre espace"
+    ]
 
 ];

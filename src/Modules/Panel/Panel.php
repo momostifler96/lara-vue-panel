@@ -28,6 +28,7 @@ class Panel
     protected $_label = '';
     protected $_id = '';
     protected $_local = 'en';
+    protected $_tenancy_domains = [];
     protected $_settings = [
         'has_notifications' => true,
         'has_messages' => true,
@@ -61,6 +62,7 @@ class Panel
     protected $_dashboard_class = DashboardPage::class;
     protected $_dashboard;
     protected $_auth_provider = 'App\Models\User';
+    protected $_tenancy_auth_provider;
     protected $_dashboard_view_path = 'LVP/Dashboard';
 
     #login page

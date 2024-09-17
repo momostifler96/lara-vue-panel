@@ -1,12 +1,11 @@
 <?php
 
-namespace App\LVP\Panels;
+namespace App\Providers\Lvp;
 
 
-class {{class}}Panel extends \LVP\Facades\Panel
+class {{class}}Panel extends \LVP\Providers\PanelProvider
 {
-
-    public static function panel(\LVP\Facades\Panel $panel)
+    public function settings(\LVP\Modules\Panel\Panel $panel)
     {
         $panel->id('{{id}}')
             ->routeName('{{id}}')

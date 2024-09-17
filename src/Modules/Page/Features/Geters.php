@@ -78,7 +78,7 @@ trait Geters
             'label' => $this->getMenuLabel(),
             'position' => $this->menu_position,
             'icon' => $this->menu_icon,
-            'path' => url($this->slug),
+            'path' => '/' . $this->slug,
         ];
     }
     public function getMenuGroup(): null|string

@@ -4,33 +4,17 @@
       <slot name="actions" />
     </template>
 
-    <div
-      v-if="props.before_content_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10 tt"
-    >
-      <component
-        v-for="(widget, i) in props.before_content_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        :class="`col-span-${widget.col_span}`"
-      />
+    <div v-if="props.before_content_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
+      <component v-for="(widget, i) in props.before_content_widgets" :is="widgets_components[widget.type]"
+        v-bind="widget.props" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
     </div>
     <div class="">
       <slot />
     </div>
 
-    <div
-      v-if="props.after_content_widgets.length > 0"
-      class="grid grid-cols-3 gap-3 mt-10 mb-10"
-    >
-      <component
-        v-for="(widget, i) in props.after_content_widgets"
-        :is="widgets_components[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-        :class="`col-span-${widget.col_span}`"
-      />
+    <div v-if="props.after_content_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10">
+      <component v-for="(widget, i) in props.after_content_widgets" :is="widgets_components[widget.type]"
+        v-bind="widget.props" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
     </div>
   </PanelLayout>
 </template>

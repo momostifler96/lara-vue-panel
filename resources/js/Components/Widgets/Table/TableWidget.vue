@@ -3,10 +3,7 @@
     <div class="p-3" v-if="$slots.t_header">
       <slot name="t_header" />
     </div>
-    <div
-      v-if="$slots.t_leading || $slots.t_action"
-      class="flex justify-between px-2 pt-2 my-2"
-    >
+    <div v-if="$slots.t_leading || $slots.t_action" class="flex justify-between px-2 pt-2 my-2">
       <span class="flex items-center gap-3">
         <slot name="t_leading" />
       </span>
@@ -15,36 +12,23 @@
       </span>
     </div>
     <div class="relative overflow-x-auto">
-      <table
-        class="lvp-table"
-        :class="{
-          'fixe-last-columns': fixeLastColumns,
-          'fixe-first-columns': fixeFirstColumns,
-        }"
-      >
+      <table class="lvp-table" :class="{
+        'fixe-last-columns': fixeLastColumns,
+        'fixe-first-columns': fixeFirstColumns,
+      }">
         <thead class="lvp-table-header">
           <tr>
             <th class="px-2 py-3 text-nowrap vp-table-header-first-column">
-              <input
-                type="checkbox"
-                class="lvp-checkbox"
-                :checked="props.data?.length == selected?.length"
-                @change="selectAll"
-              />
+              <input type="checkbox" class="lvp-checkbox" :checked="props.data?.length == selected?.length"
+                @change="selectAll" />
             </th>
-            <th
-              v-for="(column, c_i) in props.columns"
-              :key="column.field"
-              scope="col"
-              :align="column.align"
-              class="px-2 py-3 text-nowrap vp-table-header-first-column"
-              :class="[
+            <th v-for="(column, c_i) in props.columns" :key="column.field" scope="col" :align="column.align"
+              class="px-2 py-3 text-nowrap vp-table-header-first-column" :class="[
                 {
                   'lvp-table-header-last-column':
                     c_i === props.columns.length - 1,
                 },
-              ]"
-            >
+              ]">
               {{ column.label }}
             </th>
           </tr>
@@ -52,50 +36,25 @@
         <tbody>
           <tr v-for="item in props.data" :key="item.id" class="lvp-table-row">
             <th class="px-2 py-3 text-nowrap vp-table-body-first-column">
-              <input
-                type="checkbox"
-                class="lvp-checkbox"
-                :checked="selected?.includes(item.id)"
-                @change="select"
-                :value="item.id"
-              />
+              <input type="checkbox" class="lvp-checkbox" :checked="selected?.includes(item.id)" @change="select"
+                :value="item.id" />
             </th>
-            <td
-              v-for="(column, c_i) in props.columns"
-              :key="column.field"
-              :align="column.align"
-              scope="row"
-              class="lvp-table-row-data"
-              :class="[
+            <td v-for="(column, c_i) in props.columns" :key="column.field" :align="column.align" scope="row"
+              class="lvp-table-row-data" :class="[
                 {
                   'lvp-table-body-last-column':
                     c_i === props.columns.length - 1,
                 },
-              ]"
-            >
-              <div
-                class="flex"
-                :class="{
-                  'justify-end': column.align === 'right',
-                  'justify-start': column.align === 'left',
-                  'justify-center': column.align === 'center',
-                }"
-              >
+              ]">
+              <div class="flex" :class="{
+                'justify-end': column.align === 'right',
+                'justify-start': column.align === 'left',
+                'justify-center': column.align === 'center',
+              }">
                 <slot :name="column.field" :item="item" :column="column">
-                  <GroupColumn
-                    v-if="column.type == 'group'"
-                    :data="item"
-                    :field="column.field"
-                    :column="column"
-                  />
-                  <component
-                    v-else
-                    :is="columns_components[column.type]"
-                    :data="getItemData(item, column.field)"
-                    :field="column.field"
-                    :column="column"
-                    @dataEvent="(e:any)=>{emitTableData(e,item.id)}"
-                  />
+                  <GroupColumn v-if="column.type == 'group'" :data="item" :field="column.field" :column="column" />
+                  <component v-else :is="columns_components[column.type]" :data="getItemData(item, column.field)"
+                    :field="column.field" :column="column" @dataEvent="(e: any) => { emitTableData(e, item.id); }" />
                 </slot>
               </div>
             </td>

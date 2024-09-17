@@ -2,9 +2,9 @@
   <FiltersGrid v-if="filter && filter_type == 'grid'" :options="filter" :filterData="filterData" :loading="false"
     @filtering="onFiltering" @reset="onResetFilter" />
   <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated" fixeLastColumns
-    @dataEvent="$emit('dataEvent', $event)">
+    @dataEvent="execColAction($event.action, $event)">
     <template #t_leading>
-      <TableGroupedActionMenu v-if="seletedItems.length > 0" :actions="group_action" @exec="execGroupAction" />
+      <TableGroupedActionMenu :actions="group_action" @exec="execGroupAction" />
     </template>
     <template #t_action>
       <div class="flex gap-2">
@@ -53,7 +53,7 @@ import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
 import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
-import { ActionsList, TableColumn, TableFilter } from "lvp/Types";
+import { SelectedItemsActions, SingleItemAction, TableColumn, TableFilter } from "lvp/Types";
 
 import { router } from "@inertiajs/vue3";
 import { useToast } from "lvp/Plugins/toast";
@@ -178,9 +178,10 @@ const action_icons = <Record<string, any>>{
   delete: TrashIcon,
 };
 
-const execGroupAction = (action: any) => {
-  emit("groupAction", action, seletedItems.value);
-};
+// const execGroupAction = (action: any) => {
+//   console.log('execGroupAction', action, seletedItems.value);
+//   emit("groupAction", action, seletedItems.value);
+// };
 
 const navigate = (page: number) => {
   queryString.set("page", page.toString());
@@ -205,11 +206,21 @@ const seletedItems = ref([]);
 
 //------------------------—
 
-const datatable_item_actions = <ActionsList>(
+const datatable_item_actions = <SingleItemAction>(
   inject("lvp.actions.datatable.item")
 );
-const datatable_selected_item_actions = <ActionsList>(
-  inject("lvp.actions.datatable.selected_items")
+
+const datatable_item_col_actions_ = <SingleItemAction>(
+  inject("lvp.actions.datatable.item_col")
+);
+const datatable_item_col_actions = {
+  update_col: (opt: any) => {
+    opt.router.post(route(opt.route_list.exec_actions), opt.data);
+  },
+  ...datatable_item_col_actions_
+}
+const datatable_selected_item_actions = <SelectedItemsActions>(
+  inject("lvp.actions.datatable.bulk")
 );
 
 //------------------Confirmation modal-----------
@@ -238,7 +249,40 @@ const form_modal = reactive({
 });
 //------------------Actions-----------
 
-const table_actions_methods = <ActionsList>{
+const col_actions = <{ [k: string]: any }>{
+  'update_col': (data: any) => {
+    router.post(route(props.routes.exec_actions), data);
+  }
+}
+
+const execColAction = (action: string, data: any) => {
+  console.log('datatable_item_col_actions', action, datatable_item_col_actions[action]);
+  datatable_item_col_actions[action]({
+    showConfirmation: (option) => {
+      confirmation_modal.title = option.title;
+      confirmation_modal.body = option.body;
+      confirmation_modal.cancel_button_label = option.cancel_button_label;
+      confirmation_modal.confirm_button_label = option.confirm_button_label;
+      confirmation_modal.has_password = option.has_password;
+      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
+        if (rsp) {
+          option.onConfirm(password);
+        } else {
+          option.onCancel();
+        }
+        confirmation_modal.show = false;
+        confirmation_modal.title = "";
+        confirmation_modal.body = "";
+      };
+      confirmation_modal.show = true;
+    },
+    data,
+    showToast: useToast,
+    route_list: props.routes,
+    router: router,
+  });
+}
+const table_single_item_actions = <SingleItemAction>{
   edit: ({ route_list, item }) => {
     emit("edit", item);
   },
@@ -264,11 +308,14 @@ const table_actions_methods = <ActionsList>{
       },
     });
   },
+  update_col: (opt: any) => {
+    opt.router.post(route(opt.route_list.exec_actions, { id: opt.item.id }));
+  },
   ...datatable_item_actions,
 };
 
 const execAction = (action: string, item: any) => {
-  table_actions_methods[action]({
+  table_single_item_actions[action]({
     showConfirmation: (option) => {
       confirmation_modal.title = option.title;
       confirmation_modal.body = option.body;
@@ -286,7 +333,51 @@ const execAction = (action: string, item: any) => {
         confirmation_modal.body = "";
       };
       confirmation_modal.show = true;
-    }, showFormModal: (option: any) => {
+    },
+
+    item,
+    showToast: useToast,
+    route_list: props.routes,
+    router: router,
+  });
+};
+
+//------------------Actions-----------
+
+const table_selected_items_actions = <SelectedItemsActions>{
+  delete: (opt: any) => {
+    opt.showConfirmation({
+      title: "Delete",
+      body: "Are you sure you want to delete this items?",
+      onConfirm: () => {
+        router.delete(route(opt.route_list.delete, { id: opt.selected_items_ids.join(',') }));
+      },
+    });
+  },
+  ...datatable_selected_item_actions,
+};
+
+const execGroupAction = (action: string, items: any[]) => {
+  table_selected_items_actions[action]({
+    showConfirmation: (option: any) => {
+      confirmation_modal.title = option.title;
+      confirmation_modal.body = option.body;
+      confirmation_modal.cancel_button_label = option.cancel_button_label;
+      confirmation_modal.confirm_button_label = option.confirm_button_label;
+      confirmation_modal.has_password = option.has_password;
+      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
+        if (rsp) {
+          option.onConfirm(password);
+        } else {
+          option.onCancel();
+        }
+        confirmation_modal.show = false;
+        confirmation_modal.title = "";
+        confirmation_modal.body = "";
+      };
+      confirmation_modal.show = true;
+    },
+    showFormModal: (option: any) => {
       form_modal.title = option.title;
       form_modal.description = option.description;
       form_modal.cancel_button_label = option.cancel_button_label;
@@ -296,7 +387,8 @@ const execAction = (action: string, item: any) => {
       form_modal.onSubmit = option.onSubmit;
       form_modal.show = true;
     },
-    item,
+    selected_items_ids: seletedItems.value,
+    selected_items: seletedItems.value,
     showToast: useToast,
     route_list: props.routes,
     router: router,

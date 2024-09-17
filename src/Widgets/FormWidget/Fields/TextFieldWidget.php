@@ -52,7 +52,6 @@ class TextFieldWidget extends FormFieldWidget
     protected function beforeRender(array $data): array
     {
         $data['mask'] = $this->_mask;
-        $data['label'] = $this->_label;
         $data['type'] = $this->_type;
         return $data;
     }

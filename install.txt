@@ -1,0 +1,105 @@
+Step 1 - Install  package
+
+composer require momoledev/laravue-panel --dev
+
+Step 2 - Intall panel module
+php artisan lvp:install
+
+Step 3 - Intall npm packages
+npm install apexcharts
+npm install vue3-apexcharts
+npm install pinia
+npm install pinia-plugin-persistedstate
+npm install sass
+npm install @headlessui/vue
+npm install vue-awesome-paginate
+npm install maska
+npm install pinia
+npm install pinia-plugin-persistedstate
+npm install primevue
+npm install cropperjs
+npm install @primevue/themes
+npm install @tailwindcss/forms
+npm install @vitejs/plugin-vue
+
+
+Step 4 - Install codes
+
+copy and past the following code in your vite config file after imported Modules
+```
+import path from 'path';
+```
+
+copy and past the following code in your vite config file after plugins
+```
+resolve: {
+        alias: {
+            lvp: path.resolve(__dirname, 'vendor/momoledev/laravue-panel/resources/js'),
+        }
+    };
+```
+
+Step 5 - Intall tailwind config
+
+copy and past the following code in your tailwind config file
+```
+import defaultTheme from 'tailwindcss/defaultTheme';
+import forms from '@tailwindcss/forms';
+import lvpPreset from './vendor/momoledev/laravue-panel/tailwind.config.preset';
+
+/** @type {import('tailwindcss').Config} */
+export default {
+    presets: [lvpPreset],
+    content: [
+        './vendor/momoledev/laravue-panel/resources/js/**/*.{js,ts,vue}',
+        './vendor/momoledev/laravue-panel/resources/views/**/*.blade.php',
+        './vendor/momoledev/laravue-panel/src/**/*.php',
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.vue',
+    ],
+
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
+        },
+    },
+    safelist: [
+        {
+            pattern: /grid-cols-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /grid-rows-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /gap-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }, {
+            pattern: /col-span-(\d+)/,
+            variants: ['md', 'lg', 'xl'],
+        }
+    ],
+};
+
+
+```
+
+Step 6 - Intall tsconfig
+copy and past the following code in your tsconfig file on compilerOptions.paths
+
+```
+"lvp/*": ["./vendor/momoledev/laravue-panel/resources/js/*"],
+```
+
+Step 7 - Stetup app.ts file
+Add the following code in your app.ts file after imported Modules
+```
+import { lvp_plugins_options } from './Utils/plugins_options';
+````
+Add the following code in your app.ts file on plugins
+```
+.use(LVP)
+```

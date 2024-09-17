@@ -17,15 +17,15 @@ trait Actions
                 } else {
                     Route::get($this->slug, fn(Request $request) => $this->index($request, null))->middleware($this->index_middlewares)->name($this->route_name);
                 }
-                // if (in_array('post', $this->http_methods)) {
-                //     Route::post($this->slug, fn(Request $request) => $this->post($request))->middleware($this->post_middlewares)->name($this->route_name . '.post');
-                // }
-                // if (in_array('put', $this->http_methods)) {
-                //     Route::put($this->slug, fn(Request $request) => $this->put($request))->middleware($this->put_middlewares)->name($this->route_name . '.put');
-                // }
-                // if (in_array('delete', $this->http_methods)) {
-                //     Route::delete($this->slug, fn(Request $request) => $this->delete($request))->middleware($this->delete_middlewares)->name($this->route_name . '.delete');
-                // }
+                if (in_array('post', $this->http_methods)) {
+                    Route::post($this->slug, fn(Request $request) => $this->post($request))->middleware($this->post_middlewares)->name($this->route_name . '.post');
+                }
+                if (in_array('put', $this->http_methods)) {
+                    Route::put($this->slug, fn(Request $request) => $this->put($request))->middleware($this->put_middlewares)->name($this->route_name . '.put');
+                }
+                if (in_array('delete', $this->http_methods)) {
+                    Route::delete($this->slug, fn(Request $request) => $this->delete($request))->middleware($this->delete_middlewares)->name($this->route_name . '.delete');
+                }
             });
     }
     protected function setupPanel(Panel $panel_provider)

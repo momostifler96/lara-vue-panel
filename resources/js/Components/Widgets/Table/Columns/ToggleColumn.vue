@@ -15,6 +15,7 @@ const onSelect = (value: any) => {
   console.log("Toggle column  change", value);
   emit("dataEvent", {
     event: "change_toggle",
+    action: props.column.action,
     has_confirmation: props.column.has_confirmation,
     confirmation_title: props.column.confirmation_title,
     confirmation_body: props.column.confirmation_body,

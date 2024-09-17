@@ -44,7 +44,6 @@ class Page
     protected string $label;
     protected string $short_label;
     protected string $nav_menu_label;
-    protected string $plural_label;
 
     protected array $http_methods = ['get', 'post'];
     protected string $view_path = 'LVP/PageTemplate';
@@ -61,10 +60,18 @@ class Page
     protected array $put_middlewares = [];
     protected array $delete_middlewares = [];
     protected string $local = 'en';
+    protected array $_translations = [];
 
 
     protected \Illuminate\Foundation\Auth\User|null $current_user;
 
+    public function __construct()
+    {
+        $locale = config('app.locale');
+        $this->locale = $locale;
+        $tr = require __DIR__ . './../../Translations/' . $locale . '.php';
+        $this->_translations = $tr;
+    }
 
 
 }

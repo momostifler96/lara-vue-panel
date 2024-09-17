@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use LVP\Middlewares\PanelGuestInertiaMiddleware;
 use LVP\Middlewares\PanelInertiaMiddleware;
+use LVP\Middlewares\PanelTenancyMiddleware;
 use LVP\Support\PanelNavLink;
+use Spatie\Multitenancy\Contracts\IsTenant;
 
 trait Actions
 {
@@ -23,11 +25,22 @@ trait Actions
             $this->_login_page = new $this->_login_page_class();
         }
     }
+    public function setup()
+    {
+        if (!empty($this->_tenancy_domains)) {
+            $this->_middlewares[] = PanelTenancyMiddleware::class . ':' . $this->_id . ',' . implode(',', $this->_tenancy_domains);
+        }
+    }
     public function registerRoutes()
     {
+        // dd($this->getPanelRouteName());
+        // dd(app(IsTenant::class)::checkCurrent());
+        // if ($this->_is_tenancy && IsTenant::checkCurrent()) {
+        //     dd(IsTenant::checkCurrent());
+        // }
         Route::middleware($this->_middlewares)->group(function () {
             if (!empty($this->_login_page_class)) {
-                Route::middleware($this->_guest_middlewares)->prefix($this->getPanelRouteName())->as($this->getPanelRouteName())->group(function () {
+                Route::middleware($this->_guest_middlewares)->prefix($this->getPanelRoutePath())->as($this->getPanelRouteName())->group(function () {
                     Route::get('/login', fn(Request $request) => $this->_login_page->index($request))->name('.login');
                     Route::post('/login', fn(Request $request) => $this->_login_page->login($request))->name('.login.store');
                     Route::get('/register', fn(Request $request) => $this->_login_page->login($request))->name('.register');
@@ -35,7 +48,7 @@ trait Actions
                 });
             }
             Route::middleware($this->_panel_middlewares)->group(function () {
-                Route::prefix($this->getPanelRouteName())->as($this->getPanelRouteName())->group(function () {
+                Route::prefix($this->getPanelRoutePath())->as($this->getPanelRouteName())->group(function () {
                     Route::get('/', fn(Request $request) => $this->_dashboard->index($request));
                     Route::post('/', fn(Request $request) => $this->_dashboard->post($request))->name('.post');
                 });
@@ -185,7 +198,7 @@ trait Actions
                     'label' => 'Dashboard',
                     'icon' => 'dashboard',
                     'position' => -1,
-                    'path' => url($this->_route_path),
+                    'path' => '/' . $this->_route_path,
                 ],
                 ...$saved_menus
             ];

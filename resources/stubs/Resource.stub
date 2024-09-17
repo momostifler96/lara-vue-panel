@@ -7,6 +7,7 @@ use LVP\Table\TextColumn;
 use LVP\Widgets\DataWidgets\Actions\DataActionButton;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class {{class}}Resource extends Resource
 {
@@ -15,6 +16,9 @@ class {{class}}Resource extends Resource
     protected array $model_appends = [];
     protected array $model_with = [];
     protected string $model_primary_key = 'id';
+
+    protected string $form_type = 'modal'; // modal or page
+
 
 
     /**
@@ -104,5 +108,15 @@ class {{class}}Resource extends Resource
     }
     protected function onDeleteModelFail(\Exception $exception, array $models_id, Request $request)
     {
+    }
+    
+    //Retreive data Query Builder hooks
+    protected function beforeBuildQuery(Builder $query,Request $request)
+    {
+
+    }
+    protected function afterBuildQuery(Builder $query,Request $request)
+    {
+        
     }
 }

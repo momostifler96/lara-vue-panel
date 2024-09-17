@@ -3,6 +3,7 @@
 namespace LVP\Widgets\FormWidget;
 
 use LVP\Enums\HttpMethod;
+use LVP\Widgets\FormWidget\Fields\FormFieldWidget;
 use LVP\Widgets\LVPWidget;
 
 class FormWidget extends LVPWidget
@@ -10,6 +11,9 @@ class FormWidget extends LVPWidget
 
     protected string $_widget_type = 'form';
 
+    /**
+     * @var FormFieldWidget[]
+     */
     protected array $_fields = [];
     protected array $_formData = [];
     /**
@@ -39,6 +43,10 @@ class FormWidget extends LVPWidget
     protected string $_confirmation_title = 'Confirmation';
     protected string $_confirmation_message = 'Are you sure?';
     protected string $_method = 'POST';
+    protected string $_route = '';
+
+    protected array $_default_data = [];
+
 
     protected array $_cols = [
         'all' => 3,
@@ -155,10 +163,26 @@ class FormWidget extends LVPWidget
         $this->_title = $title;
         return $this;
     }
+
+    public function route(string $route)
+    {
+        $this->_route = $route;
+        return $this;
+    }
     public function isCard(bool $isCard)
     {
         $this->_is_card = $isCard;
         return $this;
+    }
+    public function defaultData(array $defaultData)
+    {
+        $this->_default_data = $defaultData;
+        return $this;
+    }
+
+    private function buildData()
+    {
+
     }
     public function setFormData(string $name, mixed $data)
     {
@@ -184,13 +208,14 @@ class FormWidget extends LVPWidget
         $data['grid_cols'] = $this->_cols['all'];
         $data['grid_cols_'] = $this->_cols;
         $data['gap'] = $this->_gap;
-        $data['fields'] = array_map(fn($it) => ($it->render($this)), ($this->_fields));
+        $data['fields'] = array_map(fn($it) => ($it->render($this, empty ($this->_default_data) ? [] : $this->_default_data[$it->field()])), ($this->_fields));
         $data['formData'] = $this->_formData;
         $data['confirmBeforeSubmit'] = $this->_confirm_before_submit;
         $data['confirmationTitle'] = $this->_confirmation_title;
         $data['confirmationMessage'] = $this->_confirmation_message;
         $data['isCard'] = $this->_is_card;
         $data['isHeadless'] = $this->_is_headless;
+        $data['route'] = $this->_route;
         $data['headerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_header_left_actions));
         $data['headerRightActions'] = array_map(fn($it) => ($it->render()), ($this->_header_right_actions));
         $data['footerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_footer_left_actions));

@@ -1,10 +1,7 @@
 <template>
-  <form
-    @submit.prevent="submitForm"
-    :class="[{ 'lvp-card': _props.isCard }, 'col-span-3']"
-  >
+  <form @submit.prevent="submitForm" :class="[{ 'lvp-card': _props.isCard }, 'col-span-3']">
     <div class="lvp-card-header">
-      <h3 v-if="_props.title.length > 1" class="text-xl font-bold pb-4">
+      <h3 v-if="_props.title.length > 1" class="text-xl font-bold" :class="[{ 'pb-3': !_props.isCard }]">
         {{ _props.title }}
       </h3>
       <slot name="header"></slot>
@@ -12,27 +9,18 @@
       <div class=""></div>
     </div>
     <div class="lvp-card-body">
-      <div
-        class="grid"
-        :style="`grid-template-columns: repeat(${_props.cols.all}, minmax(0, 1fr));gap:${_props.gap}px`"
-      >
+      <div class="grid"
+        :style="`grid-template-columns: repeat(${_props.cols.all}, minmax(0, 1fr));gap:${_props.gap}px`">
         <template v-for="(field, i) in _props.fields">
-          <component
-            :is="form_fields[field.component]"
-            v-bind="field.props"
-            v-model="_formData[field.name]"
-            :errorText="errorIsArray($page.props.errors, field.name)"
-            @change="
+          <component :is="form_fields[field.type]" v-bind="field.props" v-model="_formData[field.name]"
+            :errorText="errorIsArray($page.props.errors, field.name)" @change="
               updateField(field.name, $event, field.eventsListeners.change)
-            "
-            class=""
-            :class="[
-              `col-span-${field.colspan}`,
-              {
-                'col-span-full': field.colspan == 'full',
-              },
-            ]"
-          />
+              " class="mb-3" :class="[
+                `col-span-${field.colspan}`,
+                {
+                  'col-span-full': field.colspan == 'full',
+                },
+              ]" />
         </template>
       </div>
     </div>
@@ -43,13 +31,8 @@
       <slot name="footer"></slot>
     </div>
   </form>
-  <ConfirmationModal
-    :show="confirmation_modal.show"
-    icon="info"
-    :title="confirmation_modal.title"
-    :body="confirmation_modal.body"
-    @onResponse="confirmation_modal.onConfirm"
-  />
+  <ConfirmationModal :show="confirmation_modal.show" icon="info" :title="confirmation_modal.title"
+    :body="confirmation_modal.body" @onResponse="confirmation_modal.onConfirm" />
 </template>
 <script setup lang="ts">
 import { router, usePage } from "@inertiajs/vue3";
@@ -99,6 +82,10 @@ const _props = defineProps({
     type: String,
     default: "Submit",
   },
+  route: {
+    type: String,
+    default: "",
+  },
   submitBtnClass: {
     type: String,
     default: "btn-primary",
@@ -125,15 +112,15 @@ const _props = defineProps({
   },
 });
 const form_fields = <{ [k: string]: any }>{
-  "text-field": TextField,
-  "text-area-field": TextAreaField,
-  "text-editor-field": TextAreaField,
-  "select-field": FormSelectField,
-  "date-field": DatePicker,
-  "file-field": FileUploader,
-  "image-field": FileUploader,
-  "toggle-field": SwitchToggle,
-  "checkbox-field": TextAreaField,
+  "text": TextField,
+  "text-area": TextAreaField,
+  "text-editor": TextAreaField,
+  "select": FormSelectField,
+  "date": DatePicker,
+  "file": FileUploader,
+  "image": FileUploader,
+  "toggle": SwitchToggle,
+  "checkbox": TextAreaField,
 };
 
 const errorIsArray = (errors: any, field: string): string | null => {
@@ -143,7 +130,7 @@ const errorIsArray = (errors: any, field: string): string | null => {
 
 const _formData = reactive<{ [k: string]: any }>({
   ..._props.formData,
-  lvp_action: _props.lvpAction,
+  lvp_action: _props.action,
 });
 
 let field_debounce = <{ [k: string]: any }>{};
@@ -160,15 +147,15 @@ const submit = () => {
   if (_props.preventSubmit) {
     emit("onSubmit", _formData);
   } else if (_props.method == "get") {
-    router.get(_props.action, _formData);
+    router.get(_props.route, _formData);
   } else if (_props.method == "put") {
-    router.put(_props.action, _formData);
+    router.put(_props.route, _formData);
   } else if (_props.method == "post") {
-    router.post(_props.action, _formData);
+    router.post(_props.route, _formData);
   } else if (_props.method == "delete") {
-    router.delete(_props.action, _formData);
+    router.delete(_props.route, _formData);
   } else if (_props.method == "patch") {
-    router.patch(_props.action, _formData);
+    router.patch(_props.route, _formData);
   }
 };
 

@@ -72,11 +72,22 @@ class Install extends Command
                 'cropperjs',
                 '@primevue/themes',
                 '@headlessui/vue',
-                '@vuepic/vue-datepicker ',
                 'vue-awesome-paginate',
                 'maska',
                 'pinia',
-                'pinia-plugin-persistedstate'
+                'pinia-plugin-persistedstate',
+                // 'primevue/dropdown',
+                // 'primevue/multiselec',
+                '@vuepic/vue-datepicker',
+                '@tiptap/vue-3',
+                '@tiptap/starter-kit',
+                '@tiptap/extension-highlight',
+                '@tiptap/extension-text-align',
+                '@tiptap/extension-link',
+                '@tiptap/extension-underline',
+                '@tiptap/extension-dropcursor',
+                '@tiptap/extension-placeholder',
+                '',
             ];
             foreach ($npm_pakages as $key => $npm_pakage) {
                 $npm_pakage_prc = new Process(['npm', 'install', '--save', $npm_pakage]);

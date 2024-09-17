@@ -45,6 +45,7 @@ class Resource
     protected string $label;
     protected string $plural_label;
     protected string $short_label;
+    protected string $one_label;
     protected string $menu_label;
     protected int $menu_position = 0;
     protected int $form_grid_cols = 1;

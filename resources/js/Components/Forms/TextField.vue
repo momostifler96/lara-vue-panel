@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col">
     <div class="flex">
-      <label v-if="label" :for="id ?? ''" class="text-sm capitalize">{{
+      <label v-if="label" :for="id ?? ''" class="text-sm uc-first-letter">{{
         label
-      }}</label>
+        }}</label>
       <span v-if="required" class="text-red-500">*</span>
     </div>
     <div class="relative lvp-text-field">
@@ -15,10 +15,10 @@
     </div>
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText
-    }}</small>
+      }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-    }}</small>
+      }}</small>
   </div>
 </template>
 <script setup lang="ts">

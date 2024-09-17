@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use LVP\Enums\LVPAction;
+use LVP\Utils\CreateLVPAction;
 
 trait Http
 {
@@ -23,7 +24,6 @@ trait Http
             'data_widget' => $this->buildDataWidget($request),
             'after_data_widgets' => $this->buildAfterDataWidget($request),
         ];
-        // dd($props);
         return Inertia::render('LVP/ResourcePage', $props);
     }
     private function show(Request $request, $id = null)
@@ -58,13 +58,30 @@ trait Http
                 'cancel' => $this->getRoutes('index'),
                 'index' => $this->getRoutes('index'),
             ],
-            'form_component' => $this->buildFormComponent('create'),
+            'form_component' => $this->buildCreateFormComponent(),
         ];
         return Inertia::render('LVP/ResourceForm', $props);
     }
     private function edit(Request $request, $id = null)
     {
-        $props = [];
+        $resource = $this->model::where($this->model_primary_key, $id)->firstOrFail();
+        $formDefaultData = $resource->toArray();
+        $props = [
+            'page_titles' => $this->getFormPageTitle('update'),
+            'labels' => [
+                'submit' => 'Create',
+                'submit_and_create' => 'Create and Create Another',
+                'cancel' => 'Cancel',
+            ],
+            'dialog' => [],
+            'action' => 'update',
+            'routes' => [
+                'submit' => $this->getRoutes('update'),
+                'cancel' => $this->getRoutes('index'),
+                'index' => $this->getRoutes('index'),
+            ],
+            'form_component' => $this->buildEditFormComponent($formDefaultData),
+        ];
         return Inertia::render('LVP/ResourceForm', $props);
     }
     private function store(Request $request)
@@ -88,7 +105,6 @@ trait Http
                 }
             },
             function ($exception) use ($request, $formData) {
-                dd($exception);
                 $this->onStoreModelFail($exception, $formData, $request);
                 return redirect()->back()->with('error', 'Something went wrong');
             }
@@ -125,6 +141,39 @@ trait Http
                 return redirect()->back()->with('error', 'Something went wrong. errors :' . $exception->getMessage());
             }
         );
+
+    }
+    protected function actions(): array
+    {
+        return [
+
+        ];
+    }
+    protected function buildInActions(): array
+    {
+        return [
+            'update_col' => CreateLVPAction::make('update_col', function ($model, $request) {
+                $model::where($this->model_primary_key, $request->item_id)->first($this->model_primary_key)->update([
+                    $request->field => $request->value
+                ]);
+            }, "Item updated", "Item update failded"),
+
+        ];
+    }
+    private function execActions(Request $request)
+    {
+        /**
+         * @var Model $model
+         */
+        $actions = [...$this->buildInActions(), ...$this->actions()];
+        $action = $actions[$request->action];
+
+        try {
+            $action->exec($this->model, $request);
+            return back()->with('success', $action->on_success_message);
+        } catch (\Throwable $th) {
+            return back()->with('error', $action->on_fail_message);
+        }
 
     }
     private function delete(Request $request)

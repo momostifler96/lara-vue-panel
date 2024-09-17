@@ -1,12 +1,20 @@
 <?php
 namespace LVP\Modules\Resource\Features;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 trait Hooks
 {
     //Store model hooks 
+    protected function beforeBuildQuery(Builder $query, Request $request)
+    {
+
+    }
+    protected function afterBuildQuery(Builder $query, Request $request)
+    {
+    }
     protected function beforeStoreModel(array $formData, Request $request): array
     {
         return $formData;

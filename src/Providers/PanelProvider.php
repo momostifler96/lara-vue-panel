@@ -41,6 +41,8 @@ class PanelProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->panel = new Panel();
         $this->settings($this->panel);
+        // dd($this->panel);
+        $this->panel->setup();
         $this->panel->registerBasePages();
         $this->panel->registerResources();
         $this->panel->registerPages();

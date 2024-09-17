@@ -13,11 +13,13 @@ use LVP\Form\FileUploadField;
 use LVP\Form\ImageUploadField;
 use LVP\Modules\Panel\Panel;
 use LVP\Support\Info;
+use LVP\Utils\CreateLVPAction;
 use LVP\Widgets\DataWidgets\DataTableWidget;
 use LVP\Widgets\FormWidget\Fields\SwithToggleFieldWidget;
 
 trait Actions
 {
+
     private function buildModelData(Request $request, LVPAction $action = LVPAction::CREATE, array $old_data = []): array
     {
         $model_data = [];
@@ -148,6 +150,7 @@ trait Actions
                 Route::post($this->slug . '/store', fn(Request $request) => $this->store($request))->middleware($this->store_middlewares)->name('store');
                 Route::get($this->slug . '/edit/{id}', fn(Request $request, $id) => $this->edit($request, $id))->middleware($this->edit_middlewares)->name('edit');
                 Route::post($this->slug . '/update', fn(Request $request) => $this->update($request))->middleware($this->update_middlewares)->name('update');
+                Route::post($this->slug . '/exec-actions', fn(Request $request) => $this->execActions($request))->middleware($this->update_middlewares)->name('exec-actions');
                 Route::get($this->slug . '/{id}', fn(Request $request, $id) => $this->show($request, $id))->middleware($this->show_middlewares)->name('show');
                 Route::delete($this->slug . '/', fn(Request $request) => $this->delete($request))->middleware($this->delete_middlewares)->name('delete');
             });
@@ -249,10 +252,6 @@ trait Actions
         $query = $this->buildQuery($request, $columns);
         $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
 
-        // $data->withQuery($this->query);
-        // $data->withColumns($this->columns);
-        // $data->withActions($this->actions);
-
         return $data;
     }
     protected function buildDataColumns(): array
@@ -267,10 +266,10 @@ trait Actions
     private function buildQuery(Request $request, $columns): Builder
     {
         /**
-         * @var Builder
+         * @var Builder $query
          */
         $query = $this->model::query();
-
+        $this->beforeBuildQuery($query, $request);
 
         if ($request->has('search')) {
             $searchable_columns = $this->getSearchableFields();
@@ -295,7 +294,8 @@ trait Actions
             }
         }
 
-        return $query->with($this->model_with);
+        $this->afterBuildQuery($query, $request);
+        return $query;
     }
     private function buildAfterDataWidget(Request $request)
     {
@@ -324,6 +324,13 @@ trait Actions
             }
         }
         return $rules;
+    }
+
+    protected function buildActions(): array
+    {
+        return [
+            'enable' => CreateLVPAction::make('enable', [$this, 'enableItem']),
+        ];
     }
 
 }

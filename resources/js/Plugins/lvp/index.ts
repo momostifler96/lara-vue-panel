@@ -21,7 +21,9 @@ const plugin: Plugin = {
             actions: {
                 datatable: {
                     item: {},
-                    selected_items: {},
+                    // selected_items: {},
+                    bulk: {},
+                    item_col: {},
                 },
                 page: {},
                 resource_detail_page: {},
@@ -46,7 +48,8 @@ const plugin: Plugin = {
             .directive("maska", vMaska).use(LVPToast);
 
         app.provide("lvp.actions.datatable.item", options.actions?.datatable?.item);
-        app.provide("lvp.actions.datatable.selected_items", options.actions?.datatable?.selected_items);
+        app.provide("lvp.actions.datatable.bulk", options.actions?.datatable?.bulk);
+        app.provide("lvp.actions.datatable.item_col", options.actions?.datatable?.item_col);
         app.provide("lvp.actions.page", options.actions?.page);
         app.provide("lvp.actions.resource_detail_page", options.actions?.resource_detail_page);
         app.provide("lvp.actions.resource_create_page", options.actions?.resource_create_page);

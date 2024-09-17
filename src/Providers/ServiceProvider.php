@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use LVP\Facades\LVPCurrentPanel;
 use LVP\Facades\Panel;
+use URL;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -24,13 +25,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadCommands();
 
         // $this->load();
-
     }
 
     public function boot()
     {
         // $this->loadPanels();
         // dd($this->panels);
+        URL::forceScheme(env('APP_SCHEME', 'http'));
         $this->bootPanels();
         // /**
         //  * @var PanelProvider $current_panel
@@ -55,7 +56,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             // Obtenir le nom de la classe du provider
 
             $providerClass = 'App\\Providers\\Lvp\\' . basename($providerFile, '.php');
-
+            // dd($providerClass);
             // Vérifie si la classe existe et enregistre le provider
             if (class_exists($providerClass)) {
                 $panels[] = $providerClass;

@@ -33,8 +33,34 @@ interface DataTableItemActionOptions {
         onCancel?: () => void;
     };
 }
+interface DataTableItemColActionOptions {
+    data: any;
+    route_list: any;
+    router: typeof router;
+    showToast: (option: ToastOption) => void;
+    showConfirmation: {
+        title: string;
+        body: string;
+        cancel_button_label?: string;
+        confirm_button_label?: string;
+        has_password?: boolean;
+        onConfirm: (password: string) => void;
+        onCancel?: () => void;
+    };
+    showFormModal: {
+        title: string;
+        description: string;
+        cancel_button_label?: string;
+        submit_button_label?: string;
+        fields: { type: string, props: { [k: string]: any } }[];
+        has_password?: boolean;
+        onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
+        onCancel?: () => void;
+    };
+}
 interface DataTableSelectedItemsActionOptions {
-    selected_items: any;
+    selected_items_ids: string[];
+    selected_items: any[];
     route_list: any;
     router: typeof router;
     showToast: (option: ToastOption) => void;
@@ -45,6 +71,16 @@ interface DataTableSelectedItemsActionOptions {
         confirm_button_label: string;
         onConfirm: () => void;
         onCancel: () => void;
+    };
+    showFormModal: {
+        title: string;
+        description: string;
+        cancel_button_label?: string;
+        submit_button_label?: string;
+        fields: { type: string, props: { [k: string]: any } }[];
+        has_password?: boolean;
+        onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
+        onCancel?: () => void;
     };
 }
 
@@ -119,8 +155,16 @@ interface TableData {
     };
 }
 
-interface ActionsList {
+interface SingleItemAction {
     [key: string]: (item: DataTableItemActionOptions) => void
+}
+
+interface ItemColAction {
+    [key: string]: (item: DataTableItemActionOptions) => void
+}
+
+interface SelectedItemsActions {
+    [key: string]: (item: DataTableSelectedItemsActionOptions) => void
 }
 interface FileInfo {
     imagePreview?: string;
@@ -170,8 +214,9 @@ interface LVPPluginOptions {
 
     actions?: {
         datatable?: {
-            item?: { [key: string]: (options: DataTableItemActionOptions) => any };
-            selected_items?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
+            item?: { [key: string]: (options: SingleItemAction) => any };
+            bulk?: { [key: string]: (options: SelectedItemsActions) => any };
+            item_col?: { [key: string]: (options: DataTableItemColActionOptions) => any };
         },
         page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
         resource_detail_page?: { [key: string]: (options: DataTableSelectedItemsActionOptions) => any };
@@ -184,4 +229,4 @@ interface LVPPluginOptions {
 }
 
 
-export type { LVPPluginOptions, DataTableItemActionOptions, DataTableSelectedItemsActionOptions, TableColumn, TableData, ActionsList, ActionMenu, FileInfo, PageProps, FolderInterface, TableFilter }
+export type { LVPPluginOptions, TableColumn, TableData, SingleItemAction, SelectedItemsActions, ActionMenu, FileInfo, PageProps, FolderInterface, TableFilter }

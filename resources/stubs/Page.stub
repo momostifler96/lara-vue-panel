@@ -2,17 +2,16 @@
 
 namespace App\LVP\Pages{{namespace}};
 
-use LVP\Facades\Page as LVPPage;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use LVP\Modules\Page\Page;
 
-class {{class}}Page extends LVPPage
+class {{class}}Page extends Page
 {
-    protected function settings(LVPPage $page)
-    {
-        
-    }
+
+    protected string $label;
+    protected string $short_label;
+    protected string $nav_menu_label;
+
     
     protected function beforeContent(Request $request): array
     {

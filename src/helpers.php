@@ -24,7 +24,7 @@ function sortByKey(&$array, $key, $order = 'asc')
     });
 }
 
-function lvp_translation($word, $translations = null)
+function lvp_translation($word, $translations = null, $attributes = [])
 {
     $_tt = explode('.', $word, );
     $_translations = $translations;
@@ -36,6 +36,12 @@ function lvp_translation($word, $translations = null)
 
     foreach ($_tt as $key => $value) {
         $_tr = $_tr[$value];
+    }
+
+    if (!empty($attributes)) {
+        $attrs = array_map(fn($t) => '{' . $t . '}', array_keys($attr));
+        $attrs_vals = array_values($attr);
+        $_tr = str_replace($attrs, $attrs_vals, $_tr);
     }
 
     return $_tr;

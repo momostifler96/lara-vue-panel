@@ -32,6 +32,23 @@ return [
     'update' => 'Mettre à jour',
     'back' => "Retour",
     'failed' => "Échoué",
+    'male' => "Homme",
+    'female' => "Femme",
+    'children' => "Enfants",
+    'child' => "Enfant",
     'create_and_create_another' => 'Créer et crée {gender} autre',
+    'auth' => [
+        'credential_error' => 'Les informations que vous avez fournir sont incorrect..',
+        'you_are_loged' => 'Vous êtes connecté',
+        'login_fail' => 'Connexion échoué',
+        'logout' => 'Se déconnecter',
+        'login' => 'Se connecter',
+        'register' => "S'inscrir",
+        'identifiant' => "Email ou numéro de téléphone",
+        'password' => "Mot de passe",
+        'remember_me' => "Resté connecter",
+        'login_page_title' => "Connexion",
+        'login_page_description' => "Siaisez vos information pour vous connecter a votre espace"
+    ]
 
 ];

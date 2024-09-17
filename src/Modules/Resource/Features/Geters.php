@@ -44,7 +44,7 @@ trait Geters
             'label' => $this->getMenuLabel(),
             'position' => $this->menu_position,
             'icon' => $this->menu_icon,
-            'path' => url($this->slug),
+            'path' => '/' . $this->slug,
         ];
     }
     public function getMenuGroup(): null|string
@@ -88,9 +88,14 @@ trait Geters
     {
         return $this->show_in_menu;
     }
-    public function buildFormComponent($action = 'create'): array
+    public function buildCreateFormComponent($action = 'create'): array
     {
         $form = FormWidget::make()->cols(2)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes($action == 'create' ? 'store' : 'update')))->render();
+        return $form;
+    }
+    public function buildEditFormComponent($data): array
+    {
+        $form = FormWidget::make()->defaultData($data)->cols(2)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'update'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('update')))->render();
         return $form;
     }
     public function buildFormFields(): array
@@ -176,6 +181,7 @@ trait Geters
             'index' => $this->route_name . '.index',
             'delete' => $this->route_name . '.delete',
             "show" => $this->route_name . '.show',
+            "exec_actions" => $this->route_name . '.exec-actions',
 
         ];
 

@@ -11,7 +11,7 @@
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
             props.page_titles.submit
-          }}</SimpleButton>
+            }}</SimpleButton>
           <SimpleButton v-if="props.action == 'create'" type="submit" @click="submitForm('reload')">
             {{
               props.page_titles.submit_and_create
@@ -77,7 +77,6 @@ const _formData = reactive<{ [k: string]: any }>({
 });
 
 const submit = () => {
-  console.log('_formData.formData', _formData.formData);
   router.post(
     route(props.routes.submit),
     _formData.formData

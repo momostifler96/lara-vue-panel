@@ -4,7 +4,7 @@
       <slot name="actions" />
       <SimpleButton @click="creatResource">{{
         props.labels.create
-      }}</SimpleButton>
+        }}</SimpleButton>
     </template>
 
     <div v-if="props.before_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
@@ -84,7 +84,6 @@ interface ResourceIndexPage {
 const props = computed(() => {
   return usePage().props as unknown as ResourceIndexPage;
 });
-console.log('props.modal_form', props.value.modal_form);
 
 //------------------Widgets-----------
 const widgets_components = <{ [key: string]: any }>{

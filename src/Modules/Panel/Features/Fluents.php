@@ -15,9 +15,7 @@ trait Fluents
         if (empty($this->_route_name)) {
             $this->_route_name = $id;
         }
-        if (empty($this->_route_path)) {
-            $this->_route_path = $id;
-        }
+
         return $this;
     }
 
@@ -29,6 +27,16 @@ trait Fluents
     public function routeName(string $route_name)
     {
         $this->_route_name = $route_name;
+        return $this;
+    }
+
+    public function tenanciesDomains(array|string $tenancy_domains = '*')
+    {
+        if (is_array($tenancy_domains)) {
+            $this->_tenancy_domains = $tenancy_domains;
+        } else {
+            $this->_tenancy_domains = [$tenancy_domains];
+        }
         return $this;
     }
 
@@ -48,6 +56,11 @@ trait Fluents
     public function loadResourcesFromPath(string $path)
     {
         $this->_resources_path = $path;
+        return $this;
+    }
+    public function loginPage(string $class = null)
+    {
+        $this->_login_page_class = $class;
         return $this;
     }
     public function loadPagesFromPath(string $path)
@@ -89,6 +102,11 @@ trait Fluents
     public function authModelProvider(string $model)
     {
         $this->_auth_provider = $model;
+        return $this;
+    }
+    public function tenancyAuthModelProvider(string $model)
+    {
+        $this->_tenancy_auth_provider = $model;
         return $this;
     }
     public function middleware(array $middlewares)

@@ -97,7 +97,7 @@ class CreatePanel extends Command
      */
     protected function getPath($name)
     {
-        return base_path('app/LVP/Panels/' . $name . 'Panel.php');
+        return base_path('app/Providers/Lvp/' . $name . 'Panel.php');
     }
 
     /**

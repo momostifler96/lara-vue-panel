@@ -15,7 +15,15 @@ class LoginPage
     public string $meta_title = 'Login';
     public string $meta_description = 'Login';
     public string $auth_provider = User::class;
+    public array $_translations = [];
 
+    public function __construct()
+    {
+        $locale = config('app.locale');
+        $this->locale = $locale;
+        $tr = require __DIR__ . './../Translations/' . $locale . '.php';
+        $this->_translations = $tr;
+    }
 
     public function index(Request $request)
     {
@@ -28,7 +36,17 @@ class LoginPage
             'index' => $current_panel->getPanelRouteName() . '.login',
             'store' => $current_panel->getPanelRouteName() . '.login.store',
         ];
-        $props = compact('page_titles', 'routes');
+        $labels = [
+            'login' => lvp_translation('auth.login', $this->_translations),
+            'identifiant' => lvp_translation('auth.identifiant', $this->_translations),
+            'password' => lvp_translation('auth.password', $this->_translations),
+            'remember_me' => lvp_translation('auth.remember_me', $this->_translations),
+        ];
+        // $titles = [
+        //     'title'=>lvp_translation('auth.login_page_title', $this->_translations),
+        //     'description'=>lvp_translation('auth.login_description', $this->_translations),
+        // ];
+        $props = compact('page_titles', 'routes', 'labels');
         return Inertia::render('LVP/LoginPage', $props);
     }
     public function login(Request $request)
@@ -47,23 +65,23 @@ class LoginPage
             'password' => ['required', 'min:5', 'max:30'],
         ]);
 
-        $this->afterLogin($request);
+        $credentials = $request->only('identifiant', 'password', 'remember_me');
+        $this->beforeLogin($request, $credentials);
         /**
          * @var \LVP\Modules\Panel\Panel $current_panel
          */
         $current_panel = app('lvp-current');
-        $credentials = $request->only('identifiant', 'password', 'remember_me');
         $user = $current_panel->getAuthProvider()::where('email', $credentials['identifiant'])->first();
         if ($user && Hash::check($credentials['password'], $user->password)) {
             $this->beforeLogin($request, $credentials);
             auth($current_panel->getId())->login($user, $credentials['remember_me']);
             $this->afterLogin($request);
-            return redirect()->intended(route($current_panel->getPanelRouteName()))->with('success', 'You are logind');
+            return redirect()->intended(route($current_panel->getPanelRouteName()))->with('success', lvp_translation('auth.you_are_loged', $this->_translations));
 
         } else {
             return back()->withErrors([
-                'identifiant' => 'The provided credentials do not match our records.',
-                'password' => 'The provided credentials do not match our records.',
+                'identifiant' => lvp_translation('auth.credential_error', $this->_translations),
+                'password' => lvp_translation('auth.credential_error', $this->_translations),
             ]);
         }
     }
@@ -72,7 +90,7 @@ class LoginPage
         return back();
     }
 
-    public function beforeLogin(Request $request, array $credentials)
+    public function beforeLogin(Request $request, array &$credentials)
     {
 
     }
@@ -88,9 +106,9 @@ class LoginPage
     public function getPageTitles()
     {
         return [
-            'title' => $this->title,
-            'meta_title' => $this->meta_title,
-            'meta_description' => $this->meta_description,
+            'title' => lvp_translation('auth.login_page_title', $this->_translations),
+            'meta_title' => lvp_translation('auth.login_page_title', $this->_translations),
+            'meta_description' => lvp_translation('auth.login_page_description', $this->_translations),
         ];
     }
 
