@@ -3,8 +3,8 @@
     <div class="flex">
       <label v-if="label" :for="id ?? ''" class="text-sm uc-first-letter">{{
         label
-        }}</label>
-      <span v-if="required" class="text-red-500">*</span>
+      }}</label>
+      <span v-if="required" class="text-red-500 h-2">*</span>
     </div>
     <div class="relative lvp-text-field">
       <slot name="prefix" />
@@ -15,10 +15,10 @@
     </div>
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText
-      }}</small>
+    }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-      }}</small>
+    }}</small>
   </div>
 </template>
 <script setup lang="ts">

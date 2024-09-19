@@ -2,7 +2,7 @@
   <div class="">
     <div class="flex">
       <label for="" class="text-sm capitalize">{{ label }}</label>
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-red-500 h-2">*</span>
     </div>
     <MultiSelect v-if="multiple" :modelValue="modelValue" @update:modelValue="emit('update:modelValue', $event)"
       :options="options" :placeholder="placeholder" option-label="label" option-value="value" :filter="filter"
@@ -14,10 +14,10 @@
 
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText
-    }}</small>
+      }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-    }}</small>
+      }}</small>
   </div>
 </template>
 <script setup lang="ts">

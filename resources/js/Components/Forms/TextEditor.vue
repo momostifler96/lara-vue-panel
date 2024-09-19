@@ -1,15 +1,18 @@
 <template>
   <div class="lvp-text-editor">
-    <label v-if="label" for="">{{ label }}</label>
+    <div class="flex">
+      <label v-if="label" for="">{{ label }}</label>
+      <span v-if="required" class="text-red-500 h-2">*</span>
+    </div>
     <textarea @input="updateModelValue" name="" id="" cols="30" rows="10">{{
       modelValue
     }}</textarea>
     <small v-if="helperText && helperText.length > 0" class="text-gray-300">{{
       helperText
-    }}</small>
+      }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-    }}</small>
+      }}</small>
   </div>
 </template>
 <script setup lang="ts">

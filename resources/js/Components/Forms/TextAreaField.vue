@@ -2,26 +2,17 @@
   <div class="flex flex-col">
     <div class="flex">
       <label v-if="label" :for="id ?? ''">{{ label }}</label>
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-red-500 h-2">*</span>
     </div>
 
-    <textarea
-      name=""
-      :id="id ?? ''"
-      rows="10"
-      class="lvp-text-area-field"
-      :placeholder="placeholder ?? ''"
-      :disabled="disabled"
-      :readonly="readonly"
-      @input="updateModelValue"
-      >{{ modelValue }}</textarea
-    >
+    <textarea name="" :id="id ?? ''" rows="10" class="lvp-text-area-field" :placeholder="placeholder ?? ''"
+      :disabled="disabled" :readonly="readonly" @input="updateModelValue">{{ modelValue }}</textarea>
     <small v-if="helperText && helperText.length > 0" class="text-gray-300">{{
       helperText
-    }}</small>
+      }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-    }}</small>
+      }}</small>
   </div>
 </template>
 <script setup lang="ts">
