@@ -172,6 +172,7 @@ trait Http
             $action->exec($this->model, $request);
             return back()->with('success', $action->on_success_message);
         } catch (\Throwable $th) {
+            dd($th);
             return back()->with('error', $action->on_fail_message);
         }
 

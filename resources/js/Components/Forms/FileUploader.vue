@@ -1,35 +1,19 @@
 <template>
   <div>
-    <label for="" class="flex"
-      >{{ label }}
+    <label for="" class="flex">{{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
-    <div
-      ref="fileInput"
-      @dragover="onOver"
-      @dragleave="onLeave"
-      @drop="onDrop"
-      class="flex-col bg-gray-100 border-2 border-gray-300 border-dashed rounded cursor-pointer lvp-file-uploader flex-center"
-    >
-      <label
-        v-if="multiple || uploadedFilesInfos.length == 0"
-        for="f-loader-1"
-        :class="[height]"
-        class="w-full cursor-pointer flex-center"
-      >
+    <div ref="fileInput" @dragover="onOver" @dragleave="onLeave" @drop="onDrop"
+      class="flex-col bg-gray-100 border-2 border-gray-300 border-dashed rounded cursor-pointer lvp-file-uploader flex-center">
+      <label v-if="multiple || uploadedFilesInfos.length == 0" for="f-loader-1" :class="[height]"
+        class="w-full cursor-pointer flex-center">
         <span class="flex items-center gap-3 text-gray-500 pointer-events-none">
           <span v-html="UploadIcon" class="w-10 h-10" />
           <span class="text-xl">Drop files here</span>
         </span>
         <form ref="fileForm" class="hidden">
-          <input
-            type="file"
-            id="f-loader-1"
-            :accept="accept"
-            class="hidden"
-            :multiple="multiple"
-            @change="onFilePicked"
-          />
+          <input type="file" id="f-loader-1" :accept="accept" class="hidden" :multiple="multiple"
+            @change="onFilePicked" />
         </form>
       </label>
       <div class="flex flex-col w-full">
@@ -37,13 +21,10 @@
           <template v-for="(file, i) in uploadedFilesInfos" :key="i">
             <div class="p-2">
               <div class="lvp-file-uploaded-container">
-                <div
-                  class="lvp-file-container"
-                  :class="{
-                    'lvp-file-image-container': file.fileType === 'image',
-                    'bg-black/50 h-44': file.fileType != 'image',
-                  }"
-                >
+                <div class="lvp-file-container" :class="{
+                  'lvp-file-image-container': file.fileType === 'image',
+                  'bg-black/50 h-44': file.fileType != 'image',
+                }">
                   <div class="grid grid-cols-2 gap-1">
                     <span>
                       <p class="line-clamp-1">
@@ -58,61 +39,39 @@
                         <p>Upload finished</p>
                         <p class="text-xs text-gray-400">Tap to view</p>
                       </span>
-                      <button
-                        type="button"
-                        v-if="file.fileType != 'image'"
-                        @click="removeFile(i)"
-                        class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
-                      >
+                      <button type="button" v-if="file.fileType != 'image'" @click="removeFile(i)"
+                        class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center">
                         <span v-html="CloseIcon" class="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                  <div
-                    class="w-full gap-2 flex-center"
-                    v-if="file.fileType === 'image'"
-                  >
-                    <button
-                      type="button"
-                      @click="
-                        showCropper(
-                          i,
-                          file.imagePreview as string,
-                          file.fileOriginalName
-                        )
+                  <div class="w-full gap-2 flex-center" v-if="file.fileType === 'image'">
+                    <button type="button" @click="
+                      showCropper(
+                        i,
+                        file.imagePreview as string,
+                        file.fileOriginalName
+                      )
                       "
-                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
-                    >
+                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center">
                       <span v-html="EditIcon" class="w-4 h-4" />
                     </button>
-                    <button
-                      type="button"
-                      @click="removeFile(i)"
-                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
-                    >
+                    <button type="button" @click="removeFile(i)"
+                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center">
                       <span v-html="CloseIcon" class="w-4 h-4" />
                     </button>
-                    <button
-                      type="button"
-                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
-                    >
+                    <button type="button"
+                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center">
                       <span v-html="EyeIcon" class="w-4 h-4" />
                     </button>
-                    <button
-                      type="button"
-                      v-if="server"
-                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center"
-                    >
+                    <button type="button" v-if="server"
+                      class="p-1 text-white transition bg-black rounded-full ring-1 ring-transparent hover:ring-white w-7 h-7 flex-center">
                       <span v-html="UploadIcon" class="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-                <img
-                  v-if="file.fileType === 'image'"
-                  class="absolute top-0 left-0 z-10 object-cover w-full h-full"
-                  :src="file.imagePreview"
-                  alt=""
-                />
+                <img v-if="file.fileType === 'image'" class="absolute top-0 left-0 z-10 object-cover w-full h-full"
+                  :src="file.imagePreview" alt="" />
               </div>
               <small class="flex w-full text-red-500">
                 {{ $page.props.errors[field + "." + i] }}
@@ -128,12 +87,8 @@
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
     }}</small>
-    <CropperModal
-      v-model:show="cropper.show"
-      :image="cropper.image"
-      :imageName="cropper.imageName"
-      @onCrop="onCroppe"
-    />
+    <CropperModal v-model:show="cropper.show" :image="cropper.image" :imageName="cropper.imageName"
+      @onCrop="onCroppe" />
   </div>
 </template>
 <script setup lang="ts">
@@ -398,6 +353,7 @@ const getFileType = (file: File): string => {
 .fade-leave-to {
   opacity: 0;
 }
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.3s ease-out;

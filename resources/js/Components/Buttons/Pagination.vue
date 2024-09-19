@@ -1,14 +1,7 @@
 <template>
-  <vue-awesome-paginate
-    :total-items="totalItems"
-    :items-per-page="itemsPerPage"
-    :max-pages-shown="5"
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
-    :show-ending-buttons="true"
-    :show-breakpoint-buttons="false"
-    @click="$emit('paginate', $event)"
-  >
+  <VueAwesomePaginate :total-items="totalItems" :items-per-page="itemsPerPage" :max-pages-shown="5"
+    :modelValue="modelValue" @update:modelValue="$emit('update:modelValue', $event)" :show-ending-buttons="true"
+    :show-breakpoint-buttons="false" @click="$emit('paginate', $event)">
     <template #prev-button>
       <span v-html="ChevronLeftIcon" class="w-4 h-4"></span>
     </template>
@@ -21,7 +14,7 @@
     <template #last-page-button>
       <span v-html="ChevronDoubleRightIcon" class="w-4 h-4"></span>
     </template>
-  </vue-awesome-paginate>
+  </VueAwesomePaginate>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
@@ -88,9 +81,10 @@ const onClickHandler = (page: number) => {
 .active-page:hover {
   background-color: var(--lvp-color-primary-hover);
 }
+
 .paginate-buttons {
+
   &.back-button,
-  &.next-button {
-  }
+  &.next-button {}
 }
 </style>

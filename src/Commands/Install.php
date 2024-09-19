@@ -69,7 +69,7 @@ class Install extends Command
                 'apexcharts',
                 'vue3-apexcharts ',
                 'primevue ',
-                'cropperjs',
+                'cropperjs:^2.0.0-rc.2',
                 '@primevue/themes',
                 '@headlessui/vue',
                 'vue-awesome-paginate',

@@ -4,7 +4,7 @@ namespace LVP\Widgets\FormWidget\Fields;
 
 class FileUploadFieldWidget extends FormFieldWidget
 {
-    protected string $_component = 'file-field';
+    protected string $_component = 'file';
     protected string $_accept = '*';
     protected string $_max_size = '5M';
     protected bool $_multiple = false;

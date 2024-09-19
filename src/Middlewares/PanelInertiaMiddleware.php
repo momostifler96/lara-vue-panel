@@ -61,6 +61,8 @@ class PanelInertiaMiddleware extends Middleware
             $shared_data['auth']['permissions'] = auth($current_panel->getId())->user()->permissions;
             $shared_data['notifications'] = auth($current_panel->getId())->user()->unreadNotifications->count();
         }
+        // dd($shared_data);
+
         return $shared_data;
     }
 

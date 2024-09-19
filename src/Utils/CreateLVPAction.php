@@ -5,8 +5,8 @@ class CreateLVPAction
 {
     protected $name;
     protected $action;
-    public $on_success_message;
-    public $on_failed_message;
+    public $on_success_message = '';
+    public $on_failed_message = '';
 
 
     public function __construct(string $name, callable $action, string $on_success_message = '', string $on_failed_message = '')

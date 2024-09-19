@@ -325,6 +325,7 @@ class Panel
     {
 
         $nav_menu = config('laravue-panel.env') == 'local' ? [] : Cache::get('lvp-menus-' . $this->_id, []);
+        dd($nav_menu);
         if (empty($nav_menu)) {
             $saved_menus = [];
             $simple_menus = [];

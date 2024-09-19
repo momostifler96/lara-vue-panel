@@ -1,29 +1,39 @@
 <template>
   <div class="relative w-[600px] overflow-y-auto h-full p-5">
-    <div class="w-full my-auto flex-center cropper-container"></div>
+    <div class="cropper-container">
+      <cropper-canvas background="red" ref="cropperCanvas">
+        <cropper-image :src="image" ref="cropperImage" alt="Picture" rotatable :scalable="true" :skewable="true"
+          :translatable="true" initialCenterSize="contain" />
+        <cropper-shade />
+
+        <cropper-selection ref="cropperSelection" initial-coverage="0.8" :resizable="true" outlined movable
+          :aspectRatio="_aspectRatio">
+          <cropper-grid role="grid" covered hidden />
+          <cropper-crosshair centered />
+          <!-- <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)" /> -->
+          <cropper-handle action="move" theme-color="transparent" />
+          <cropper-handle action="n-resize" />
+          <cropper-handle action="e-resize" />
+          <cropper-handle action="s-resize" />
+          <cropper-handle action="w-resize" />
+          <cropper-handle action="ne-resize" />
+          <cropper-handle action="nw-resize" />
+          <cropper-handle action="se-resize" />
+          <cropper-handle action="sw-resize" />
+        </cropper-selection>
+      </cropper-canvas>
+    </div>
     <div class="flex justify-center gap-2 mt-5">
-      <CropperActionButton
-        @click="actions.validate"
-        id="cropper-action-validate"
-      >
+      <CropperActionButton @click="actions.validate" id="cropper-action-validate">
         <span v-html="ValidateIcon" class="w-4 h-4" />
       </CropperActionButton>
-      <CropperActionButton
-        @click="actions.zoomPlus"
-        id="cropper-action-zoom-plus"
-      >
+      <CropperActionButton @click="actions.zoomPlus" id="cropper-action-zoom-plus">
         <span v-html="ZoomInIcon" class="w-5 h-5" />
       </CropperActionButton>
-      <CropperActionButton
-        @click="actions.zoomMinus"
-        id="cropper-action-zoom-minus"
-      >
+      <CropperActionButton @click="actions.zoomMinus" id="cropper-action-zoom-minus">
         <span v-html="ZoomOutIcon" class="w-5 h-5" />
       </CropperActionButton>
-      <CropperActionButton
-        @click="actions.center"
-        id="cropper-action-zoom-minus"
-      >
+      <CropperActionButton @click="actions.center" id="cropper-action-zoom-minus">
         <span v-html="CenterIcon" class="w-5 h-5" />
       </CropperActionButton>
       <CropperActionButton @click="actions.rotateLeft">
@@ -32,12 +42,22 @@
       <CropperActionButton @click="actions.rotateRight">
         <RotateRight class="!w-5 !h-5" />
       </CropperActionButton>
-      <CropperActionButton @click="actions.undo" id="cropper-action-undo">
-        <span v-html="UndoIcon" class="w-4 h-4" />
+      <CropperActionButton @click="actions.flipHorizontal">
+        <span v-html="flipHorizontalIcon" class="w-4 h-4" />
+
       </CropperActionButton>
-      <CropperActionButton @click="actions.redo" id="cropper-action-redo">
-        <span v-html="RedoIcon" class="w-4 h-4" />
+      <CropperActionButton @click="actions.flipVerticale">
+        <span v-html="flipVerticaleIcon" class="w-4 h-4" />
       </CropperActionButton>
+      <select v-model="_aspectRatio" v-if="canChangeRatio"
+        class="min-w-8 h-8 text-white transition-colors border rounded border-gray-500/30 flex-center bg-transparent hover:bg-gray-800 p-0 px-2 w-24 focus:ring-0 focus:outline-none ring-0">
+        <option :value="false">Free</option>
+        <option :value="1">1</option>
+        <option :value="16 / 9">16/9</option>
+        <option :value="4 / 3">4/3</option>
+        <option :value="3 / 2">3/2</option>
+      </select>
+
       <CropperActionButton @click="actions.reset" id="cropper-action-reset">
         <span v-html="CloseIcon" class="w-4 h-4" />
       </CropperActionButton>
@@ -57,52 +77,75 @@ import {
   CenterIcon,
   EyeIcon,
   EditIcon,
+  flipHorizontalIcon,
+  flipVerticaleIcon,
 } from "lvp/helpers/lvp_icons";
 
 import CropperActionButton from "./CropperActionButton.vue";
 import RotateLeft from "lvp/Components/Icons/RotateLeft.vue";
 import RotateRight from "lvp/Components/Icons/RotateRight.vue";
 
-import Cropper from "cropperjs";
+import "cropperjs";
 const props = defineProps({
-  image: String,
-  imageName: String,
+  image: {
+    type: String,
+    required: true,
+  },
+  imageName: {
+    type: String,
+    default: null,
+  },
+  aspectRatio: {
+    type: Number,
+    default: 16 / 9,
+  },
+  canChangeRatio: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits(["onCrop"]);
 
 const cropper = ref();
-const copperImage = ref();
+const _aspectRatio = ref(props.aspectRatio);
+const cropperImage = ref();
+const cropperSelection = ref();
+const cropperCanvas = ref();
 
 const actions = {
   reset: () => {
-    cropper.value.getCropperSelection()?.$reset();
-    cropper.value.getCropperImage()?.$center("contain");
-    cropper.value.getCropperImage()?.$rotate(0);
-    cropper.value.getCropperImage()?.$zoom(0);
+    cropperSelection.value.$reset();
+    cropperImage.value.$center("contain");
+    cropperImage.value.$rotate(0);
+    cropperImage.value.$zoom(0);
   },
   validate: () => {
     // emit("update:cropper", cropper.value.getData());
-    cropper.value
-      .getCropperSelection()
-      ?.$toCanvas()
+    cropperSelection.value.$toCanvas()
       .then((canvas: any) => {
         canvas?.toBlob((blob: Blob) =>
-          emit("onCrop", blobToFile(blob, "jpg", "image-cropped"))
+          emit("onCrop", blobToFile(blob, "png", "image-cropped"))
         );
       });
   },
   zoomPlus: () => {
-    cropper.value.getCropperImage()?.$zoom(0.1);
+    cropperImage.value.$zoom(0.1);
   },
   zoomMinus: () => {
-    cropper.value.getCropperImage()?.$zoom(-0.1);
+    cropperImage.value.$zoom(-0.1);
   },
   rotateLeft: () => {
-    cropper.value.getCropperImage()?.$rotate(-90);
+    cropperImage.value.$rotate('-90deg');
   },
   rotateRight: () => {
-    cropper.value.getCropperImage()?.$rotate(90);
+    cropperImage.value.$rotate('90deg');
+  },
+  flipHorizontal: () => {
+    cropperImage.value.$scale(-1, 1);
+  },
+  flipVerticale: () => {
+    cropperImage.value.$scale(1, -1);
   },
   undo: () => {
     // cropper.value.undo();
@@ -111,7 +154,7 @@ const actions = {
     // cropper.value.redo();
   },
   center: () => {
-    cropper.value.getCropperImage()?.$center("contain");
+    cropperImage.value.$center("contain");
   },
 };
 function blobToFile(blob: Blob, fileExtension = "png", namePrefix = "") {
@@ -149,30 +192,16 @@ function base64ToFile(base64: string, fileName: string) {
 
   return file;
 }
-onMounted(() => {
-  const image = new Image();
-  image.src = props.image;
-  image.alt = "Picture";
-  cropper.value = new Cropper(image, {
-    container: ".cropper-container",
-  });
-
-  // const test_cropper = new Cropper(image, {
-  //     container: ".cropper-containesr",
-  // });
-  // test_cropper.getCropperImage().$center("contain");
-});
 </script>
 <style lang="scss" scoped>
 .cropper-container {
   border: 1px solid var(--vp-c-divider);
   border-radius: 0.375rem;
-  // margin-bottom: 1rem;
-  // margin-top: 1rem;
   height: calc(100% - 4rem);
-  :deep(cropper-canvas) {
+
+  cropper-canvas {
     height: 100%;
-    width: 600px;
   }
+
 }
 </style>
