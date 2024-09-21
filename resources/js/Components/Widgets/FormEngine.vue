@@ -20,6 +20,7 @@ import FileUploader from "lvp/Components/Forms/FileUploader.vue";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 import TextEditor from "../Forms/TiptapEditor/Editor.vue";
+import { inject } from "vue";
 
 const _props = defineProps({
     fields: {
@@ -46,6 +47,7 @@ const _props = defineProps({
         required: 3,
     },
 });
+const plugins_fields = <{ [k: string]: any }>inject('lvp_form_fields');
 const form_fields = <{ [k: string]: any }>{
     "text": TextField,
     "text-area": TextAreaField,
@@ -56,6 +58,7 @@ const form_fields = <{ [k: string]: any }>{
     "image": FileUploader,
     "toggle": SwitchToggle,
     "checkbox": TextAreaField,
+    ...plugins_fields
 };
 
 const errorIsArray = (errors: any, field: string): string | null => {

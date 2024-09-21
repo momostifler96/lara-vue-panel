@@ -67,7 +67,9 @@ const props = defineProps({
 const showModal = ref(false);
 
 console.log('props', props);
-const formData = ref({});
+const formData = ref({
+    action: props.form.props.action,
+});
 
 
 const form_grids = <{ [k: string]: any }>{
@@ -75,10 +77,10 @@ const form_grids = <{ [k: string]: any }>{
 }
 
 const submit = () => {
-    router[props.form.props.method](props.form.props.action, formData.value, {
+    router[props.form.props.method](props.form.props.submit_url, formData.value, {
         onSuccess: () => {
             showModal.value = false;
-            formData.value = {};
+            formData.value = { action: props.form.props.action };
         },
     });
 

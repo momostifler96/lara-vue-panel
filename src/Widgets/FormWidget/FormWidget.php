@@ -36,6 +36,7 @@ class FormWidget extends LVPWidget
     protected string $_lvp_action = '';
     protected string $_action = '';
     protected string $_submit_label = 'Submit';
+    protected string $_submit_url = '';
     protected string $_submit_btn_class = '';
 
     protected string $_cancel_label = 'Cancel';
@@ -105,6 +106,11 @@ class FormWidget extends LVPWidget
     public function submitBtnLabel(string $label)
     {
         $this->_submit_label = $label;
+        return $this;
+    }
+    public function submitUrl(string $url)
+    {
+        $this->_submit_url = $url;
         return $this;
     }
 
@@ -235,6 +241,7 @@ class FormWidget extends LVPWidget
         $data['isCard'] = $this->_is_card;
         $data['isHeadless'] = $this->_is_headless;
         $data['route'] = $this->_route;
+        $data['submit_url'] = $this->_submit_url;
         $data['headerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_header_left_actions));
         $data['headerRightActions'] = array_map(fn($it) => ($it->render()), ($this->_header_right_actions));
         $data['footerLeftActions'] = array_map(fn($it) => ($it->render()), ($this->_footer_left_actions));

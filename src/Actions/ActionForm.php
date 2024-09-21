@@ -12,7 +12,8 @@ class ActionForm extends Action
     protected array $_fields = [];
     protected string $_submit_label = 'Submit';
     protected string $_cancel_label = 'Cancel';
-    protected string $_action_url = '';
+    protected string $_submit_url = '';
+    protected string $_action = '';
     protected int $_grid_cols = 1;
     protected int $_gap = 1;
     protected bool $_confirm_before_submit = false;
@@ -45,14 +46,19 @@ class ActionForm extends Action
         $this->_submit_label = $submit_label;
         return $this;
     }
-    public function actionUrl(string $action_url)
+    public function submitUrl(string $url)
     {
-        $this->_action_url = $action_url;
+        $this->_submit_url = $url;
         return $this;
     }
     public function cancelLabel(string $cancel_label)
     {
         $this->_cancel_label = $cancel_label;
+        return $this;
+    }
+    public function action(string $action)
+    {
+        $this->_action = $action;
         return $this;
     }
     public function target(string $target = '_blank')
@@ -72,7 +78,8 @@ class ActionForm extends Action
             ->method($this->_method)
             ->cols($this->_grid_cols)
             ->gap($this->_gap)
-            ->action($this->_action_url)
+            ->action($this->_action)
+            ->submitUrl($this->_submit_url)
             ->confirmBeforeSubmit($this->_confirm_before_submit)->render();
         return $data;
     }
