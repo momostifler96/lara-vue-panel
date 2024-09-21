@@ -2,8 +2,10 @@
 
 namespace LVP\Actions;
 
-class ButtonAction extends Action
+class ActionButton extends Action
 {
+    private string $_action;
+
     protected string $_action_type = 'button';
     protected string $_btn_class = 'lvp-button primary';
 
@@ -13,9 +15,16 @@ class ButtonAction extends Action
         return $this;
     }
 
+    public function action(string $action)
+    {
+        $this->_action = $action;
+        return $this;
+    }
+
     protected function beforeRender(array $data): array
     {
         $data['btn_class'] = $this->_btn_class;
+        $data['action'] = $this->_action;
         return $data;
     }
 }

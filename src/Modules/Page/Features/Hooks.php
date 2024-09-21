@@ -5,6 +5,14 @@ use Illuminate\Http\Request;
 
 trait Hooks
 {
+    public function titleActions(Request $request)
+    {
+        return [];
+    }
+    public function headerActions(Request $request)
+    {
+        return [];
+    }
     protected function beforeContent(Request $request)
     {
         return [];

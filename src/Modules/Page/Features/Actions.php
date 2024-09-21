@@ -66,4 +66,16 @@ trait Actions
         }
         return $_widgets;
     }
+
+    public function getPageActions(Request $request)
+    {
+        /**
+         * \LVP\Actions\Action $act
+         */
+        return [
+            'title' => array_map(function ($act) {
+                return $act->render();
+            }, $this->titleActions($request)),
+        ];
+    }
 }

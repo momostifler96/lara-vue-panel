@@ -37,6 +37,9 @@ class FormWidget extends LVPWidget
     protected string $_action = '';
     protected string $_submit_label = 'Submit';
     protected string $_submit_btn_class = '';
+
+    protected string $_cancel_label = 'Cancel';
+    protected string $_cancel_btn_class = '';
     protected bool $_confirm_before_submit = false;
     protected bool $_is_card = true;
     protected bool $_is_headless = false;
@@ -108,6 +111,17 @@ class FormWidget extends LVPWidget
     public function submitBtnClass(string $class)
     {
         $this->_submit_btn_class = $class;
+        return $this;
+    }
+    public function cancelBtnLabel(string $label)
+    {
+        $this->_cancel_label = $label;
+        return $this;
+    }
+
+    public function cancelBtnClass(string $class)
+    {
+        $this->_cancel_btn_class = $class;
         return $this;
     }
 
@@ -203,8 +217,13 @@ class FormWidget extends LVPWidget
         $data['action'] = $this->_action;
         $data['onSubmit'] = $this->_action;
         $data['method'] = $this->_method;
+
         $data['submitBtnLabel'] = $this->_submit_label;
         $data['submitBtnClass'] = $this->_submit_btn_class;
+
+        $data['cancelBtnLabel'] = $this->_cancel_label;
+        $data['cancelBtnClass'] = $this->_cancel_btn_class;
+
         $data['grid_cols'] = $this->_cols['all'];
         $data['grid_cols_'] = $this->_cols;
         $data['gap'] = $this->_gap;

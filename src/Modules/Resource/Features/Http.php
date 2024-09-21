@@ -94,6 +94,7 @@ trait Http
         $formData = $this->beforeStoreModel($_formData, $request);
         return $this->withTransaction(
             function () use ($request, $formData) {
+
                 $model = $this->model::create($formData);
                 $this->afterStoreModel($model, $formData, $request);
             },
@@ -105,6 +106,7 @@ trait Http
                 }
             },
             function ($exception) use ($request, $formData) {
+                dd($exception);
                 $this->onStoreModelFail($exception, $formData, $request);
                 return redirect()->back()->with('error', 'Something went wrong');
             }

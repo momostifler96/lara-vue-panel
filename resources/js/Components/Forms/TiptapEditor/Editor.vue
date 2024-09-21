@@ -3,21 +3,21 @@
         <div class="flex">
             <label v-if="label" :for="id ?? ''" class="text-sm capitalize">{{
                 label
-                }}</label>
+            }}</label>
             <span v-if="required" class="text-red-500">*</span>
         </div>
         <div class="lvp-text-editor lvp-widget-rouned">
             <div class="toolbar" v-if="editor">
                 <component :is="tools_list[tool]" v-for="tool in tools" :key="tool" :editor="editor" />
             </div>
-            <editor-content :editor="editor" />
+            <EditorContent :editor="editor" />
         </div>
         <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
             helperText
-        }}</small>
+            }}</small>
         <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
             errorText
-        }}</small>
+            }}</small>
     </div>
 
 </template>
@@ -119,6 +119,7 @@ onMounted(() => {
             emit('update:modelValue', editor.value.getHTML())
         },
     })
+    console.log('Text editor', editor.value);
 })
 onBeforeUnmount(() => {
     editor.value.destroy()

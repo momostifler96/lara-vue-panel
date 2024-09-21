@@ -1,4 +1,5 @@
 <template>
+
   <HeadlessModal :show="show" :title="modalTitle" @update:close="cancel">
     <form @submit.prevent="submit">
       <div class="">
@@ -7,11 +8,7 @@
           <slot />
         </div>
         <div class="grid w-full h-full grid-cols-2 gap-3">
-          <button
-            type="button"
-            @click="cancel"
-            class="w-full lvp-button cancel"
-          >
+          <button type="button" @click="cancel" class="w-full lvp-button cancel">
             {{ cancelLabel }}
           </button>
           <button type="submit" class="w-full lvp-button confirm">

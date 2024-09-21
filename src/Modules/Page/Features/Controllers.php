@@ -14,7 +14,8 @@ trait Controllers
         $page_titles = $this->getPageTitles();
         $route_names = $this->getRouteNames();
         $page_data = $this->onGetRequest($request, $sub_path);
-        $props = compact('before_content_widgets', 'after_content_widgets', 'page_data', 'page_titles', 'route_names');
+        $actions = $this->getPageActions($request);
+        $props = compact('before_content_widgets', 'after_content_widgets', 'page_data', 'page_titles', 'route_names', 'actions');
         return Inertia::render($this->view_path, $props);
     }
     public function post(Request $request)

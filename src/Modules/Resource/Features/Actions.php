@@ -15,11 +15,12 @@ use LVP\Modules\Panel\Panel;
 use LVP\Support\Info;
 use LVP\Utils\CreateLVPAction;
 use LVP\Widgets\DataWidgets\DataTableWidget;
+use LVP\Widgets\FormWidget\Fields\FileUploadFieldWidget;
 use LVP\Widgets\FormWidget\Fields\SwithToggleFieldWidget;
 
 trait Actions
 {
-
+    private array $_request_files = [];
     private function buildModelData(Request $request, LVPAction $action = LVPAction::CREATE, array $old_data = []): array
     {
         $model_data = [];
@@ -34,6 +35,10 @@ trait Actions
             if ($action->value == 'create' && $field->canfillOnCreate()) {
                 if ($field instanceof SwithToggleFieldWidget && empty($request[$field->field()])) {
                     $model_data[$field->field()] = $field->onStore(0);
+                } else if ($field instanceof FileUploadFieldWidget && !empty($request[$field->field()])) {
+                    $this->_request_files[$field->field()] = $request[$field->field()];
+                    $this->saveFiles($model_data, $field->field(), $request);
+
                 } else {
                     $model_data[$field->field()] = $field->onStore($request[$field->field()]);
                 }
@@ -154,6 +159,16 @@ trait Actions
                 Route::get($this->slug . '/{id}', fn(Request $request, $id) => $this->show($request, $id))->middleware($this->show_middlewares)->name('show');
                 Route::delete($this->slug . '/', fn(Request $request) => $this->delete($request))->middleware($this->delete_middlewares)->name('delete');
             });
+    }
+
+    function saveFiles(array &$formData, string $field, Request $request)
+    {
+        /**
+         * @var \Illuminate\Http\UploadedFile[] $files
+         */
+        foreach ($request[$field] as $file) {
+            $formData[$field][] = $file->store(null, ['disk' => 'public']);
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
   <PanelLayout :pageTitle="props.page_titles.title">
     <template #actions>
       <slot name="actions" />
+      <ActionEngine :actions="props.actions.title" />
     </template>
 
     <div v-if="props.before_content_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
@@ -36,6 +37,7 @@ import { ResourceRoutes, ResourceTitles } from "lvp/PropsTypes";
 import LineChart from "lvp/Components/Widgets/Chats/LineChart.vue";
 import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
 import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
+import ActionEngine from "./ActionEngine.vue";
 interface Titles {
   title: string;
   meta_title: string;
@@ -51,6 +53,7 @@ interface ResourceIndexPage {
   page_titles: Titles;
   resources_routes: ResourceRoutes;
   data: Object | any;
+  actions: Object | any;
   table_filters: any;
   widgets: Widget[];
   before_content_widgets: any[];
@@ -69,4 +72,5 @@ const widgets_components = <{ [key: string]: any }>{
   form: FormWidget,
 };
 //------------------Widgets-----------
+console.log('props.actioprops.actionsns', props.value.actions);
 </script>

@@ -16,16 +16,17 @@
             @change="onFilePicked" />
         </form>
       </label>
-      <div class="flex flex-col w-full">
+      <div class="w-full  gap-2"
+        :class="{ 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4': preview_grid, 'flex flex-col': !preview_grid }">
         <TransitionGroup name="slide-fade">
           <template v-for="(file, i) in uploadedFilesInfos" :key="i">
             <div class="p-2">
               <div class="lvp-file-uploaded-container">
                 <div class="lvp-file-container" :class="{
-                  'lvp-file-image-container': file.fileType === 'image',
+                  'lvp-file-image-container text-xs': file.fileType === 'image',
                   'bg-black/50 h-44': file.fileType != 'image',
                 }">
-                  <div class="grid grid-cols-2 gap-1">
+                  <div class="flex justify-between gap-3">
                     <span>
                       <p class="line-clamp-1">
                         {{ file.fileName }}
@@ -83,12 +84,12 @@
     </div>
     <small v-if="helperText && helperText.length > 0" class="text-gray-300">{{
       helperText
-    }}</small>
+      }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-    }}</small>
-    <CropperModal v-model:show="cropper.show" :image="cropper.image" :imageName="cropper.imageName"
-      @onCrop="onCroppe" />
+      }}</small>
+    <CropperModal v-model:show="cropper.show" :image="cropper.image" :aspectRatio="aspect_ratio"
+      :canChangeRatio="can_change_ratio" :maxUpload="max_upload" :imageName="cropper.imageName" @onCrop="onCroppe" />
   </div>
 </template>
 <script setup lang="ts">
@@ -101,6 +102,7 @@ import {
 } from "lvp/helpers/lvp_icons";
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
 import CropperModal from "./CropperModal.vue";
+import { useToast } from "lvp/Plugins/toast";
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -127,6 +129,21 @@ const props = defineProps({
     default: false,
   },
   required: {
+    type: Boolean,
+    default: false,
+  },
+  aspect_ratio: {
+    type: Number,
+    default: 1,
+  }, max_upload: {
+    type: Number,
+    default: 1,
+  },
+  preview_grid: {
+    type: Boolean,
+    default: false,
+  },
+  can_change_ratio: {
     type: Boolean,
     default: false,
   },
@@ -205,7 +222,8 @@ const onLeave = (event: Event) => {
   }
 };
 const loadFile = async (files: FileList) => {
-  const promises = Array.from(files).map((file) => {
+
+  const promises = Array.from(files).map((file, ind) => {
     return new Promise<void>((resolve, reject) => {
       const _file_info = {
         imagePreview: "",
@@ -247,7 +265,6 @@ const loadFile = async (files: FileList) => {
   try {
     await Promise.all(promises);
     updateModelValue();
-    console.log("All files have been loaded");
   } catch (error) {
     console.error("An error occurred while loading files", error);
   }
@@ -263,10 +280,22 @@ const onDrop = (event: Event) => {
     fileInput.value?.classList.remove("border-lvp-primary");
     //@ts-ignore
     const files = event.dataTransfer?.files;
-    console.log("file droped", files);
-    if (props.multiple && files.length > 1) {
+    if (!props.multiple && files.length > 1) {
       alert("Only one file can be uploaded");
-    } else {
+      useToast({
+        title: "Erreur",
+        message: `Vous pouvez charger que 1 fichier`,
+        type: "error",
+      });
+    }
+    else if (props.multiple && uploadedFilesInfos.value.length >= props.max_upload) {
+      useToast({
+        title: "Erreur",
+        message: `Vous pouvez charger que ${props.max_upload} fichiers`,
+        type: "error",
+      });
+    }
+    else {
       loadFile(files);
     }
   }

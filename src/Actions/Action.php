@@ -4,20 +4,18 @@ namespace LVP\Actions;
 
 class Action
 {
-    private string $_action;
     private string $_icon;
     private string $_icon_position = 'left';
     private string $_label;
     protected string $_action_type;
 
-    public function __construct(string $action)
+    public function __construct()
     {
-        $this->_action = $action;
     }
 
-    public static function make(string $action)
+    public static function make()
     {
-        return new static($action);
+        return new static();
     }
     public function label(string $label)
     {
@@ -43,7 +41,6 @@ class Action
     {
 
         $data = [
-            'action' => $this->_action,
             'icon' => empty($this->_icon) ? null : $this->_icon,
             'label' => empty($this->_label) ? null : $this->_label,
             'icon_position' => $this->_icon_position,

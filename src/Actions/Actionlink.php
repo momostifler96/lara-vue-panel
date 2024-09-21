@@ -2,14 +2,14 @@
 
 namespace LVP\Actions;
 
-class LinkAction extends Action
+class Actionlink extends Action
 {
     protected string $_action_type = 'button';
     protected string $_btn_class = 'lvp-button primary';
     protected string $_link_url = '#';
     protected string $_target;
 
-    public function btnClass($btn_css_class = 'lvp-button primary')
+    public function linkClass($btn_css_class = 'lvp-button primary')
     {
         $this->_btn_class = $btn_css_class;
         return $this;

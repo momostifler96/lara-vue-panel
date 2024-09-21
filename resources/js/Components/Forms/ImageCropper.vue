@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[600px] overflow-y-auto h-full p-5">
+  <div class="relative w-[100%] overflow-y-auto h-full p-5" v-if="action == 'cropper'">
     <div class="cropper-container">
       <cropper-canvas background="red" ref="cropperCanvas">
         <cropper-image :src="image" ref="cropperImage" alt="Picture" rotatable :scalable="true" :skewable="true"
@@ -27,6 +27,9 @@
       <CropperActionButton @click="actions.validate" id="cropper-action-validate">
         <span v-html="ValidateIcon" class="w-4 h-4" />
       </CropperActionButton>
+      <CropperActionButton @click="action = 'preview'" id="cropper-action-validate">
+        <span v-html="EyeIcon" class="w-4 h-4" />
+      </CropperActionButton>
       <CropperActionButton @click="actions.zoomPlus" id="cropper-action-zoom-plus">
         <span v-html="ZoomInIcon" class="w-5 h-5" />
       </CropperActionButton>
@@ -43,11 +46,10 @@
         <RotateRight class="!w-5 !h-5" />
       </CropperActionButton>
       <CropperActionButton @click="actions.flipHorizontal">
-        <span v-html="flipHorizontalIcon" class="w-4 h-4" />
-
+        <span v-html="FlipHorizontalIcon" class="w-4 h-4" />
       </CropperActionButton>
       <CropperActionButton @click="actions.flipVerticale">
-        <span v-html="flipVerticaleIcon" class="w-4 h-4" />
+        <span v-html="FlipVerticaleIcon" class="w-4 h-4" />
       </CropperActionButton>
       <select v-model="_aspectRatio" v-if="canChangeRatio"
         class="min-w-8 h-8 text-white transition-colors border rounded border-gray-500/30 flex-center bg-transparent hover:bg-gray-800 p-0 px-2 w-24 focus:ring-0 focus:outline-none ring-0">
@@ -57,12 +59,24 @@
         <option :value="4 / 3">4/3</option>
         <option :value="3 / 2">3/2</option>
       </select>
-
       <CropperActionButton @click="actions.reset" id="cropper-action-reset">
         <span v-html="CloseIcon" class="w-4 h-4" />
       </CropperActionButton>
     </div>
   </div>
+  <div class="relative w-full h-full  p-5" v-show="action != 'cropper'">
+
+    <div class="w-full h-full">
+      <div class="flex items-center justify-center flex-col w-full my-5 h-[calc(100%-30px)] ">
+        <img :src="image" class="preview-h object-cover " alt="..." />
+      </div>
+    </div>
+
+  </div>
+  <button type="button" @click="action = 'cropper'" v-show="action != 'cropper'"
+    class="absolute p-1 text-white transition z-50 bg-black rounded-full top-2 right-12 ring-1 ring-transparent hover:ring-white w-8 h-8 flex-center">
+    <span v-html="ResizeIcon" class="w-5 h-5" />
+  </button>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
@@ -77,8 +91,9 @@ import {
   CenterIcon,
   EyeIcon,
   EditIcon,
-  flipHorizontalIcon,
-  flipVerticaleIcon,
+  FlipHorizontalIcon,
+  FlipVerticaleIcon,
+  ResizeIcon,
 } from "lvp/helpers/lvp_icons";
 
 import CropperActionButton from "./CropperActionButton.vue";
@@ -169,31 +184,17 @@ function blobToFile(blob: Blob, fileExtension = "png", namePrefix = "") {
 
   return file;
 }
-function base64ToFile(base64: string, fileName: string) {
-  // Décoder la chaîne base64 en un tableau d'octets
-  const byteString = atob(base64.split(",")[1]);
-  //@ts-ignore
-  const mimeType = base64.match(/data:([^;]+);/)[1];
-
-  // Créer un tableau d'octets
-  const byteNumbers = new Array(byteString.length);
-  for (let i = 0; i < byteString.length; i++) {
-    byteNumbers[i] = byteString.charCodeAt(i);
-  }
-
-  // Créer un `Uint8Array` à partir du tableau d'octets
-  const byteArray = new Uint8Array(byteNumbers);
-
-  // Créer un `Blob` à partir du tableau d'octets
-  const blob = new Blob([byteArray], { type: mimeType });
-
-  // Créer un objet `File` à partir du `Blob`
-  const file = new File([blob], fileName, { type: mimeType });
-
-  return file;
-}
+const action = ref('preview');
+onMounted(() => {
+  // cropperImage.value.$center("contain");
+})
 </script>
 <style lang="scss" scoped>
+.preview-h {
+  max-height: calc(100% - 30px);
+  max-width: calc(100% - 45px);
+}
+
 .cropper-container {
   border: 1px solid var(--vp-c-divider);
   border-radius: 0.375rem;

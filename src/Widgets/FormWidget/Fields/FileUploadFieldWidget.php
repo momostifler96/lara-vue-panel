@@ -7,11 +7,35 @@ class FileUploadFieldWidget extends FormFieldWidget
     protected string $_component = 'file';
     protected string $_accept = '*';
     protected string $_max_size = '5M';
+    protected int $_aspect_ratio = 1;
+    protected int $_max_upload = 1;
+    protected bool $_can_change_ratio = false;
     protected bool $_multiple = false;
+    protected bool $_preview_grid = false;
 
-    public function multiple(bool $multiple = true)
+    public function multiple()
     {
-        $this->_multiple = $multiple;
+        $this->_multiple = true;
+        return $this;
+    }
+    public function previewGrid()
+    {
+        $this->_preview_grid = true;
+        return $this;
+    }
+    public function copperDefaultRatio(int $ratio)
+    {
+        $this->_aspect_ratio = $ratio;
+        return $this;
+    }
+    public function maxUpload(int $max_upload)
+    {
+        $this->_max_upload = $max_upload;
+        return $this;
+    }
+    public function canChangeCropperRatio()
+    {
+        $this->_can_change_ratio = true;
         return $this;
     }
 
@@ -62,6 +86,10 @@ class FileUploadFieldWidget extends FormFieldWidget
         $data['accept'] = $this->_accept;
         $data['maxSize'] = $this->_max_size;
         $data['multiple'] = $this->_multiple;
+        $data['preview_grid'] = $this->_preview_grid;
+        $data['can_change_ratio'] = $this->_can_change_ratio;
+        $data['aspect_ratio'] = $this->_aspect_ratio;
+        $data['max_upload'] = $this->_max_upload;
         return $data;
     }
 }
