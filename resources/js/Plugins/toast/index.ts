@@ -34,7 +34,7 @@ const plugin: Plugin = {
             });
             document.dispatchEvent(event);
         }
-        app.component('lvp-toast', Toast);
+        app.component('LvpToast', Toast);
         //@ts-ignore
         app.config.globalProperties.toast = _useToast;
         app.provide('toast', _useToast);

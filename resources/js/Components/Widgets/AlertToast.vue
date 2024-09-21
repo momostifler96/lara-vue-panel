@@ -1,5 +1,5 @@
 <template>
-    <lvp-toast />
+    <LvpToast />
     <!-- <Toast /> -->
     <template v-if="$page.props.flash.success">
         <span>{{ showSuccess($page.props.flash.success) }}</span>
