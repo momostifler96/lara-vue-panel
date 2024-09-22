@@ -50,9 +50,8 @@ class Page
     protected string $menu_label;
     protected string $menu_group;
     public int $menu_position = 0;
-    public string $menu_icon = 'stack';
+    protected string $menu_icon = 'stack';
     protected bool $show_in_menu = true;
-
 
     protected array $_middlewares = [];
     protected array $index_middlewares = [];

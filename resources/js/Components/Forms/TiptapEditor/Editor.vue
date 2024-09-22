@@ -166,10 +166,15 @@ onBeforeUnmount(() => {
     border-radius: var(--lvp-widget-border-radius);
 
     .toolbar {
-        @apply flex gap-2 items-center;
+        @apply flex gap-2 items-center flex-wrap;
 
         .editor-button {
-            @apply hover:bg-gray-200 text-gray-700 font-bold py-1 px-1 h-8 flex items-center justify-center text-xs rounded focus:right-0 focus:outline-0;
+            @apply hover:bg-gray-200 text-gray-700 font-bold py-1 px-1 h-6 flex items-center justify-center text-xs rounded focus:right-0 focus:outline-0;
+
+            svg {
+                width: 18px;
+                height: 18px;
+            }
 
             &.active {
                 @apply bg-gray-200;

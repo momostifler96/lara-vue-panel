@@ -3,7 +3,7 @@
 @import "./app.css";
 
 .lvp-panel-layout {
-    @apply bg-slate-50 flex flex-row-reverse w-full overflow-clip min-h-screen;
+    @apply bg-slate-50 flex flex-row-reverse w-full overflow-clip min-h-screen text-sm;
 }
 
 //padnel navbar
@@ -387,7 +387,7 @@ input[type="checkbox"] {
 }
 
 .lvp-modal {
-    @apply bg-white p-3 max-w-[80vw] max-h-[80vw] z-[1000] min-w-[400px] w-fit h-fit mx-auto my-auto fixed top-0 left-0 right-0 bottom-0;
+    @apply bg-white p-3 h-fit z-[1000] mx-auto my-auto fixed top-0 left-0 right-0 bottom-0;
     border-radius: var(--lvp-widget-border-radius);
 
     .modal-header {
@@ -399,7 +399,7 @@ input[type="checkbox"] {
     }
 
     .modal-content {
-        @apply relative;
+        @apply relative max-h-[80vw] h-fit overflow-y-auto;
     }
 }
 

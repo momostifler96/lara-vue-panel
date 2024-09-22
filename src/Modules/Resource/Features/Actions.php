@@ -267,17 +267,18 @@ trait Actions
     {
         $columns = $this->buildDataColumns();
         $query = $this->buildQuery($request, $columns);
-        // $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
-        $data = DataGridWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->dataField([
-            DataGridField::make('slug'),
-            DataGridField::make('name'),
-            DataGridField::make('picture'),
-            DataGridField::make('stock'),
-            DataGridField::make('sku'),
-            DataGridField::make('created_date'),
-            DataGridField::make('category', 'category.name'),
-            DataGridField::make('brand', 'brand.name'),
-        ])->cardType('product-card')->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
+        $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
+        // $data = DataGridWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->dataField([
+        //     DataGridField::make('slug'),
+        //     DataGridField::make('name'),
+        //     DataGridField::make('picture'),
+        //     DataGridField::make('stock'),
+        //     DataGridField::make('sku'),
+        //     DataGridField::make('created_date'),
+        //     DataGridField::make('category', 'category.name'),
+        //     DataGridField::make('brand', 'brand.name'),
+        // ])->cardType('product-card')->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
+
         // $data = [];
         return $data;
     }

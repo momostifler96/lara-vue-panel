@@ -2,7 +2,7 @@
     <div class="grid mb-5" :class="`${_grid_cols[grid_cols]} ${_gaps[gap]}`">
         <div v-for="(field, i) in fields" :class="`col-span-${field.props.colspan}`">
             <component :is="form_fields[field.type]" v-bind="field.props" v-model="formData[field.props.name]"
-                :errorText="errorIsArray($page.props.errors, field.props.name)" class="my-2"
+                :formData="formData" :errorText="errorIsArray($page.props.errors, field.props.name)" class="my-2"
                 @change="updateField(field.props.name, $event, field.eventsListeners.change)" :class="[
                     `col-span-${field.props.colspan}`,
                     {
@@ -21,6 +21,7 @@ import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 import TextEditor from "../Forms/TiptapEditor/Editor.vue";
 import { inject } from "vue";
+import SectionWidget from "../Forms/SectionWidget.vue";
 
 const _props = defineProps({
     fields: {
@@ -58,6 +59,7 @@ const form_fields = <{ [k: string]: any }>{
     "image": FileUploader,
     "toggle": SwitchToggle,
     "checkbox": TextAreaField,
+    "section": SectionWidget,
     ...plugins_fields
 };
 

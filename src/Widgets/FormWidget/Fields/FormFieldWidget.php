@@ -38,6 +38,12 @@ class FormFieldWidget
     protected string $_label = '';
 
     /**
+     * The label of the form field.
+     * @var bool
+     */
+    protected bool $_no_label = false;
+
+    /**
      * The column span of the form field.
      * @var string
      */
@@ -125,6 +131,15 @@ class FormFieldWidget
     public function label(string $label)
     {
         $this->_label = $label;
+        return $this;
+    }
+    /**
+     * Set the label for the form field.
+     * @return $this
+     */
+    public function noLabel()
+    {
+        $this->_no_label = true;
         return $this;
     }
 
@@ -251,7 +266,7 @@ class FormFieldWidget
         }
         $props = [
             'name' => $this->_name,
-            'label' => !empty($this->_label) ? ucfirst($this->_label) : str($this->_name)->kebab()->replace('-', ' ')->ucfirst(),
+            'label' => !$this->_no_label ? !empty($this->_label) ? ucfirst($this->_label) : str($this->_name)->kebab()->replace('-', ' ')->ucfirst() : null,
             'value' => !empty($field_data) ? $field_data : $this->_default_value,
             'rules' => $this->_rules,
             'required' => $this->_required,

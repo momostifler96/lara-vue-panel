@@ -6,16 +6,9 @@
       </div>
       <div class=""></div>
     </div>
-    <div
-      :class="`lvp-card-body grid grid-cols-${props.gridCols} gap-${props.gap}`"
-    >
-      <component
-        v-for="info in props.infos"
-        :is="infos_list[info.type]"
-        :key="info.label"
-        v-bind="info.props"
-        :data="props.data"
-      />
+    <div :class="`lvp-card-body grid grid-cols-${props.gridCols} gap-${props.gap}`">
+      <component v-for="info in props.infos" :is="infos_list[info.type]" :key="info.label" v-bind="info.props"
+        :data="props.data" />
     </div>
   </div>
 </template>

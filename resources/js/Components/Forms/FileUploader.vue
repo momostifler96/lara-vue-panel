@@ -5,14 +5,14 @@
     </label>
     <div ref="fileInput" @dragover="onOver" @dragleave="onLeave" @drop="onDrop"
       class="flex-col bg-gray-100 border-2 border-gray-300 border-dashed rounded cursor-pointer lvp-file-uploader flex-center">
-      <label v-if="multiple || uploadedFilesInfos.length == 0" for="f-loader-1" :class="[height]"
+      <label v-if="multiple || uploadedFilesInfos.length == 0" :for="`f-loader-1-${field}`" :class="[height]"
         class="w-full cursor-pointer flex-center">
         <span class="flex items-center gap-3 text-gray-500 pointer-events-none">
           <span v-html="UploadIcon" class="w-10 h-10" />
           <span class="text-xl">Drop files here</span>
         </span>
         <form ref="fileForm" class="hidden">
-          <input type="file" id="f-loader-1" :accept="accept" class="hidden" :multiple="multiple"
+          <input type="file" :id="`f-loader-1-${field}`" :accept="accept" class="hidden" :multiple="multiple"
             @change="onFilePicked" />
         </form>
       </label>
@@ -84,10 +84,10 @@
     </div>
     <small v-if="helperText && helperText.length > 0" class="text-gray-300">{{
       helperText
-      }}</small>
+    }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-      }}</small>
+    }}</small>
     <CropperModal v-model:show="cropper.show" :image="cropper.image" :aspectRatio="aspect_ratio"
       :canChangeRatio="can_change_ratio" :maxUpload="max_upload" :imageName="cropper.imageName" @onCrop="onCroppe" />
   </div>
@@ -133,7 +133,7 @@ const props = defineProps({
     default: false,
   },
   aspect_ratio: {
-    type: Number,
+    type: String,
     default: 1,
   }, max_upload: {
     type: Number,

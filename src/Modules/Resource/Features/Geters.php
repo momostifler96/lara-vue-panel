@@ -90,12 +90,12 @@ trait Geters
     }
     public function buildCreateFormComponent($action = 'create'): array
     {
-        $form = FormWidget::make()->cols(2)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes($action == 'create' ? 'store' : 'update')))->render();
+        $form = FormWidget::make()->cols($this->form_grid_cols)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes($action == 'create' ? 'store' : 'update')))->render();
         return $form;
     }
     public function buildEditFormComponent($data): array
     {
-        $form = FormWidget::make()->defaultData($data)->cols(2)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'update'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('update')))->render();
+        $form = FormWidget::make()->defaultData($data)->cols($this->form_grid_cols)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'update'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('update')))->render();
         return $form;
     }
     public function buildFormFields(): array
