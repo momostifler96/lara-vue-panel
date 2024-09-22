@@ -6,23 +6,12 @@
       }}</label>
       <span v-if="required" class="text-red-500">*</span>
     </div>
-    <VueDatePicker
-      v-model="(date as any)"
-      :range="range"
-      :locale="locale"
-      :placeholder="placeholder"
-      :format="formatDate"
-      :cancelText="cancelButtonLabel"
-      :selectText="validateButtonLabel"
-      :min-date="minDate"
-      :max-date="maxDate"
-      :enable-time-picker="props.type == 'datetime' || props.type == 'time'"
-      :year-picker="props.type == 'year'"
-      :month-picker="props.type == 'month-year'"
-      :time-picker="props.type == 'time'"
-      :week-picker="props.type == 'week'"
-      :start-date="startDate"
-    />
+    <VueDatePicker :model-value="date" @update:model-value="$emit('update:modelValue', formatDateOutput($event))"
+      :range="range" :locale="locale" :placeholder="placeholder" :format="formatDate" :cancelText="cancelButtonLabel"
+      :selectText="validateButtonLabel" :min-date="minDate" :max-date="maxDate"
+      :enable-time-picker="props.type == 'datetime' || props.type == 'time'" :year-picker="props.type == 'year'"
+      :month-picker="props.type == 'month-year'" :time-picker="props.type == 'time'" :week-picker="props.type == 'week'"
+      :start-date="startDate" />
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText
     }}</small>
@@ -91,7 +80,7 @@ const date = ref(props.modelValue);
 
 const emit = defineEmits(["update:modelValue"]);
 watch(date, (value) => {
-  emit("update:modelValue", value);
+  // emit("update:modelValue", formatDateOutput(value));
 });
 
 watch(
@@ -129,9 +118,9 @@ const formats = {
   "month-year": (date: Date | null) => {
     return date
       ? date.toLocaleDateString("fr-FR", {
-          month: "long",
-          year: "numeric",
-        })
+        month: "long",
+        year: "numeric",
+      })
       : "";
   },
   year: (date: Date | null) => {
@@ -148,5 +137,14 @@ const formatDate = (date: any) => {
   return Array.isArray(date)
     ? date.map((d) => formats[props.type](d)).join(" - ")
     : formats[props.type](date);
+};
+
+const formatDateOutput = (date: any) => {
+  // Format the date as needed, e.g., 'YYYY-MM-DD'
+  return Array.isArray(date)
+    ? date.map((d) => {
+      return d ? (new Date(d)).toISOString() : null
+    })
+    : date ? (new Date(date)).toISOString() : null;
 };
 </script>

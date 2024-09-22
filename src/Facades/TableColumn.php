@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class TableColumn
 {
 
-    protected string $_field;
+    protected string $_field = '';
     protected string $_load_data_from;
     protected string $_label;
     protected string $_type;
@@ -33,7 +33,7 @@ class TableColumn
 
 
 
-    public static function make($field)
+    public static function make($field = '')
     {
         $instance = new static();
         $instance->_field = $field;

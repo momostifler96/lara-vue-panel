@@ -1147,6 +1147,7 @@ input[type="checkbox"] {
     .dp__input {
         @extend .lvp-text-field;
         padding-left: 30px;
+        padding-right: 25px;
     }
 
     .dp__icon {

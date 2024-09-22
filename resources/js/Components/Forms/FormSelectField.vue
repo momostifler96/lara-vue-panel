@@ -14,10 +14,10 @@
 
     <small v-if="helperText && helperText.length > 0" class="text-gray-400">{{
       helperText
-      }}</small>
+    }}</small>
     <small v-if="errorText && errorText.length > 0" class="text-red-500">{{
       errorText
-      }}</small>
+    }}</small>
   </div>
 </template>
 <script setup lang="ts">
@@ -76,6 +76,8 @@ const options = ref(props.options);
 const loading = ref(false);
 var search_debounce: any = null;
 const search = (val: any) => {
+  return;
+  loading.value = false;
   if (search_debounce) clearTimeout(search_debounce);
   search_debounce = setTimeout(async () => {
     //@ts-ignore

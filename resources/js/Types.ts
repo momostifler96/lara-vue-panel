@@ -227,6 +227,7 @@ interface LVPPluginOptions {
     svg_icons?: { [key: string]: string };
     widgets?: { [key: string]: Component };
     form_fields?: { [key: string]: Component };
+    datatable_columns?: { [key: string]: Component };
 }
 
 

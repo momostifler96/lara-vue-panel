@@ -52,9 +52,7 @@
                 'justify-center': column.align === 'center',
               }">
                 <slot :name="column.field" :item="item" :column="column">
-                  <GroupColumn v-if="column.type == 'group'" :data="item" :field="column.field" :column="column" />
-                  <component v-else :is="columns_components[column.type]" :data="getItemData(item, column.field)"
-                    :field="column.field" :column="column" @dataEvent="(e: any) => { emitTableData(e, item.id); }" />
+                  <TableColumnEngine :column="column" :item="item" />
                 </slot>
               </div>
             </td>
@@ -69,13 +67,14 @@
 </template>
 <script setup lang="ts">
 import type { TableColumn } from "../../../Types";
-import { watch } from "vue";
+import { inject, watch } from "vue";
 import ImageColumn from "./Columns/ImageColumn.vue";
 import TextColumn from "./Columns/TextColumn.vue";
 import BadgeColumn from "./Columns/BadgeColumn.vue";
 import DropdownColumn from "./Columns/DropdownColumn.vue";
 import ToggleColumn from "./Columns/ToggleColumn.vue";
 import GroupColumn from "./Columns/GroupColumn.vue";
+import TableColumnEngine from "../TableColumnEngine.vue";
 const props = defineProps({
   data: {
     type: Array<any>,
@@ -94,6 +93,9 @@ const props = defineProps({
     default: [],
   },
 });
+const plugin_columns = <{ [k: string]: any }>(
+  inject("lvp_datatable_columns")
+);
 
 const columns_components = {
   image: ImageColumn,
@@ -102,6 +104,7 @@ const columns_components = {
   dropdown: DropdownColumn,
   toggle: ToggleColumn,
   group: GroupColumn,
+  ...plugin_columns
 };
 const emit = defineEmits(["update:selected", "dataEvent"]);
 const selectAll = (event: any) => {

@@ -45,20 +45,15 @@ import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";
 import TableActionMenu from "lvp/Components/Widgets/Table/TableActionMenu.vue";
 import TableGroupedActionMenu from "lvp/Components/Widgets/Table/TableGroupedActionMenu.vue";
-import { ref, reactive, computed, watch, onMounted, inject } from "vue";
+import { ref, reactive, computed, watch, inject } from "vue";
 import LVPTable from "lvp/Components/Widgets/Table/TableWidget.vue";
 import FiltersPopover from "lvp/Components/Widgets/Table/FiltersPopover.vue";
 import FiltersGrid from "lvp/Components/Widgets/Table/FiltersGrid.vue";
-import TextColumn from "lvp/Components/Widgets/Table/Columns/TextColumn.vue";
-import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
-import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
-import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
 import { SelectedItemsActions, SingleItemAction, TableColumn, TableFilter } from "lvp/Types";
 
 import { router } from "@inertiajs/vue3";
 import { useToast } from "lvp/Plugins/toast";
 import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
-import ModalForm from "lvp/Layouts/Resources/ModalForm.vue";
 import DynamicFormModal from "lvp/Components/Dialogs/DynamicFormModal.vue";
 interface TableGroupAction {
   type: string;
@@ -137,12 +132,6 @@ const emit = defineEmits([
   "dataEvent",
 ]);
 
-const table_column_widget = <{ [k: string]: any }>{
-  text: TextColumn,
-  image: ImageColumn,
-  dropdown: DropdownColumn,
-  toggle: ToggleColumn,
-};
 const queryString = new URLSearchParams(document.location.search);
 
 const _filter = ref({
@@ -178,22 +167,13 @@ const action_icons = <Record<string, any>>{
   delete: TrashIcon,
 };
 
-// const execGroupAction = (action: any) => {
-//   console.log('execGroupAction', action, seletedItems.value);
-//   emit("groupAction", action, seletedItems.value);
-// };
-
 const navigate = (page: number) => {
   queryString.set("page", page.toString());
   router.get("?" + queryString.toString());
 };
 const navigatePerpage = () => { };
 let search_debounce: any = null;
-const hasSearchable = computed(() => {
-  return props.columns.some((col) => {
-    return col.searchable;
-  });
-});
+
 
 watch(
   () => _filter.value.search,
@@ -249,14 +229,8 @@ const form_modal = reactive({
 });
 //------------------Actions-----------
 
-const col_actions = <{ [k: string]: any }>{
-  'update_col': (data: any) => {
-    router.post(route(props.routes.exec_actions), data);
-  }
-}
 
 const execColAction = (action: string, data: any) => {
-  console.log('datatable_item_col_actions', action, datatable_item_col_actions[action]);
   datatable_item_col_actions[action]({
     showConfirmation: (option) => {
       confirmation_modal.title = option.title;
