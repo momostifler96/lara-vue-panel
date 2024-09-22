@@ -7,6 +7,7 @@ import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import { router } from "@inertiajs/vue3";
 import { ActionsList } from "lvp/Types";
 import { inject } from "vue";
+import DataGridWidget from "lvp/Components/Widgets/DataGridWidget.vue";
 
 const props = defineProps({
   type: {
@@ -24,7 +25,7 @@ const props = defineProps({
 });
 const dataComponents = <{ [k: string]: any }>{
   "data-table": DataTableWidget,
-  "data-grid": DataTableWidget,
+  "data-grid": DataGridWidget,
 };
 const emit = defineEmits(["edit", "submit"]);
 

@@ -104,7 +104,7 @@ const columns_components = {
   dropdown: DropdownColumn,
   toggle: ToggleColumn,
   group: GroupColumn,
-  ...plugin_columns
+  // ...plugin_columns
 };
 const emit = defineEmits(["update:selected", "dataEvent"]);
 const selectAll = (event: any) => {

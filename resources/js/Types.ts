@@ -228,6 +228,7 @@ interface LVPPluginOptions {
     widgets?: { [key: string]: Component };
     form_fields?: { [key: string]: Component };
     datatable_columns?: { [key: string]: Component };
+    data_grid_cards?: { [key: string]: Component };
 }
 
 

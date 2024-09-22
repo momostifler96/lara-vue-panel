@@ -32,6 +32,7 @@ const plugin: Plugin = {
             widgets: {},
             form_fields: {},
             datatable_columns: {},
+            data_grid_cards: {},
         }
     ) {
         app.use(PrimeVue, {
@@ -59,8 +60,9 @@ const plugin: Plugin = {
         app.provide("lvp_actions", options.actions);
         app.provide("lvp_widgets", { ...widgets, ...options.widgets });
         app.provide("lvp_icons", { ...icons, ...options.svg_icons });
-        app.provide("lvp_form_fields", { ...icons, ...options.form_fields });
-        app.provide("lvp_datatable_columns", { ...icons, ...options.datatable_columns });
+        app.provide("lvp_form_fields", options.form_fields);
+        app.provide("lvp_datatable_columns", options.datatable_columns);
+        app.provide("lvp_data_grid_cards", options.data_grid_cards);
     },
 };
 
