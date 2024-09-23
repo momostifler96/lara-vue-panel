@@ -66,6 +66,7 @@ trait Http
     {
         $resource = $this->model::where($this->model_primary_key, $id)->firstOrFail();
         $formDefaultData = $resource->toArray();
+        $formDefaultData['id'] = $formDefaultData[$this->model_primary_key];
         $props = [
             'page_titles' => $this->getFormPageTitle('update'),
             'labels' => [
@@ -126,7 +127,6 @@ trait Http
         /**
          * @var Model $model
          */
-
         $model = $this->model::where($this->model_primary_key, $request->input('id'))->with($this->model_with)->first();
         $_formData = $this->buildModelData($request, LVPAction::EDIT, $model->toArray());
         $formData = $this->beforeUpdateModel($model, $_formData, $request);

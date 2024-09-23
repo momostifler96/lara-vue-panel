@@ -6,6 +6,7 @@
   </template>
   <FormModal :show="show" @submit="submit" @close="cancel" :modalTitle="titles[action].title"
     :cancelLabel="titles[action].cancel" :submitLabel="titles[action].submit" size="md">
+
     <FormEngine v-bind="props.fields.props" :form-data="formData" />
   </FormModal>
 </template>
@@ -13,7 +14,6 @@
 import { ref, onMounted, watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import FormModal from "lvp/Components/Dialogs/FormModal.vue";
-import FormComponent from "./FormComponent.vue";
 import FormEngine from "lvp/Components/Widgets/FormEngine.vue";
 const props = defineProps({
   show: Boolean,
@@ -33,14 +33,14 @@ const props = defineProps({
     type: Object as () => any,
     required: true,
   },
-  defaultData: {
+  formData: {
     type: Object as () => any,
     required: true,
   },
   errors: Object,
 });
 console.log('props datra', props.titles, props.fields, props.action);
-const formData = ref({});
+const formData = ref(props.formData);
 const updateLoadErrors = ($errors: any) => {
   formErrors.value = $errors;
 };

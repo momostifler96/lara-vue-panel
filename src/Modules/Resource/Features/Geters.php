@@ -100,7 +100,7 @@ trait Geters
     }
     public function buildFormFields(): array
     {
-        return FormWidget::make()->cols($this->form_grid_cols)->colSpan($this->form_grid_gap)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('create')))->render();
+        return $this->form_type == 'modal' ? FormWidget::make()->cols($this->form_grid_cols)->colSpan($this->form_grid_gap)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('create')))->render() : [];
     }
 
 

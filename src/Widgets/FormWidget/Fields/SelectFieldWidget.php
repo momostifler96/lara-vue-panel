@@ -4,6 +4,7 @@ namespace LVP\Widgets\FormWidget\Fields;
 
 use LVP\Widgets\FormWidget\Fields\Traits\HasPlaceholder;
 use LVP\Widgets\FormWidget\Fields\Traits\HasType;
+use LVP\Widgets\FormWidget\FormWidget;
 
 class SelectFieldWidget extends FormFieldWidget
 {

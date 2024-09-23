@@ -4,6 +4,7 @@ namespace LVP\Widgets\FormWidget;
 
 use LVP\Enums\HttpMethod;
 use LVP\Widgets\FormWidget\Fields\FormFieldWidget;
+use LVP\Widgets\FormWidget\Fields\SectionWidget;
 use LVP\Widgets\LVPWidget;
 
 class FormWidget extends LVPWidget
@@ -12,7 +13,7 @@ class FormWidget extends LVPWidget
     protected string $_widget_type = 'form';
 
     /**
-     * @var FormFieldWidget[]
+     * @var FormFieldWidget[] $_fields
      */
     protected array $_fields = [];
     protected array $_formData = [];
@@ -217,7 +218,8 @@ class FormWidget extends LVPWidget
 
     protected function beforeRender(array $data): array
     {
-        $data['fields'] = $this->_fields;
+        // $data['fields'] = $this->_fields;
+        $this->buildFormData();
         $data['title'] = $this->_title;
         $data['lvpAction'] = $this->_lvp_action;
         $data['action'] = $this->_action;
@@ -233,8 +235,11 @@ class FormWidget extends LVPWidget
         $data['grid_cols'] = $this->_cols['all'];
         $data['grid_cols_'] = $this->_cols;
         $data['gap'] = $this->_gap;
-        $data['fields'] = array_map(fn($it) => ($it->render($this, empty ($this->_default_data) ? [] : $this->_default_data[$it->field()])), ($this->_fields));
+        $data['fields'] = array_map(function ($field) use ($data) {
+            return $field->render();
+        }, $this->_fields);
         $data['formData'] = $this->_formData;
+        $data['defaultData'] = $this->_default_data;
         $data['confirmBeforeSubmit'] = $this->_confirm_before_submit;
         $data['confirmationTitle'] = $this->_confirmation_title;
         $data['confirmationMessage'] = $this->_confirmation_message;
@@ -249,4 +254,30 @@ class FormWidget extends LVPWidget
 
         return $data;
     }
+
+    private function buildFormData()
+    {
+        $formData = [];
+        foreach ($this->_fields as $field) {
+            $this->buildFormDataFields($formData, $field);
+        }
+        if (!empty($this->_default_data)) {
+            $formData['id'] = $this->_default_data['id'];
+        }
+        $this->_formData = $formData;
+    }
+    private function buildFormDataFields(&$formData, $field)
+    {
+        if ($field instanceof SectionWidget) {
+            foreach ($field->getSections() as $_sections) {
+                foreach ($_sections as $_field) {
+                    $this->buildFormDataFields($formData, $_field);
+                }
+            }
+        } else {
+            $formData[$field->field()] = empty($this->_default_data) ? $field->getValue() : $this->_default_data[$field->field()];
+        }
+    }
+
+
 }

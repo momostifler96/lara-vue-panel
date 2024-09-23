@@ -1,22 +1,20 @@
 <template>
 
-  <LVPModal :show="show" :title="modalTitle" @update:close="cancel" :size="size">
-    <form @submit.prevent="submit">
-      <div class="">
-        <AlertBox />
-        <div class="">
-          <slot />
-        </div>
-        <div class="grid w-full h-full grid-cols-2 gap-3">
-          <button type="button" @click="cancel" class="w-full lvp-button cancel">
-            {{ cancelLabel }}
-          </button>
-          <button type="submit" class="w-full lvp-button confirm">
-            {{ submitLabel }}
-          </button>
-        </div>
+  <LVPModal :show="show" :title="modalTitle" @update:close="cancel" :size="size" as="form" @submit="submit">
+    <div class="">
+      <AlertBox />
+      <slot />
+    </div>
+    <template #footer>
+      <div class="grid w-full h-full grid-cols-2 gap-3">
+        <button type="button" @click="cancel" class="w-full lvp-button cancel">
+          {{ cancelLabel }}
+        </button>
+        <button type="submit" class="w-full lvp-button confirm">
+          {{ submitLabel }}
+        </button>
       </div>
-    </form>
+    </template>
   </LVPModal>
 </template>
 <script setup lang="ts">

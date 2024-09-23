@@ -1,6 +1,7 @@
 <?php
 
 namespace LVP\Widgets\FormWidget\Fields;
+use LVP\Widgets\FormWidget\FormWidget;
 
 class FileUploadFieldWidget extends FormFieldWidget
 {

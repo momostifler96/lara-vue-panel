@@ -108,7 +108,7 @@ class FormFieldWidget
      * Constructor for the FormFieldWidget.
      * @param string $name The name of the form field.
      */
-    public function __construct(string $name)
+    public function __construct(string $name = '')
     {
         $this->_name = $name;
     }
@@ -118,7 +118,7 @@ class FormFieldWidget
      * @param string $name The name of the form field.
      * @return static
      */
-    public static function make(string $name)
+    public static function make(string $name = '')
     {
         return new static($name);
     }
@@ -154,6 +154,11 @@ class FormFieldWidget
         return $this;
     }
 
+    public function getValue()
+    {
+        return $this->_default_value;
+    }
+
     /**
      * Set the column span for the form field.
      * @param mixed $value The column span to set.
@@ -176,14 +181,7 @@ class FormFieldWidget
         return $this;
     }
 
-    /**
-     * Get the value for the form field.
-     * @param FormWidget $formWidget The form widget instance.
-     */
-    public function getValue(FormWidget $formWidget)
-    {
-        $formWidget->setFormData($this->_name, $this->_default_value);
-    }
+
 
     /**
      * Set the field as required.
@@ -259,16 +257,14 @@ class FormFieldWidget
      * @param FormWidget|null $formWidget The form widget instance.
      * @return array The rendered form field data.
      */
-    public function render(FormWidget|null $formWidget = null, $field_data = null)
+    public function render()
     {
-        if ($formWidget) {
-            $this->getValue($formWidget);
-        }
+
         $props = [
             'name' => $this->_name,
             'label' => !$this->_no_label ? !empty($this->_label) ? ucfirst($this->_label) : str($this->_name)->kebab()->replace('-', ' ')->ucfirst() : null,
-            'value' => !empty($field_data) ? $field_data : $this->_default_value,
             'rules' => $this->_rules,
+            'value' => $this->_default_value,
             'required' => $this->_required,
             'colspan' => $this->_colspan,
         ];
@@ -278,6 +274,17 @@ class FormFieldWidget
             'eventsListeners' => $this->_events,
             'props' => $this->beforeRender($props)
         ];
+    }
+
+    public function onStoreData(&$formData, $request)
+    {
+        $formData[$this->_name] = $request[$this->_name];
+    }
+    public function onUpdateData(&$formData, $request, $oldData)
+    {
+
+        $data = $request->all()[$this->_name];
+        $formData[$this->_name] = empty($data) ? $oldData[$this->_name] : $data;
     }
 
     /**
@@ -433,4 +440,5 @@ class FormFieldWidget
         ];
         return $props;
     }
+
 }

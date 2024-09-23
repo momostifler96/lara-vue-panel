@@ -18,6 +18,7 @@ use LVP\Widgets\DataWidgets\DataGridField;
 use LVP\Widgets\DataWidgets\DataGridWidget;
 use LVP\Widgets\DataWidgets\DataTableWidget;
 use LVP\Widgets\FormWidget\Fields\FileUploadFieldWidget;
+use LVP\Widgets\FormWidget\Fields\SectionWidget;
 use LVP\Widgets\FormWidget\Fields\SwithToggleFieldWidget;
 
 trait Actions
@@ -32,40 +33,49 @@ trait Actions
          */
 
         $fields = $this->formFields();
-
+        // dd($old_data);
+        // dd($action->value);
         foreach ($fields as $key => $field) {
             if ($action->value == 'create' && $field->canfillOnCreate()) {
+
                 if ($field instanceof SwithToggleFieldWidget && empty($request[$field->field()])) {
                     $model_data[$field->field()] = $field->onStore(0);
                 } else if ($field instanceof FileUploadFieldWidget && !empty($request[$field->field()])) {
                     $this->_request_files[$field->field()] = $request[$field->field()];
                     $this->saveFiles($model_data, $field->field(), $request);
-
                 } else {
-                    $model_data[$field->field()] = $field->onStore($request[$field->field()]);
+                    // dd($field);
+                    $field->onStoreData($model_data, $request);
                 }
             } else if ($action->value == 'edit' && $field->canfillOnEdit()) {
-                if (!empty($field->onEditData())) {
-                    $_fields = explode('.', $field->onEditData());
-                    $_fd = $old_data;
-                    foreach ($_fields as $key => $value) {
-                        if (isset($_fields[$key - 1]) && $_fields[$key - 1] == '*') {
-                            $_fd = array_map(function ($it) use ($value) {
-                                return $it[$value];
-                            }, $_fd);
-                        } else if ($value != '*') {
-                            $_fd = $_fd[$value];
-                        }
-                    }
-                    $model_data[$field->field()] = $_fd;
-                    $model_data[$field->field()] = $field->onUpdate($request[$field->field()], $_fd);
-                } else {
-                    $model_data[$field->field()] = $field->onUpdate($request[$field->field()], @$old_data[$field->field()] ?? '');
-                }
+                $field->onUpdateData($model_data, $request, $old_data);
+
+                // if (!empty($field->onEditData())) {
+                //     $_fields = explode('.', $field->onEditData());
+                //     $_fd = $old_data;
+                //     foreach ($_fields as $key => $value) {
+                //         if (isset($_fields[$key - 1]) && $_fields[$key - 1] == '*') {
+                //             $_fd = array_map(function ($it) use ($value) {
+                //                 return $it[$value];
+                //             }, $_fd);
+                //         } else if ($value != '*') {
+                //             $_fd = $_fd[$value];
+                //         }
+                //     }
+                //     $model_data[$field->field()] = $_fd;
+                //     $model_data[$field->field()] = $field->onUpdate($request[$field->field()], $_fd);
+                // } else {
+                //     $field->onUpdateData($model_data, $request, $old_data);
+                // }
             }
         }
-
+        // dd($model_data);
         return $model_data;
+    }
+
+    public function buildSectionFields(&$formData, $section, Request $request)
+    {
+        $section->buildFieldsData($formData, $request);
     }
     private function buildData($pagination, $cols): array
     {

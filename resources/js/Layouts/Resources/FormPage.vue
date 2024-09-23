@@ -11,7 +11,7 @@
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
             props.page_titles.submit
-            }}</SimpleButton>
+          }}</SimpleButton>
           <SimpleButton v-if="props.action == 'create'" type="submit" @click="submitForm('reload')">
             {{
               props.page_titles.submit_and_create
@@ -71,7 +71,7 @@ const submitForm = (type: "reload" | "leave") => {
 const _formData = reactive<{ [k: string]: any }>({
   props: props,
   formData: {
-    ...props.form_data,
+    ...props.form_component.props.formData,
     after_save: "leave",
   },
 });

@@ -4,6 +4,7 @@ namespace LVP\Widgets\FormWidget\Fields;
 
 use LVP\Widgets\FormWidget\Fields\Traits\HasPlaceholder;
 use LVP\Widgets\FormWidget\Fields\Traits\HasType;
+use LVP\Widgets\FormWidget\FormWidget;
 
 class SectionWidget extends FormFieldWidget
 {
@@ -75,5 +76,28 @@ class SectionWidget extends FormFieldWidget
             $w->render();
         }, $this->_header);
         return $data;
+    }
+
+
+    public function onStoreData(&$formData, $request)
+    {
+        foreach ($this->_sections as $section) {
+            foreach ($section as $field) {
+                $field->onStoreData($formData, $request);
+            }
+        }
+    }
+    public function onUpdateData(&$formData, $request, $oldData)
+    {
+        foreach ($this->_sections as $section) {
+            foreach ($section as $field) {
+                $field->onUpdateData($formData, $request, $oldData);
+            }
+        }
+    }
+
+    public function getSections()
+    {
+        return $this->_sections;
     }
 }
