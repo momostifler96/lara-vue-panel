@@ -1,5 +1,6 @@
 <template>
-    <div :class="{ 'lvp-card': filled }">
+    <div :class="{ 'lvp-card': filled }"
+        :style="props.sticky.length > 0 ? `position: sticky; top: ${props.sticky}` : ''">
         <div v-show="props.label && props.label.length > 0" :class="{ 'lvp-card-header': filled, 'mb-3': !filled }">
             <div class="">
                 <h3 class="text-lg font-bold">{{ props.label }}</h3>
@@ -51,6 +52,9 @@ const props = defineProps({
     gap: {
         type: Number,
         default: 1,
+    }, sticky: {
+        type: String,
+        default: '',
     }, filled: {
         type: Boolean,
         default: true,

@@ -1,19 +1,14 @@
 <template>
   <div class="grid grid-cols-2 gap-4 mb-10">
     <template v-for="(field, i) in props.fields">
-      <component
-        :is="form_fields[field.component]"
-        v-bind="field.props"
-        v-model="formData[field.field]"
+      <component :is="form_fields[field.component]" v-bind="field.props" v-model="formData[field.field]"
         :errorText="errorIsArray($page.props.errors, field.field)"
-        @change="updateField(field.field, $event, field.eventsListeners.change)"
-        :class="[
+        @change="updateField(field.field, $event, field.eventsListeners.change)" :class="[
           `col-span-${field.colspan}`,
           {
             'col-span-full': field.colspan == 'full',
           },
-        ]"
-      />
+        ]" />
     </template>
   </div>
 </template>
