@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { CloseIcon } from "lvp/helpers/lvp_icons";
+import { CloseIcon } from "lvp/svg_icons";
 const props = defineProps({
   show: Boolean,
   title: {

@@ -1,72 +1,36 @@
 <template>
-  <LVPTable
-    :data="data.items"
-    :columns="columns"
-    v-model:selected="seletedItems"
-    :hasHeader="false"
-    :hasFooter="paginated"
-    fixeLastColumns
-    @dataEvent="$emit('dataEvent', $event)"
-  >
+  <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasHeader="false"
+    :hasFooter="paginated" fixeLastColumns @dataEvent="$emit('dataEvent', $event)">
     <template #t_leading>
-      <TableGroupedActionMenu
-        v-if="seletedItems.length > 0"
-        :actions="group_action"
-        @exec="execGroupAction"
-      />
+      <TableGroupedActionMenu v-if="seletedItems.length > 0" :actions="group_action" @exec="execGroupAction" />
     </template>
     <template #t_action>
       <div class="flex gap-2">
         <SearchTextField v-if="hasSearchable" v-model="_filter.search" />
-        <FiltersPopover
-          v-if="filter"
-          :options="filter"
-          :filterData="filterData"
-          :loading="false"
-          @filtering="onFiltering"
-        />
+        <FiltersPopover v-if="filter" :options="filter" :filterData="filterData" :loading="false"
+          @filtering="onFiltering" />
       </div>
     </template>
     <template #actions="{ column, item }">
       <template v-if="column.data.type == 'inline'">
         <div class="flex gap-2">
-          <TableActionButton
-            v-for="action in column.data.actions"
-            :icon="action_icons[action.icon]"
-            :label="action.label"
-            :action="action"
-            :color="action.color"
-            :item="item"
-            @click="$emit('action', action.action, item)"
-          />
+          <TableActionButton v-for="action in column.data.actions" :icon="action_icons[action.icon]"
+            :label="action.label" :action="action" :color="action.color" :item="item"
+            @click="$emit('action', action.action, item)" />
         </div>
       </template>
-      <TableActionMenu
-        v-else-if="column.data.type == 'dropdown'"
-        :tableItem="item"
-        :tableActions="column.data.actions"
-        @exec="
-          (action) => {
-            emit('action', action, item);
-          }
-        "
-      />
+      <TableActionMenu v-else-if="column.data.type == 'dropdown'" :tableItem="item" :tableActions="column.data.actions"
+        @exec="(action) => {
+          emit('action', action, item);
+        }
+          " />
     </template>
     <template #t_footer>
       <div class="flex items-center justify-between" v-if="paginated">
-        <Pagination
-          :total-items="data.pagination.total"
-          :items-per-page="data.pagination.per_page"
-          :modelValue="data.pagination.current_page"
-          @update:modelValue="navigate"
-        />
-        <Select
-          @update:modelValue="navigatePerpage"
-          :modelValue="data.pagination.per_page"
-          class="h-8 w-44"
-          placeholder="Par page"
-          :options="[5, 10, 20, 50, 100]"
-        />
+        <Pagination :total-items="data.pagination.total" :items-per-page="data.pagination.per_page"
+          :modelValue="data.pagination.current_page" @update:modelValue="navigate" />
+        <Select @update:modelValue="navigatePerpage" :modelValue="data.pagination.per_page" class="h-8 w-44"
+          placeholder="Par page" :options="[5, 10, 20, 50, 100]" />
       </div>
     </template>
   </LVPTable>
@@ -88,7 +52,7 @@ import ImageColumn from "lvp/Components/Widgets/Table/Columns/ImageColumn.vue";
 import DropdownColumn from "lvp/Components/Widgets/Table/Columns/DropdownColumn.vue";
 import ToggleColumn from "lvp/Components/Widgets/Table/Columns/ToggleColumn.vue";
 import { TableColumn, TableFilter } from "lvp/Types";
-import { EditIcon, DeleteIcon, ViewIcon } from "lvp/helpers/lvp_icons";
+import { EditIcon, DeleteIcon, ViewIcon } from "lvp/svg_icons";
 interface TableGroupAction {
   type: string;
   actions: {
@@ -182,7 +146,7 @@ const confirmation_modal = reactive<Record<string, any>>({
   title: "",
   body: "",
   current_id: "",
-  onConfirm: () => {},
+  onConfirm: () => { },
   onCancel: () => {
     confirmation_modal.show = false;
     confirmation_modal.title = "";

@@ -14,6 +14,7 @@ class SectionWidget extends FormFieldWidget
     protected int $_cols = 1;
     protected int $_gap = 3;
     protected int $_filled = 1;
+    protected int $_stiky = 0;
     protected array $_sections = [];
     protected array $_footer = [];
     protected array $_header = [];
@@ -38,6 +39,11 @@ class SectionWidget extends FormFieldWidget
         $this->_header = $header;
         return $this;
     }
+    public function stiky(int $stiky)
+    {
+        $this->_stiky = $stiky;
+        return $this;
+    }
     public function gap(int $gap)
     {
         $this->_gap = $gap;
@@ -58,10 +64,10 @@ class SectionWidget extends FormFieldWidget
                 return $field->render();
             }, $sec);
         }, $this->_sections);
-        // dd($data['sections']);
         $data['gap'] = $this->_gap;
         $data['cols'] = $this->_cols;
         $data['filled'] = $this->_filled;
+        $data['stiky'] = $this->_stiky;
         $data['footer'] = array_map(function ($w) {
             $w->render();
         }, $this->_footer);

@@ -2,7 +2,7 @@
     <div :class="{ 'lvp-card': filled }">
         <div v-show="props.label && props.label.length > 0" :class="{ 'lvp-card-header': filled, 'mb-3': !filled }">
             <div class="">
-                <h3 class="text-xl font-bold">{{ props.label }}</h3>
+                <h3 class="text-lg font-bold">{{ props.label }}</h3>
             </div>
             <div class=""></div>
         </div>

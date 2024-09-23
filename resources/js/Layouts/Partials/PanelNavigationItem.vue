@@ -6,7 +6,7 @@
 </template>
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
-import lvp_icons from "lvp/helpers/lvp_icons";
+import lvp_icons from "lvp/svg_icons";
 import { NavLink } from "lvp/types/index";
 import { inject } from "vue";
 

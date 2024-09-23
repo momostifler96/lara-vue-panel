@@ -94,7 +94,7 @@ import {
   FlipHorizontalIcon,
   FlipVerticaleIcon,
   ResizeIcon,
-} from "lvp/helpers/lvp_icons";
+} from "lvp/svg_icons";
 
 import CropperActionButton from "./CropperActionButton.vue";
 import RotateLeft from "lvp/Components/Icons/RotateLeft.vue";

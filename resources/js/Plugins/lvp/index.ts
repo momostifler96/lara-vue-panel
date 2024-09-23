@@ -1,6 +1,6 @@
 import { App, Plugin } from "vue";
 import "./../../../css/app.scss";
-import icons from "./../../helpers/lvp_icons";
+import icons from "../../svg_icons";
 import widgets from "./../../Components/Widgets";
 import VueApexCharts from "vue3-apexcharts";
 import PrimeVue from "primevue/config";

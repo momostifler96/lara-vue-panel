@@ -23,7 +23,7 @@
 </template>
 <script setup lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { CloseIcon } from "lvp/helpers/lvp_icons";
+import { CloseIcon } from "lvp/svg_icons";
 import ImageCropper from "./ImageCropper.vue";
 const props = defineProps({
   show: Boolean,

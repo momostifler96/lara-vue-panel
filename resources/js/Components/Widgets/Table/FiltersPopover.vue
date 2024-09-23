@@ -42,7 +42,7 @@ import {
   MenuItem,
 } from "@headlessui/vue";
 import { Link } from "@inertiajs/vue3";
-import { FilterIcon } from "lvp/helpers/lvp_icons";
+import { FilterIcon } from "lvp/svg_icons";
 
 import { TableFilter } from "lvp/Types";
 import FilterCheckBox from "../Filters/FilterCheckBox.vue";

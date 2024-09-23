@@ -23,7 +23,7 @@ import {
   ChevronRightIcon,
   ChevronDoubleRightIcon,
   ChevronDoubleLeftIcon,
-} from "lvp/helpers/lvp_icons";
+} from "lvp/svg_icons";
 const props = defineProps({
   totalItems: {
     type: Number,

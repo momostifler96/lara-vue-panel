@@ -39,7 +39,7 @@
   <DynamicFormModal v-bind="form_modal" @close="form_modal.show = false" :show="form_modal.show" />
 </template>
 <script setup lang="ts">
-import { TrashIcon, EditIcon, EyeIcon } from "lvp/helpers/lvp_icons";
+import { TrashIcon, EditIcon, EyeIcon } from "lvp/svg_icons";
 import Select from "lvp/Components/Forms/Select.vue";
 import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";

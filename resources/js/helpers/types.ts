@@ -43,12 +43,13 @@ interface FormField {
 
 interface ActionMenu {
     type: "inline" | "dropdown";
-    actions: {
-        label: string;
-        action: string;
-        icon: string;
-        color: string;
-    }[];
+    actions: LVPActionMenuOption[];
+}
+interface LVPActionMenuOption {
+    label?: string;
+    action: string;
+    icon?: string;
+    color: string;
 }
 interface TableData {
     columns: any[];
@@ -165,4 +166,4 @@ interface FolderInterface {
 }
 
 
-export type { TableColumn, TableData, ActionsList, SelectedActionsList, FormField, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface }
+export type { TableColumn, LVPActionMenuOption, TableData, ActionsList, SelectedActionsList, FormField, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface }

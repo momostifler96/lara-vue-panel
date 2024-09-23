@@ -1,10 +1,6 @@
 <template>
     <div v-if="actions?.type == 'inline'" class="flex gap-2">
-        <button
-            v-for="(action, i) in actions?.actions"
-            class="lvp-button-lite"
-            :class="action.color"
-        >
+        <button v-for="(action, i) in actions?.actions" class="lvp-button-lite" :class="action.color">
             {{ action.label }}
         </button>
     </div>
@@ -13,25 +9,13 @@
             <span v-html="Menu2Icon" class="w-5 h-5"></span>
             <span>Bulk action</span>
         </button>
-        <Menu
-            ref="tableActionMenu"
-            :model="{
-                items: actions.actions,
-            }"
-            :popup="true"
-            class=""
-        >
+        <Menu ref="tableActionMenu" :model="{
+            items: actions.actions,
+        }" :popup="true" class="">
             <template #item="{ item, props }">
-                <TableActionButton
-                    v-for="action in item"
-                    class="w-full"
-                    :icon="action_icons[action.icon]"
-                    :label="action.label"
-                    :action="action.action"
-                    :color="action.color"
-                    :item="null"
-                    @click="$emit('exec', action.action)"
-                />
+                <TableActionButton v-for="action in item" class="w-full" :icon="action_icons[action.icon]"
+                    :label="action.label" :action="action.action" :color="action.color" :item="null"
+                    @click="$emit('exec', action.action)" />
             </template>
         </Menu>
     </template>
@@ -42,7 +26,7 @@ import { inject, ref } from "vue";
 import Menu from "primevue/menu";
 import TableActionButton from "./TableActionButton.vue";
 import type { ActionMenu } from "lvp/helpers/types";
-import { Menu2Icon } from "lvp/helpers/lvp_icons";
+import { Menu2Icon } from "lvp/svg_icons";
 
 import icons, {
     DeleteIcon,
@@ -50,7 +34,7 @@ import icons, {
     EditIcon,
     MoveIcon,
     ViewIcon,
-} from "lvp/helpers/lvp_icons";
+} from "lvp/svg_icons";
 
 const props = defineProps({
     actions: Object as () => ActionMenu,

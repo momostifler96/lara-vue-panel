@@ -458,7 +458,7 @@ input[type="checkbox"] {
 }
 
 .lvp-button {
-    @apply flex justify-center items-center gap-2 px-3 py-1 text-white transition-all cursor-pointer text-nowrap;
+    @apply flex justify-center items-center gap-2 px-1.5 py-1 text-white transition-all cursor-pointer text-nowrap;
     border-radius: var(--lvp-button-border-radius);
     transition-duration: var(--lvp-transition-duration);
     transition-timing-function: var(--lvp-transition-timing-function);
@@ -489,6 +489,16 @@ input[type="checkbox"] {
 
         &:hover {
             background-color: var(--lvp-color-danger-hover);
+        }
+    }
+
+    &.white {
+        background-color: white;
+        outline-color: rgb(217, 217, 217);
+        color: #2d2d2d;
+
+        &:hover {
+            background-color: white;
         }
     }
 

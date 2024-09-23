@@ -99,7 +99,7 @@ import {
   UploadIcon,
   EyeIcon,
   EditIcon,
-} from "lvp/helpers/lvp_icons";
+} from "lvp/svg_icons";
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
 import CropperModal from "./CropperModal.vue";
 import { useToast } from "lvp/Plugins/toast";
@@ -314,14 +314,12 @@ const onFilePicked = (event: Event) => {
     fileInput.value?.classList.remove("border-lvp-primary");
     //@ts-ignore
     const files = <FileList>event.target?.files;
-    if (files.length > 0) {
-      if (props.multiple && files.length > 1) {
-        alert("Only one file can be uploaded");
-      } else {
-        loadFile(files);
-      } // emit("update:modelValue", (event.target as HTMLInputElement).value);
-      fileForm.value.reset();
-    }
+    if (!props.multiple && files.length > 1) {
+      alert("Only one file can be uploaded");
+    } else {
+      loadFile(files);
+    } // emit("update:modelValue", (event.target as HTMLInputElement).value);
+    fileForm.value.reset();
   }
 };
 
