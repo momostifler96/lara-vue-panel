@@ -1,25 +1,15 @@
 <template>
-  <HeadlessModal :show="show" @update:close="cancel">
+  <LVPModal :show="show" @update:close="cancel" size="xs">
     <div class="flex-center">
-      <span
-        class="flex h-12 p-3 bg-lite rounded-xl w-[50px] text-gray-50"
-        v-html="icons[icon]"
-        :class="colors[icon]"
-      >
+      <span class="flex h-12 p-3 bg-lite rounded-xl w-[50px] text-gray-50" v-html="icons[icon]" :class="colors[icon]">
       </span>
     </div>
     <div class="my-4 mb-10">
       <h4 class="mb-3 text-center">{{ title }}</h4>
       <p class="text-sm text-center text-gray-500">{{ body }}</p>
-      <TextField
-        v-if="hasPassword"
-        id="password"
-        class="mt-5"
-        label="Password"
-        v-model="password"
-      />
+      <TextField v-if="hasPassword" id="password" class="mt-5" label="Password" v-model="password" />
     </div>
-    <div class="w-full h-full gap-3 flex-center">
+    <div class="w-full h-full gap-3 flex-center p-1">
       <button @click="cancel" class="w-full lvp-button cancel">
         {{ cancelLabel }}
       </button>
@@ -27,10 +17,9 @@
         {{ confirmLabel }}
       </button>
     </div>
-  </HeadlessModal>
+  </LVPModal>
 </template>
 <script setup lang="ts">
-import HeadlessModal from "./HeadlessModal.vue";
 import {
   SuccessIcon,
   WarningIcon,
@@ -39,6 +28,7 @@ import {
 } from "./../../Assets/Icons";
 import TextField from "../Forms/TextField.vue";
 import { ref } from "vue";
+import LVPModal from "./LVPModal.vue";
 
 const props = defineProps({
   show: Boolean,

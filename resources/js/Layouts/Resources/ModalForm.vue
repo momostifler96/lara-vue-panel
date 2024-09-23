@@ -5,7 +5,7 @@
     </span>
   </template>
   <FormModal :show="show" @submit="submit" @close="cancel" :modalTitle="titles[action].title"
-    :cancelLabel="titles[action].cancel" :submitLabel="titles[action].submit">
+    :cancelLabel="titles[action].cancel" :submitLabel="titles[action].submit" size="md">
     <FormEngine v-bind="props.fields.props" :form-data="formData" />
   </FormModal>
 </template>

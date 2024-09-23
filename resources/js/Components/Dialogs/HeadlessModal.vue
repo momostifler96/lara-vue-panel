@@ -11,7 +11,7 @@
         <div class="lvp-modal">
           <div class="modal-header">
             <button type="button" @click="close" class="lvp-modal-close-btn">
-              <span v-html="CloseIcon" class="w-5 h-5" />
+              <span v-html="CloseIcon" class="w-5 h-5 text-black" />
             </button>
             <h6 class="font-bold">{{ title }}</h6>
           </div>

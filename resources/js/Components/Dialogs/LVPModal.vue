@@ -45,10 +45,10 @@ const close = () => {
 };
 
 const sizes = <{ [k: string]: string }>{
-  sm: 'w-[calc(100vw-50%)]',
+  xs: 'w-[400px]',
+  sm: 'w-[700px]',
   md: 'w-[calc(100vw-500px)]',
   lg: 'w-[calc(100vw-200px)]',
   xl: 'w-[calc(100vw-100px)]',
-
 }
 </script>

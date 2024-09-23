@@ -1,6 +1,6 @@
 <template>
 
-  <HeadlessModal :show="show" :title="modalTitle" @update:close="cancel">
+  <LVPModal :show="show" :title="modalTitle" @update:close="cancel" :size="size">
     <form @submit.prevent="submit">
       <div class="">
         <AlertBox />
@@ -17,11 +17,12 @@
         </div>
       </div>
     </form>
-  </HeadlessModal>
+  </LVPModal>
 </template>
 <script setup lang="ts">
 import HeadlessModal from "./HeadlessModal.vue";
 import AlertBox from "../Widgets/AlertBox.vue";
+import LVPModal from "./LVPModal.vue";
 const props = defineProps({
   show: Boolean,
 
@@ -32,6 +33,9 @@ const props = defineProps({
   submitLabel: {
     type: String,
     default: "Create",
+  }, size: {
+    type: String,
+    default: "md",
   },
   modalTitle: {
     type: String,
