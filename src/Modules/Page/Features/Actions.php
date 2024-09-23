@@ -48,8 +48,9 @@ trait Actions
         if (empty($this->short_label)) {
             $this->short_label = $this->label;
         }
-
-        $this->menu_label = $this->label;
+        if (empty($this->menu_label)) {
+            $this->menu_label = $this->label;
+        }
 
         $this->page_title = ucfirst(!empty($this->page_title) ? $this->page_title : $this->label);
         $this->meta_title = ucfirst(!empty($this->meta_title) ? $this->meta_title : $this->label);
