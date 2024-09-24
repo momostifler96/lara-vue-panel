@@ -77,7 +77,6 @@ class TableColumn
         return $this->_field;
     }
 
-
     public function beforeRender(array $data)
     {
         return $data;

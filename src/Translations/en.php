@@ -6,6 +6,8 @@ return [
         'create_and_create_another' => 'Créer {label} et crée {gender} autre',
         'edit' => 'Modifier {gender} {label}',
         'update' => 'Mettre à jour',
+        'updated' => '{label} updated',
+
         'submit' => 'Soumettre',
         'delete' => 'Supprimer {gender} {label}',
         'delete_selected' => 'Supprimer les {label} sélectionnés',
@@ -37,6 +39,10 @@ return [
     'female' => "female",
     'children' => "Children",
     'child' => "Child",
+    'success' => "success",
+    'error' => "error",
+    'warning' => "warning",
+    'info' => "info",
     'create_and_create_another' => 'Create and create another',
     'auth' => [
         'credential_error' => 'The provided credentials do not match our records.',

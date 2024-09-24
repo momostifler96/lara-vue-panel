@@ -163,9 +163,11 @@ trait Actions
             ->as($this->route_name . '.')
             ->group(function () {
                 Route::get($this->slug . '/', fn(Request $request) => $this->index($request))->name('index');
-                Route::get($this->slug . '/create', fn(Request $request) => $this->create($request))->middleware($this->create_middlewares)->name('create');
+                if ($this->form_type == 'page') {
+                    Route::get($this->slug . '/create', fn(Request $request) => $this->create($request))->middleware($this->create_middlewares)->name('create');
+                    Route::get($this->slug . '/edit/{id}', fn(Request $request, $id) => $this->edit($request, $id))->middleware($this->edit_middlewares)->name('edit');
+                }
                 Route::post($this->slug . '/store', fn(Request $request) => $this->store($request))->middleware($this->store_middlewares)->name('store');
-                Route::get($this->slug . '/edit/{id}', fn(Request $request, $id) => $this->edit($request, $id))->middleware($this->edit_middlewares)->name('edit');
                 Route::post($this->slug . '/update', fn(Request $request) => $this->update($request))->middleware($this->update_middlewares)->name('update');
                 Route::post($this->slug . '/exec-actions', fn(Request $request) => $this->execActions($request))->middleware($this->update_middlewares)->name('exec-actions');
                 Route::get($this->slug . '/{id}', fn(Request $request, $id) => $this->show($request, $id))->middleware($this->show_middlewares)->name('show');
@@ -275,9 +277,10 @@ trait Actions
     }
     private function buildDataWidget(Request $request)
     {
-        $columns = $this->buildDataColumns();
-        $query = $this->buildQuery($request, $columns);
-        $data = DataTableWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->columns($this->dataColumns())->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
+        // $columns = $this->buildDataColumns();
+        $query = $this->buildQuery($request);
+        // dd($this->dataWidget()->setData($query));
+        $data = $this->dataWidget()->setQuery($query)->paginated()->render();
         // $data = DataGridWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->dataField([
         //     DataGridField::make('slug'),
         //     DataGridField::make('name'),
@@ -301,7 +304,7 @@ trait Actions
     {
         return array_map(fn($_table_column) => $_table_column->render(), $this->beforeDataWidgets());
     }
-    private function buildQuery(Request $request, $columns): Builder
+    private function buildQuery(Request $request): Builder
     {
         /**
          * @var Builder $query
@@ -309,28 +312,28 @@ trait Actions
         $query = $this->model::query();
         $this->beforeBuildQuery($query, $request);
 
-        if ($request->has('search')) {
-            $searchable_columns = $this->getSearchableFields();
-            if (!empty($searchable_columns)) {
-                $query->whereAny($searchable_columns, 'LIKE', $request->get('search') . '%');
-            }
-        }
-        $data_filters = $this->dataFilters();
+        // if ($request->has('search')) {
+        //     $searchable_columns = $this->getSearchableFields();
+        //     if (!empty($searchable_columns)) {
+        //         $query->whereAny($searchable_columns, 'LIKE', $request->get('search') . '%');
+        //     }
+        // }
+        // $data_filters = $this->dataFilters();
 
-        $request_array_data = $request->toArray();
-        for ($i = 0; $i < count($data_filters); $i++) {
-            $data_filters[$i]->apply($query, $request_array_data);
-        }
+        // $request_array_data = $request->toArray();
+        // for ($i = 0; $i < count($data_filters); $i++) {
+        //     $data_filters[$i]->apply($query, $request_array_data);
+        // }
 
-        foreach ($columns as $key => $column) {
-            if (str_starts_with($column['field'], 'related.')) {
-                $related = explode('.', substr($column['field'], strlen('related.')));
-                $query->with($related[0]);
-            } else if (str_starts_with($column['field'], 'count.')) {
-                $related = substr($column['field'], strlen('count.'));
-                $query->withCount($related);
-            }
-        }
+        // foreach ($columns as $key => $column) {
+        //     if (str_starts_with($column['field'], 'related.')) {
+        //         $related = explode('.', substr($column['field'], strlen('related.')));
+        //         $query->with($related[0]);
+        //     } else if (str_starts_with($column['field'], 'count.')) {
+        //         $related = substr($column['field'], strlen('count.'));
+        //         $query->withCount($related);
+        //     }
+        // }
 
         $this->afterBuildQuery($query, $request);
         return $query;

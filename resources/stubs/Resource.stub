@@ -3,8 +3,6 @@
 namespace App\LVP\Resources{{namespace}};
 
 use LVP\Modules\Resource\Resource;
-use LVP\Table\TextColumn;
-use LVP\Widgets\DataWidgets\Actions\DataActionButton;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +14,14 @@ class {{class}}Resource extends Resource
     protected array $model_appends = [];
     protected array $model_with = [];
     protected string $model_primary_key = 'id';
+
+    protected string $label;
+    protected string $plural_label;
+    protected string $short_label;
+    protected string $menu_label;
+    protected string $menu_icon;
+    protected string $menu_group;
+    protected int $menu_position;
 
     protected string $form_type = 'modal'; // modal or page
 
@@ -33,44 +39,28 @@ class {{class}}Resource extends Resource
 
 
     /**
-     * @return \LVP\Facades\TableColumn[]
+     * @return \LVP\Widgets\DataWidgets\DataWidget
      */
-    protected function dataColumns(): array
+     protected function dataWidget(): \LVP\Widgets\DataWidgets\DataWidget
     {
-        return [
-           
-        ];
-    }
+        return DataTableWidget::make()
+            ->columns([
+               
+            ])
+             ->hiddenFields([
 
-     /**
-     * @return \LVP\Widgets\DataWidgets\Filters\DataFilterField[]
-     */
-    protected function dataFilters(): array
-    {
-        return [
+            ])
+            ->actions([
+               \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('edit'),
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete')->color('text-lvp-danger'),
+            ])
+            ->bulkActions([
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete')->color('text-lvp-danger'),
 
-        ];
-    }
+            ])
+            ->filters([
 
-    /**
-     * @return \LVP\Widgets\DataWidgets\Actions\DataActionButton[]
-     */
-
-    protected function dataActions(): array
-    {
-        return [
-            DataActionButton::make('edit'),
-            DataActionButton::make('delete')->color('text-lvp-danger'),
-        ];
-    }
-     /**
-     * @return DataActionButton[]
-     */
-    protected function dataActionsGroup(): array
-    {
-        return [
-            DataActionButton::make('delete')->color('text-lvp-danger'),
-        ];
+            ]);
     }
 
     //Store model hooks 

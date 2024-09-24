@@ -44,6 +44,8 @@ const props = defineProps({
 const emit = defineEmits(["update:show", "submit", "close"]);
 
 const submit = () => {
+  console.log('submit modal fff');
+
   emit("submit");
 };
 const cancel = () => {

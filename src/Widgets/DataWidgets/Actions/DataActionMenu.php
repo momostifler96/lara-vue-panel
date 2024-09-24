@@ -6,6 +6,8 @@ class DataActionMenu
 {
 
     protected string $_type = 'inline';
+    protected string $_label = 'Bulk actions';
+    protected string $_icon = 'bulk';
     /**
      * Undocumented variable
      *
@@ -34,12 +36,24 @@ class DataActionMenu
         $this->_type = $type;
         return $this;
     }
+    public function label(string $label)
+    {
+        $this->_label = $label;
+        return $this;
+    }
+    public function icon(string $icon)
+    {
+        $this->_icon = $icon;
+        return $this;
+    }
 
 
     public function render(): array
     {
-        return  [
+        return [
             'type' => $this->_type,
+            'label' => $this->_label,
+            'icon' => $this->_icon,
             'actions' => array_map(function ($action) {
                 return $action->render();
             }, $this->_actions),

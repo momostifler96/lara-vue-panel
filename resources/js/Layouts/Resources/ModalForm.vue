@@ -7,7 +7,7 @@
   <FormModal :show="show" @submit="submit" @close="cancel" :modalTitle="titles[action].title"
     :cancelLabel="titles[action].cancel" :submitLabel="titles[action].submit" size="md">
 
-    <FormEngine v-bind="props.fields.props" :form-data="formData" />
+    <FormEngine v-bind="props.form_widget.props" :form-data="formData" />
   </FormModal>
 </template>
 <script setup lang="ts">
@@ -21,7 +21,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  fields: {
+  form_widget: {
     type: Object,
     required: true,
   },
@@ -39,8 +39,7 @@ const props = defineProps({
   },
   errors: Object,
 });
-console.log('props datra', props.titles, props.fields, props.action);
-const formData = ref(props.formData);
+
 const updateLoadErrors = ($errors: any) => {
   formErrors.value = $errors;
 };
@@ -51,7 +50,8 @@ const errorIsArray = (field: string): string | null => {
   return error ? (Array.isArray(error) ? error[0] : error) : null;
 };
 const submit = () => {
-  router.post(route(props.routes[props.action]), formData.value, {
+
+  router.post(route(props.routes[props.action == 'create' ? 'store' : 'update']), props.formData, {
     onSuccess: () => {
       formErrors.value = {};
       emit("close", true);
@@ -62,17 +62,7 @@ const cancel = () => {
   formErrors.value = {};
   emit("close", true);
 };
-watch(
-  () => props.show,
-  () => {
-    if (props.action == "edit") {
-      console.log("props.defaultData", props.defaultData);
-      formData.value = props.defaultData;
-    } else {
-      formData.value = {};
-    }
-  }
-);
+
 
 onMounted(() => { });
 </script>

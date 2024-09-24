@@ -10,6 +10,9 @@ use LVP\Modules\Resource\Features\Hooks;
 use LVP\Modules\Resource\Features\Http;
 use LVP\Modules\Resource\Features\Geters;
 use LVP\Modules\Resource\Features\Actions;
+use LVP\Modules\Resource\Features\ResourceDataWidget;
+use LVP\Widgets\DataWidgets\DataWidget;
+use LVP\Widgets\LVPWidget;
 
 
 class Resource
@@ -86,18 +89,23 @@ class Resource
     {
         return [];
     }
-    protected function dataFilters(): array
+
+    protected function dataWidget(): DataWidget
     {
-        return [];
+        return ResourceDataWidget::table()
+            ->columns([
+
+            ])->actions([
+
+                ])->bulkActions([
+
+                ])->filters([
+
+                ]);
     }
-    protected function dataColumns(): array
-    {
-        return [];
-    }
-    protected function dataActions(): array
-    {
-        return [];
-    }
+
+
+
     protected function infoList(): array
     {
         return [];

@@ -4,10 +4,20 @@
   <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated" fixeLastColumns
     @dataEvent="execColAction($event.action, $event)">
     <template #t_leading>
-      <TableGroupedActionMenu :actions="group_action" @exec="execGroupAction" />
+      <TableGroupedActionMenu :actions="bulk_actions" @exec="execGroupAction" />
     </template>
     <template #t_action>
       <div class="flex gap-2">
+        <TextField v-if="searchables.length > 0" v-model="_filter.search" class="w-full" placeholder="Search"
+          :prefix="icons.search">
+          <template #prefix>
+            <span class="text-gray-400 w-5 h-5 flex-center" v-html="icons.search"></span>
+          </template>
+          <template #surfix>
+            <button class="text-gray-400 w-5 h-5 hover:bg-gray-200 flex-center" @click="_filter.search = ''"
+              v-html="icons.close"></button>
+          </template>
+        </TextField>
         <FiltersPopover v-if="filter && filter_type == 'popover'" :options="filter" :filterData="filterData"
           :loading="false" @filtering="onFiltering" @reset="onResetFilter" />
       </div>
@@ -32,14 +42,11 @@
       </div>
     </template>
   </LVPTable>
-  <ConfirmationModal :show="confirmation_modal.show" icon="delete" :title="confirmation_modal.title"
-    :body="confirmation_modal.body" :hasPassword="confirmation_modal.has_password"
-    :cancelLabel="confirmation_modal.cancel_button_label" :confirmLabel="confirmation_modal.confirm_button_label"
-    @onResponse="confirmation_modal.onResponse" />
+
   <DynamicFormModal v-bind="form_modal" @close="form_modal.show = false" :show="form_modal.show" />
 </template>
 <script setup lang="ts">
-import { TrashIcon, EditIcon, EyeIcon } from "lvp/svg_icons";
+import icons, { TrashIcon, EditIcon, EyeIcon } from "lvp/svg_icons";
 import Select from "lvp/Components/Forms/Select.vue";
 import Pagination from "lvp/Components/Buttons/Pagination.vue";
 import TableActionButton from "lvp/Components/Widgets/Table/TableActionButton.vue";
@@ -55,6 +62,8 @@ import { router } from "@inertiajs/vue3";
 import { useToast } from "lvp/Plugins/toast";
 import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
 import DynamicFormModal from "lvp/Components/Dialogs/DynamicFormModal.vue";
+import TextField from "lvp/Components/Forms/TextField.vue";
+import { showConfirmation } from "lvp/utils";
 interface TableGroupAction {
   type: string;
   actions: {
@@ -93,7 +102,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  group_action: {
+  bulk_actions: {
     type: Object as () => TableGroupAction,
     required: true,
   },
@@ -114,6 +123,9 @@ const props = defineProps({
     required: true,
   },
   routes: {
+    type: Object,
+    required: true,
+  }, searchables: {
     type: Object,
     required: true,
   },
@@ -179,7 +191,10 @@ watch(
   () => _filter.value.search,
   (val) => {
     if (search_debounce) clearTimeout(search_debounce);
-    search_debounce = setTimeout(() => { }, 1000);
+    search_debounce = setTimeout(() => {
+      queryString.set("search", val);
+      router.get("?" + queryString.toString());
+    }, 1000);
   }
 );
 const seletedItems = ref([]);
@@ -290,24 +305,7 @@ const table_single_item_actions = <SingleItemAction>{
 
 const execAction = (action: string, item: any) => {
   table_single_item_actions[action]({
-    showConfirmation: (option) => {
-      confirmation_modal.title = option.title;
-      confirmation_modal.body = option.body;
-      confirmation_modal.cancel_button_label = option.cancel_button_label;
-      confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.has_password = option.has_password;
-      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
-        if (rsp) {
-          option.onConfirm(password);
-        } else {
-          option.onCancel();
-        }
-        confirmation_modal.show = false;
-        confirmation_modal.title = "";
-        confirmation_modal.body = "";
-      };
-      confirmation_modal.show = true;
-    },
+    showConfirmation: showConfirmation,
 
     item,
     showToast: useToast,
@@ -333,24 +331,7 @@ const table_selected_items_actions = <SelectedItemsActions>{
 
 const execGroupAction = (action: string, items: any[]) => {
   table_selected_items_actions[action]({
-    showConfirmation: (option: any) => {
-      confirmation_modal.title = option.title;
-      confirmation_modal.body = option.body;
-      confirmation_modal.cancel_button_label = option.cancel_button_label;
-      confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.has_password = option.has_password;
-      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
-        if (rsp) {
-          option.onConfirm(password);
-        } else {
-          option.onCancel();
-        }
-        confirmation_modal.show = false;
-        confirmation_modal.title = "";
-        confirmation_modal.body = "";
-      };
-      confirmation_modal.show = true;
-    },
+    showConfirmation: showConfirmation,
     showFormModal: (option: any) => {
       form_modal.title = option.title;
       form_modal.description = option.description;

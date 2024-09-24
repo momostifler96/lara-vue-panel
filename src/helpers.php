@@ -39,8 +39,8 @@ function lvp_translation($word, $translations = null, $attributes = [])
     }
 
     if (!empty($attributes)) {
-        $attrs = array_map(fn($t) => '{' . $t . '}', array_keys($attr));
-        $attrs_vals = array_values($attr);
+        $attrs = array_map(fn($t) => '{' . $t . '}', array_keys($attributes));
+        $attrs_vals = array_values($attributes);
         $_tr = str_replace($attrs, $attrs_vals, $_tr);
     }
 

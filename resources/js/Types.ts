@@ -105,6 +105,7 @@ interface TableFilter {
         component: string;
         col_span: string;
     }[];
+    searchable: any[];
     icon: string;
     style: string;
     type: string;

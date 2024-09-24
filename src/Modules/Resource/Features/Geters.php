@@ -100,7 +100,7 @@ trait Geters
     }
     public function buildFormFields(): array
     {
-        return $this->form_type == 'modal' ? FormWidget::make()->cols($this->form_grid_cols)->colSpan($this->form_grid_gap)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->action(route($this->getRoutes('create')))->render() : [];
+        return $this->form_type == 'modal' ? FormWidget::make()->cols($this->form_grid_cols)->colSpan($this->form_grid_gap)->fields($this->formFields())->submitBtnLabel($this->tr($this->short_label, 'create'))->isCard(false)->method(HttpMethod::POST)->submitUrl(route($this->getRoutes('store')))->render() : [];
     }
 
 
@@ -174,17 +174,18 @@ trait Geters
     public function getRoutes($route = 'all')
     {
         $routes = [
-            'create' => $this->route_name . '.create',
-            'edit' => $this->route_name . '.edit',
+
             'store' => $this->route_name . '.store',
             'update' => $this->route_name . '.update',
             'index' => $this->route_name . '.index',
             'delete' => $this->route_name . '.delete',
             "show" => $this->route_name . '.show',
             "exec_actions" => $this->route_name . '.exec-actions',
-
         ];
-
+        if ($this->form_type == 'page') {
+            $routes['edit'] = $this->route_name . '.edit';
+            $routes['create'] = $this->route_name . '.create';
+        }
         if ($route == 'all') {
             return $routes;
         } else {
@@ -198,15 +199,12 @@ trait Geters
     public function getModalForm()
     {
         return [
-            'routes' => [
-                'create' => $this->getRoutes('store'),
-                'edit' => $this->getRoutes('update'),
-            ],
+
             'titles' => [
                 'create' => $this->getFormPageTitle('create'),
                 'edit' => $this->getFormPageTitle('edit'),
             ],
-            'fields' => $this->buildFormFields(),
+            'form_widget' => $this->buildFormFields(),
         ];
     }
 

@@ -1,60 +1,46 @@
 <?php
 
-namespace LVP\Table;
+namespace LVP\Widgets\DataWidgets\DataTable\Columns;
 
 use LVP\Facades\TableColumn;
 
-class DropdownColumn extends TableColumn
+class ToggleColumn extends TableColumn
 {
 
-    protected string $_color;
-    protected string $_field;
-    protected array $_options = [];
+    protected $_true_value = '1';
+    protected $_false_value = '0';
+    protected $_action = 'update_col';
+
     protected bool $_has_confirmation = false;
-    protected bool $_multiple = false;
-    protected int $_max_show = 2;
 
     protected string $_confirmation_title;
     protected string $_confirmation_body;
 
-    protected array $_value_colors = [];
-
-
-    public function dateFormat(string $format)
-    {
-        $this->_date_format = $format;
-        return $this;
-    }
-
-    public function badgeColors(array $colors)
-    {
-        $this->_value_colors = $colors;
-        return $this;
-    }
     /**
      * Create a new class instance.
      */
     public function __construct()
     {
-        $this->_type = 'dropdown';
-        $this->_editable = false;
+        $this->_type = 'toggle';
+        $this->_editable = true;
     }
 
-    public function options(array $options)
+    public function setTrueValue(string $value)
     {
-        $this->_options = $options;
+        $this->_true_value = $value;
         return $this;
     }
-    public function multiple(bool $multiple = true)
+    public function action(string $action)
     {
-        $this->_multiple = $multiple;
+        $this->_action = $action;
         return $this;
     }
-    public function maxShow(int $max_show = 2)
+    public function setFalseValue(string $value)
     {
-        $this->_max_show = $max_show;
+        $this->_false_value = $value;
         return $this;
     }
+
     public function setConfirmationTitle(string $title)
     {
         $this->_confirmation_title = $title;
@@ -70,13 +56,12 @@ class DropdownColumn extends TableColumn
         $this->_has_confirmation = true;
         return $this;
     }
+
     public function beforeRender(array $data)
     {
-        $data['options'] = $this->_options;
-        $data['multiple'] = $this->_multiple;
-        $data['maxShow'] = $this->_max_show;
-        $data['value_colors'] = $this->_value_colors;
-
+        $data['action'] = $this->_action;
+        $data['true_value'] = $this->_true_value;
+        $data['false_value'] = $this->_false_value;
         $data['has_confirmation'] = $this->_has_confirmation;
         if (!empty($this->_confirmation_title)) {
             $data['confirmation_title'] = $this->_confirmation_title;
@@ -84,7 +69,6 @@ class DropdownColumn extends TableColumn
         if (!empty($this->_confirmation_body)) {
             $data['confirmation_body'] = $this->_confirmation_body;
         }
-
         return $data;
     }
 }

@@ -1,9 +1,10 @@
 <template>
     <div class="grid mb-5" :class="`${_grid_cols[grid_cols]} ${_gaps[gap]}`">
         <div v-for="(field, i) in fields" :class="`col-span-${field.props.colspan}`">
-            <component :is="form_fields[field.type]" v-bind="field.props" v-model="formData[field.props.name]"
-                :formData="formData" :errorText="errorIsArray($page.props.errors, field.props.name)" class="my-2"
-                @change="updateField(field.props.name, $event, field.eventsListeners.change)" />
+
+            <component :is="form_fields[field.type]" v-bind="field.props" v-model="formData[field.name]"
+                :formData="formData" :errorText="errorIsArray($page.props.errors, field.name)" class="my-2"
+                @change="updateField(field.name, $event, field.eventsListeners.change)" />
         </div>
     </div>
 </template>

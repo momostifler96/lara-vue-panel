@@ -1,10 +1,10 @@
 <?php
 
-namespace LVP\Table;
+namespace LVP\Widgets\DataWidgets\DataTable\Columns;
 
 use LVP\Facades\TableColumn;
 
-class TextFieldColumn extends TableColumn
+class TextSelectColumn extends TableColumn
 {
 
     public function searchable()
@@ -14,7 +14,7 @@ class TextFieldColumn extends TableColumn
     }
     public function __construct()
     {
-        $this->_type = 'text-field';
+        $this->_type = 'select';
         $this->_editable = false;
     }
 }

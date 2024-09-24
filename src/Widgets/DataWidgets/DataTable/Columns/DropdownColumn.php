@@ -1,46 +1,60 @@
 <?php
 
-namespace LVP\Table;
+namespace LVP\Widgets\DataWidgets\DataTable\Columns;
 
 use LVP\Facades\TableColumn;
 
-class ToggleColumn extends TableColumn
+class DropdownColumn extends TableColumn
 {
 
-    protected $_true_value = '1';
-    protected $_false_value = '0';
-    protected $_action = 'update_col';
-
+    protected string $_color;
+    protected string $_field;
+    protected array $_options = [];
     protected bool $_has_confirmation = false;
+    protected bool $_multiple = false;
+    protected int $_max_show = 2;
 
     protected string $_confirmation_title;
     protected string $_confirmation_body;
 
+    protected array $_value_colors = [];
+
+
+    public function dateFormat(string $format)
+    {
+        $this->_date_format = $format;
+        return $this;
+    }
+
+    public function badgeColors(array $colors)
+    {
+        $this->_value_colors = $colors;
+        return $this;
+    }
     /**
      * Create a new class instance.
      */
     public function __construct()
     {
-        $this->_type = 'toggle';
-        $this->_editable = true;
+        $this->_type = 'dropdown';
+        $this->_editable = false;
     }
 
-    public function setTrueValue(string $value)
+    public function options(array $options)
     {
-        $this->_true_value = $value;
+        $this->_options = $options;
         return $this;
     }
-    public function action(string $action)
+    public function multiple(bool $multiple = true)
     {
-        $this->_action = $action;
+        $this->_multiple = $multiple;
         return $this;
     }
-    public function setFalseValue(string $value)
+    public function maxShow(int $max_show = 2)
     {
-        $this->_false_value = $value;
+        $this->_max_show = $max_show;
         return $this;
     }
-
     public function setConfirmationTitle(string $title)
     {
         $this->_confirmation_title = $title;
@@ -56,12 +70,13 @@ class ToggleColumn extends TableColumn
         $this->_has_confirmation = true;
         return $this;
     }
-
     public function beforeRender(array $data)
     {
-        $data['action'] = $this->_action;
-        $data['true_value'] = $this->_true_value;
-        $data['false_value'] = $this->_false_value;
+        $data['options'] = $this->_options;
+        $data['multiple'] = $this->_multiple;
+        $data['maxShow'] = $this->_max_show;
+        $data['value_colors'] = $this->_value_colors;
+
         $data['has_confirmation'] = $this->_has_confirmation;
         if (!empty($this->_confirmation_title)) {
             $data['confirmation_title'] = $this->_confirmation_title;
@@ -69,6 +84,7 @@ class ToggleColumn extends TableColumn
         if (!empty($this->_confirmation_body)) {
             $data['confirmation_body'] = $this->_confirmation_body;
         }
+
         return $data;
     }
 }

@@ -7,7 +7,7 @@
     <template v-else-if="actions?.type == 'dropdown'">
         <button type="button" @click="showMenu" class="lvp-button-lite">
             <span v-html="Menu2Icon" class="w-5 h-5"></span>
-            <span>Bulk action</span>
+            <span>{{ actions.label }}</span>
         </button>
         <Menu ref="tableActionMenu" :model="{
             items: actions.actions,
@@ -37,6 +37,13 @@ import icons, {
 } from "lvp/svg_icons";
 
 const props = defineProps({
+    label: {
+        type: String,
+        required: true,
+    }, icon: {
+        type: String,
+        required: true,
+    },
     actions: Object as () => ActionMenu,
 });
 

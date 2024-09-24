@@ -1,6 +1,6 @@
 <?php
 
-namespace LVP\Table;
+namespace LVP\Widgets\DataWidgets\DataTable\Columns;
 
 use LVP\Enums\Alignment;
 use LVP\Facades\TableColumn;

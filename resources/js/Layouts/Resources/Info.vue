@@ -7,14 +7,10 @@
     <InfoBlock :infos="props.widgets" :data="props.model_infos" />
 
     <div class="flex justify-between mt-10">
-      <SimpleButton buttonType="link" :href="route(props.routes.index)"
-        >Retour</SimpleButton
-      >
+      <SimpleButton buttonType="link" :href="route(props.routes.index)">Retour</SimpleButton>
       <div class="flex gap-3">
         <SimpleButton>Modifier</SimpleButton>
-        <SimpleButton color="danger" @click="item_actions.delete"
-          >Supprimer</SimpleButton
-        >
+        <SimpleButton color="danger" @click="item_actions.delete">Supprimer</SimpleButton>
       </div>
     </div>
   </PanelLayout>
@@ -25,16 +21,10 @@
     :action="form_modal.action"
     v-bind="props.modal_form"
   /> -->
-  <ConfirmationModal
-    :show="confirmation_modal.show"
-    icon="delete"
-    :title="confirmation_modal.title"
-    :body="confirmation_modal.body"
-    :hasPassword="confirmation_modal.has_password"
-    :cancelLabel="confirmation_modal.cancel_button_label"
-    :confirmLabel="confirmation_modal.confirm_button_label"
-    @onResponse="confirmation_modal.onResponse"
-  />
+  <ConfirmationModal :show="confirmation_modal.show" icon="delete" :title="confirmation_modal.title"
+    :body="confirmation_modal.body" :hasPassword="confirmation_modal.has_password"
+    :cancelLabel="confirmation_modal.cancel_button_label" :confirmLabel="confirmation_modal.confirm_button_label"
+    @onResponse="confirmation_modal.onResponse" />
 </template>
 <script setup lang="ts">
 import PanelLayout from "../Partials/PanelLayout.vue";
@@ -78,7 +68,6 @@ interface ResourceIndexPage {
 const props = computed(() => {
   return usePage().props as unknown as ResourceIndexPage;
 });
-console.log("props", props.value);
 const confirmation_modal = reactive({
   show: false,
   title: "",
@@ -86,7 +75,7 @@ const confirmation_modal = reactive({
   has_password: false,
   cancel_button_label: "Annuler",
   confirm_button_label: "Confirmer",
-  onResponse: (rsp: boolean, password: string) => {},
+  onResponse: (rsp: boolean, password: string) => { },
 });
 
 const item_actions = <ActionsList>{

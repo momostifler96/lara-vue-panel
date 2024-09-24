@@ -43,6 +43,8 @@ interface FormField {
 
 interface ActionMenu {
     type: "inline" | "dropdown";
+    label: string;
+    icon: string;
     actions: LVPActionMenuOption[];
 }
 interface LVPActionMenuOption {

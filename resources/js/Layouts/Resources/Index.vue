@@ -4,14 +4,13 @@
       <slot name="actions" />
       <SimpleButton @click="creatResource">{{
         props.labels.create
-        }}</SimpleButton>
+      }}</SimpleButton>
     </template>
-
-    <div v-if="props.before_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
+    <WidgetEngine :widgets="props.before_data_widgets" />
+    <!-- <div v-if="props.before_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10 tt">
       <component v-for="(widget, i) in props.before_data_widgets" :is="widgets_components[widget.widget_type]"
-        v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" @edit="edit"
-        :class="`col-span-${widget.col_span}`" />
-    </div>
+        v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
+    </div> -->
     <div class="">
       <DataComponent v-bind="props.data_widget" key="data-widget" :routes="props.routes" @edit="editResource" />
     </div>
@@ -21,14 +20,14 @@
         v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
     </div>
   </PanelLayout>
-  <ModalForm @close="form_modal.show = false" :show="form_modal.show" :defaultData="form_modal.data"
-    :action="form_modal.action" v-bind="props.modal_form" />
+  <ModalForm @close="form_modal.show = false" :show="form_modal.show" :formData="modal_form_data"
+    :action="form_modal.action" v-bind="props.modal_form" :routes="props.routes" />
 
 </template>
 <script setup lang="ts">
 import PanelLayout from "../Partials/PanelLayout.vue";
 import { router, usePage } from "@inertiajs/vue3";
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
 import DataComponent from "./DataComponent.vue";
@@ -38,6 +37,7 @@ import LineChart from "lvp/Components/Widgets/Chats/LineChart.vue";
 import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
 import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
 import ModalForm from "./ModalForm.vue";
+import WidgetEngine from "../WidgetEngine.vue";
 interface Titles {
   title: string;
   meta_title: string;
@@ -76,8 +76,22 @@ interface ResourceIndexPage {
   widgets: Widget[];
   before_data_widgets: any[];
   after_data_widgets: any[];
-  form_fields: any;
-  modal_form: any;
+
+  modal_form: {
+    form_widget: {
+      label: string;
+      props: {
+        formData: { [k: string]: any };
+      };
+      type: 'modal' | 'page';
+
+    };
+    routes: ResourceRoutes;
+    titles: {
+      create: string;
+      edit: string;
+    };
+  };
   form_type: "modal" | "page";
 }
 
@@ -94,14 +108,13 @@ const widgets_components = <{ [key: string]: any }>{
 const form_modal = reactive({
   show: false,
   action: "create",
-  data: null,
 });
-
+const modal_form_data = ref<any>()
 const creatResource = () => {
   if (props.value.form_type === "modal") {
-    form_modal.show = true;
-    form_modal.data = null;
+    modal_form_data.value = props.value.modal_form.form_widget.props.formData;
     form_modal.action = "create";
+    form_modal.show = true;
   } else {
     router.get(route(props.value.routes.create));
   }
@@ -109,9 +122,16 @@ const creatResource = () => {
 };
 const editResource = (item: any) => {
   if (props.value.form_type === "modal") {
-    form_modal.show = true;
-    form_modal.data = { ...item.props, id: item.id };
+    const formData = props.value.modal_form.form_widget.props.formData;
+    modal_form_data.value = props.value.modal_form.form_widget.props.formData;
+    const keys = Object.keys(formData);
+    modal_form_data.value.id = item.id;
+    keys.forEach((key) => {
+      modal_form_data.value[key] = item[key];
+    });
     form_modal.action = "edit";
+    form_modal.show = true;
+
   } else {
     router.get(route(props.value.routes.edit, { id: item.id }));
   }

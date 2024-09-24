@@ -1,24 +1,25 @@
 <?php
 
-namespace LVP\Table;
+namespace LVP\Widgets\DataWidgets\DataTable\Columns;
 
-use Illuminate\Support\Facades\Storage;
 use LVP\Facades\TableColumn;
+use Illuminate\Support\Facades\Storage;
 
-class AvatarColumn extends TableColumn
+class ImageColumn extends TableColumn
 {
     protected string $_file_path = '/';
-    protected string $_default = 'https://avatar.iran.liara.run/public/11';
-    protected string $_rounded = 'rounded-full';
-    protected int $_size = 20;
+    protected string $_default = '/';
+    protected string $_css_class = '';
+    protected int $_size = 50;
 
     /**
      * Create a new class instance.
      */
     public function __construct()
     {
-        $this->_type = 'avatar';
+        $this->_type = 'image';
         $this->_editable = false;
+        $this->disk('public');
     }
 
     public function disk($disk = 'public')
@@ -26,19 +27,16 @@ class AvatarColumn extends TableColumn
         $this->_file_path = Storage::disk($disk)->url('');
         return $this;
     }
-
-    public function rounded(bool $value = true)
-    {
-        $this->_rounded = $value ? 'rounded-full' : 'rounded';
-        return $this;
-    }
-
     public function default(string $url)
     {
         $this->_default = $url;
         return $this;
     }
-
+    public function cssClass(string $cssClass)
+    {
+        $this->_css_class = $cssClass;
+        return $this;
+    }
     public function size(int $size)
     {
         $this->_size = $size;
@@ -49,7 +47,7 @@ class AvatarColumn extends TableColumn
         $data['path'] = $this->_file_path;
         $data['default'] = $this->_default;
         $data['size'] = $this->_size;
-
+        $data['css_class'] = $this->_css_class;
         return $data;
     }
 }

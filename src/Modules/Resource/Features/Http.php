@@ -101,15 +101,15 @@ trait Http
             },
             function () use ($request, $formData) {
                 if ($request->input('after_save') === 'reload') {
-                    return redirect()->back()->with('success', 'Created successfully');
+                    return redirect()->back()->with('success', lvp_translation('resource.created', $this->_translations, ['label' => $this->_label]));
                 } else {
-                    return to_route($this->getRoutes('index'))->with('success', 'Created successfully');
+                    return to_route($this->getRoutes('index'))->with('success', lvp_translation('resource.created', $this->_translations, ['label' => $this->getLabel()]));
                 }
             },
             function ($exception) use ($request, $formData) {
                 dd($exception);
                 $this->onStoreModelFail($exception, $formData, $request);
-                return redirect()->back()->with('error', 'Something went wrong');
+                return redirect()->back()->with('error', lvp_translation('some_wrong', $this->_translations));
             }
         );
     }
@@ -121,9 +121,8 @@ trait Http
         );
 
         if ($valiator->fails()) {
-            return redirect()->back()->withErrors($valiator->errors()->toArray())->with('error', 'Please check fields before submit');
+            return redirect()->back()->withErrors($valiator->errors()->toArray())->with('error', lvp_translation('validation.please_check_field', $this->_translations));
         }
-
         /**
          * @var Model $model
          */
@@ -136,11 +135,12 @@ trait Http
                 $this->afterUpdateModel($model, $formData, $request);
             },
             function () use ($request, $formData) {
-                return redirect()->back()->with('success', 'Updated successfully');
+                return redirect()->back()->with('success', lvp_translation('resource.updated', $this->_translations, ['label' => $this->getLabel()]));
             },
             function (\Exception $exception) use ($request, $formData, $model) {
                 $this->onUpdateModelFail($exception, $model, $formData, $request);
-                return redirect()->back()->with('error', 'Something went wrong. errors :' . $exception->getMessage());
+                dd($exception);
+                return redirect()->back()->with('error', lvp_translation('some_wrong', $this->_translations));
             }
         );
 
@@ -158,7 +158,7 @@ trait Http
                 $model::where($this->model_primary_key, $request->item_id)->first($this->model_primary_key)->update([
                     $request->field => $request->value
                 ]);
-            }, "Item updated", "Item update failded"),
+            }, lvp_translation('update_col_success', $this->_translations), lvp_translation('update_col_fail', $this->_translations)),
 
         ];
     }
@@ -192,15 +192,15 @@ trait Http
                 $this->afterDeleteModel($ids, $request);
 
                 if ($request->has('redirect_to')) {
-                    session()->flash('success', 'Deleted successfully');
+                    session()->flash('success', lvp_translation('delation_success', $this->_translations));
                     return to_route($request->input('redirect_to'));
                 } else {
-                    return redirect()->back()->with('success', 'Deleted successfully');
+                    return redirect()->back()->with('success', lvp_translation('delation_success', $this->_translations));
                 }
             },
             function (\Exception $exception) use ($ids, $request) {
                 $this->onDeleteModelFail($exception, $ids, $request);
-                return redirect()->back()->with('error', 'Something went wrong. errors :' . $exception->getMessage());
+                return redirect()->back()->with('error', lvp_translation('some_wrong', $this->_translations));
             }
         );
     }

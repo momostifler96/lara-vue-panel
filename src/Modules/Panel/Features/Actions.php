@@ -185,8 +185,7 @@ trait Actions
                     $saved_menus[] = $menu;
                 }
             }
-            usort($saved_menus, function ($a, $b) {
-
+            usort($saved_menus, function ($a, $b) use ($saved_menus) {
                 if ($a['position'] == $b['position']) {
                     return 0;
                 }

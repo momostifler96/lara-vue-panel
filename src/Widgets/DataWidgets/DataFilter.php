@@ -21,6 +21,7 @@ class DataFilter
     protected string $_style = 'popover';
     protected string $_title = 'Filter';
     protected string $_value;
+    protected array $searchable = [];
     protected bool $_show_reset = false;
     protected bool $_auto_submit = false;
     protected string $_reset_button_label = 'Reset all';
@@ -58,7 +59,11 @@ class DataFilter
     {
         $this->_submit_button_label = $label;
         return $this;
-
+    }
+    public function searchable(array $fields)
+    {
+        $this->_searchable = $fields;
+        return $this;
     }
 
     public function title(string $title)
@@ -124,11 +129,10 @@ class DataFilter
     public function render()
     {
 
-
-
         return [
             'filters' => array_map(fn($item) => $item->render(), $this->_filters),
             'icon' => $this->_icon,
+            'searchable' => $this->_searchable,
             'style' => $this->_style,
             'show_reset' => $this->_show_reset,
             'reset_button_label' => $this->_reset_button_label,
