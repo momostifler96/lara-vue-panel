@@ -1,7 +1,5 @@
 <template>
   <div class="flex gap-3">
-    <TextField v-if="options.searchable.length > 0" v-model="_filters.search" class="w-full" placeholder="Search"
-      :loading="loading" />
 
 
     <Popover v-slot="{ open }" class="relative">

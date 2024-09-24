@@ -132,7 +132,6 @@ class DataFilter
         return [
             'filters' => array_map(fn($item) => $item->render(), $this->_filters),
             'icon' => $this->_icon,
-            'searchable' => $this->_searchable,
             'style' => $this->_style,
             'show_reset' => $this->_show_reset,
             'reset_button_label' => $this->_reset_button_label,
