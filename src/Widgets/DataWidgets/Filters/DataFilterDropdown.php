@@ -70,7 +70,7 @@ class DataFilterDropdown extends DataFilterField
                     }
                 });
             }
-
+            $this->execOnQuery($query, $request_filter[$this->_field], $request_filter);
         }
     }
 

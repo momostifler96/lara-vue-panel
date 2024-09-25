@@ -8,11 +8,13 @@ class DataFilterField
 {
 
     protected string $_field;
+    protected string $_query_from;
     protected string $_label;
     protected string $_component;
     protected string $_col_span = "1";
 
     protected string $_query;
+    protected $_call_on_query;
 
 
     public function __construct($field)
@@ -32,6 +34,7 @@ class DataFilterField
         $this->_label = $label;
         return $this;
     }
+
     public function colSpan(string $col_span)
     {
         $this->_col_span = $col_span;
@@ -42,8 +45,14 @@ class DataFilterField
     {
         return $render_data;
     }
+    public function onQuery(callable $call)
+    {
+        $this->_call_on_query = [$call];
+        return $this;
+    }
     public function apply(Builder $query, array $request_filter)
     {
+
         if (isset($request_filter[$this->_field]) && !empty($request_filter[$this->_field])) {
             $query->where($this->_query, $request_filter[$this->_field]);
             $cols = explode('.', $this->_query);
@@ -60,10 +69,19 @@ class DataFilterField
                     $q->where($cols[1], $request_filter[$this->_field]);
                 });
             }
+            $this->execOnQuery($query, $request_filter[$this->_field], $request_filter);
+
         }
 
     }
-    public function query(string $query)
+
+    protected function execOnQuery(Builder $query, $val, array $request_filter)
+    {
+        if (isset($this->_call_on_query)) {
+            $this->_call_on_query[0]($query, $val, $request_filter, $this->_field);
+        }
+    }
+    public function queryFrom(string $query)
     {
         $this->_query = $query;
         return $this;
