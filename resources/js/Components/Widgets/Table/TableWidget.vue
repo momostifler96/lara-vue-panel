@@ -13,17 +13,17 @@
     </div>
     <div class="relative overflow-x-auto">
       <table class="lvp-table" :class="{
-        'fixe-last-columns': fixeLastColumns,
-        'fixe-first-columns': fixeFirstColumns,
+        'fixe-last-columns': fixeLastColumn,
+        'fixe-first-columns': fixeFirstColumn,
       }">
         <thead class="lvp-table-header">
           <tr>
-            <th class="px-2 py-3 text-nowrap vp-table-header-first-column">
+            <th class="px-2 py-3 text-nowrap lvp-table-header-first-column">
               <input type="checkbox" class="lvp-checkbox" :checked="props.data?.length == selected?.length"
                 @change="selectAll" />
             </th>
             <th v-for="(column, c_i) in props.columns" :key="column.field" scope="col" :align="column.align"
-              class="px-2 py-3 text-nowrap vp-table-header-first-column" :class="[
+              class="px-2 py-3 text-nowrap " :class="[
                 {
                   'lvp-table-header-last-column':
                     c_i === props.columns.length - 1,
@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           <tr v-for="item in props.data" :key="item.id" class="lvp-table-row">
-            <th class="px-2 py-3 text-nowrap vp-table-body-first-column">
+            <th class="px-2 py-3 text-nowrap lvp-table-body-first-column">
               <input type="checkbox" class="lvp-checkbox" :checked="selected?.includes(item.id)" @change="select"
                 :value="item.id" />
             </th>
@@ -82,8 +82,8 @@ const props = defineProps({
   },
   hasHeader: Boolean,
   hasFooter: Boolean,
-  fixeLastColumns: Boolean,
-  fixeFirstColumns: Boolean,
+  fixeLastColumn: Boolean,
+  fixeFirstColumn: Boolean,
   columns: {
     type: Array as () => TableColumn[],
     required: true,

@@ -1,7 +1,8 @@
 <template>
   <FiltersGrid v-if="filter && filter_type == 'grid'" :options="filter" :filterData="filterData" :loading="false"
     @filtering="onFiltering" @reset="onResetFilter" />
-  <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated" fixeLastColumns
+  <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated"
+    :fixeLastColumn="fixe_last_column" :fixeFirstColumn="fixe_first_column"
     @dataEvent="execColAction($event.action, $event)">
     <template #t_leading>
       <TableGroupedActionMenu :actions="bulk_actions" @exec="execGroupAction" />

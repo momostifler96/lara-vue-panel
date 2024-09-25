@@ -25,7 +25,7 @@ class ToggleColumn extends TableColumn
         $this->_editable = true;
     }
 
-    public function setTrueValue(string $value)
+    public function trueValue(string $value)
     {
         $this->_true_value = $value;
         return $this;
@@ -35,7 +35,7 @@ class ToggleColumn extends TableColumn
         $this->_action = $action;
         return $this;
     }
-    public function setFalseValue(string $value)
+    public function falseValue(string $value)
     {
         $this->_false_value = $value;
         return $this;

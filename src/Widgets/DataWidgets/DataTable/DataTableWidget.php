@@ -36,12 +36,12 @@ class DataTableWidget extends DataWidget
      */
 
 
-    protected function fixeLastColumn()
+    public function fixeLastColumn()
     {
         $this->_fixe_last_column = true;
         return $this;
     }
-    protected function fixeFirstColumn()
+    public function fixeFirstColumn()
     {
         $this->_fixe_first_column = true;
         return $this;

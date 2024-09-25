@@ -1231,6 +1231,7 @@ input[type="checkbox"] {
 
 .lvp-table-header th {
     background-color: rgb(243 244 246);
+    z-index: 2;
 }
 
 .lvp-table-row-data {
@@ -1238,21 +1239,27 @@ input[type="checkbox"] {
 }
 
 .lvp-table.fixe-last-columns {
+    .lvp-table-header-first-column {
+        background-color: rgb(243 244 246);
+    }
 
     .lvp-table-body-last-column,
     .lvp-table-header-last-column {
         position: sticky;
         right: 0;
-        z-index: 2;
+        z-index: 5;
     }
 }
 
 .lvp-table.fixe-first-columns {
+    .lvp-table-body-first-column {
+        background-color: white;
+    }
 
     .lvp-table-body-first-column,
     .lvp-table-header-first-column {
         position: sticky;
         left: 0;
-        z-index: 2;
+        z-index: 5;
     }
 }
