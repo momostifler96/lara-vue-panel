@@ -12,7 +12,6 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["dataEvent"]);
 const onSelect = (value: any) => {
-  console.log("Toggle column  change", value);
   emit("dataEvent", {
     event: "change_toggle",
     action: props.column.action,

@@ -3,9 +3,15 @@
     @filtering="onFiltering" @reset="onResetFilter" />
   <LVPTable :data="data.items" :columns="columns" v-model:selected="seletedItems" :hasFooter="paginated"
     :fixeLastColumn="fixe_last_column" :fixeFirstColumn="fixe_first_column"
-    @dataEvent="execColAction($event.action, $event)">
+    @dataEvent="execColAction($event.action, $event)" :activesCols="actives_cols">
     <template #t_leading>
-      <TableGroupedActionMenu :actions="bulk_actions" @exec="execGroupAction" />
+      <div class="grid grid-cols-2 gap-2">
+        <MultiSelect v-model="actives_cols" :options="columns.map((it: any) => ({ label: it.label, value: it.field }))"
+          option-value="value" option-label="label" class="w-full" :max-selected-labels="1"
+          selected-items-label="{0} colones visible" />
+        <TableGroupedActionMenu :actions="bulk_actions" @exec="execGroupAction" />
+      </div>
+
     </template>
     <template #t_action>
       <div class="flex gap-2">
@@ -21,6 +27,7 @@
         </TextField>
         <FiltersPopover v-if="filter && filter_type == 'popover'" :options="filter" :filterData="filterData"
           :loading="false" @filtering="onFiltering" @reset="onResetFilter" />
+
       </div>
     </template>
     <template #actions="{ column, item }">
@@ -65,6 +72,7 @@ import ConfirmationModal from "lvp/Components/Dialogs/ConfirmationModal.vue";
 import DynamicFormModal from "lvp/Components/Dialogs/DynamicFormModal.vue";
 import TextField from "lvp/Components/Forms/TextField.vue";
 import { showConfirmation } from "lvp/utils";
+import MultiSelect from "primevue/multiselect";
 interface TableGroupAction {
   type: string;
   actions: {
@@ -198,6 +206,10 @@ watch(
     }, 1000);
   }
 );
+
+
+const actives_cols = ref(props.columns.map((it: any) => it.field));
+
 const seletedItems = ref([]);
 
 //------------------------—
@@ -247,30 +259,28 @@ const form_modal = reactive({
 
 
 const execColAction = (action: string, data: any) => {
-  datatable_item_col_actions[action]({
-    showConfirmation: (option) => {
-      confirmation_modal.title = option.title;
-      confirmation_modal.body = option.body;
-      confirmation_modal.cancel_button_label = option.cancel_button_label;
-      confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.has_password = option.has_password;
-      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
-        if (rsp) {
-          option.onConfirm(password);
-        } else {
-          option.onCancel();
-        }
-        confirmation_modal.show = false;
-        confirmation_modal.title = "";
-        confirmation_modal.body = "";
-      };
-      confirmation_modal.show = true;
-    },
-    data,
-    showToast: useToast,
-    route_list: props.routes,
-    router: router,
-  });
+  if (data.has_confirmation) {
+    showConfirmation({
+      title: data.confirmation_title,
+      body: data.confirmation_body,
+      onConfirm: () => {
+        router.post(route(props.routes.exec_actions), {
+          item_id: data.item_id,
+          value: data.value,
+          field: data.field,
+          action: 'update_col',
+        });
+      },
+    });
+  } else {
+    router.post(route(props.routes.exec_actions), {
+      item_id: data.item_id,
+      value: data.value,
+      field: data.field,
+      action: 'update_col',
+    });
+  }
+
 }
 const table_single_item_actions = <SingleItemAction>{
   edit: ({ route_list, item }) => {
@@ -307,7 +317,6 @@ const table_single_item_actions = <SingleItemAction>{
 const execAction = (action: string, item: any) => {
   table_single_item_actions[action]({
     showConfirmation: showConfirmation,
-
     item,
     showToast: useToast,
     route_list: props.routes,

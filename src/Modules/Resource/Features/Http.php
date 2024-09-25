@@ -158,6 +158,7 @@ trait Http
                 $model::where($this->model_primary_key, $request->item_id)->first($this->model_primary_key)->update([
                     $request->field => $request->value
                 ]);
+
             }, lvp_translation('update_col_success', $this->_translations), lvp_translation('update_col_fail', $this->_translations)),
 
         ];

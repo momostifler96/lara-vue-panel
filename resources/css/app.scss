@@ -1248,6 +1248,8 @@ input[type="checkbox"] {
         position: sticky;
         right: 0;
         z-index: 5;
+        visibility: visible !important;
+        // box-shadow: inset 25px 0px 20px -25px;
     }
 }
 
@@ -1261,5 +1263,7 @@ input[type="checkbox"] {
         position: sticky;
         left: 0;
         z-index: 5;
+        visibility: visible !important;
+        // box-shadow: inset 25px 0px 20px -25px;
     }
 }

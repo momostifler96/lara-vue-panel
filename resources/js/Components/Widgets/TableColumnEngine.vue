@@ -13,7 +13,7 @@ import TextColumn from './Table/Columns/TextColumn.vue';
 import ToggleColumn from './Table/Columns/ToggleColumn.vue';
 import LinkColumn from './Table/Columns/LinkColumn.vue';
 
-const proops = defineProps({
+defineProps({
     column: {
         type: Object as () => any,
         required: true,
