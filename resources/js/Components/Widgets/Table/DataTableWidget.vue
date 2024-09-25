@@ -27,7 +27,6 @@
         </TextField>
         <FiltersPopover v-if="filter && filter_type == 'popover'" :options="filter" :filterData="filterData"
           :loading="false" @filtering="onFiltering" @reset="onResetFilter" />
-
       </div>
     </template>
     <template #actions="{ column, item }">

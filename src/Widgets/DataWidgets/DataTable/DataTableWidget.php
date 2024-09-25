@@ -55,7 +55,6 @@ class DataTableWidget extends DataWidget
 
     public function beforeRender(array $data): array
     {
-        $this->loadSearchableFields();
         $this->runFilterQuery();
         $this->loadData();
         $columns = array_map(fn($item) => $item->render(), $this->_columns);
@@ -124,7 +123,23 @@ class DataTableWidget extends DataWidget
         if ($request->has('search')) {
             $searchable_columns = $this->_searchable_fields;
             if (!empty($searchable_columns)) {
-                $this->_query->whereAny($searchable_columns, 'LIKE', $request->get('search') . '%');
+                foreach ($searchable_columns as $field) {
+                    $field_segs = explode('.', $field);
+
+                    if (count($field_segs) > 1) {
+                        $this->_query->orWhereHas($field_segs[0], function ($r) use ($searchable_columns, $request, $field_segs) {
+                            if (count($field_segs) > 2) {
+                                $r->_query->orWhereHas($field_segs[1], function ($r) use ($searchable_columns, $request, $field_segs) {
+                                    $r->where($field_segs[2], 'LIKE', $request->get('search') . '%');
+                                });
+                            } else {
+                                $r->where($field_segs[1], 'LIKE', $request->get('search') . '%');
+                            }
+                        });
+                    } else {
+                        $this->_query->orWhere($field, 'LIKE', $request->get('search') . '%');
+                    }
+                }
             }
         }
         $data_filters = $this->_filters;
@@ -133,20 +148,12 @@ class DataTableWidget extends DataWidget
         for ($i = 0; $i < count($data_filters); $i++) {
             $data_filters[$i]->apply($this->_query, $request_array_data);
         }
-
-
     }
 
-    private function loadSearchableFields()
+    public function searchableFields($fields)
     {
-        $fields = [];
-        foreach ($this->_columns as $key => $field) {
-            if ($field->isSearchable()) {
-                $fields[] = $field->field();
-            }
-        }
         $this->_searchable_fields = $fields;
-
+        return $this;
     }
 
     public function loadData()
