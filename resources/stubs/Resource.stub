@@ -19,12 +19,11 @@ class {{class}}Resource extends Resource
     protected string $plural_label;
     protected string $short_label;
     protected string $menu_label;
-    protected string $menu_icon;
+    protected string $menu_icon = 'stack';
     protected string $menu_group;
-    protected int $menu_position;
+    protected int $menu_position =1;
 
     protected string $form_type = 'modal'; // modal or page
-
 
 
     /**
@@ -43,7 +42,7 @@ class {{class}}Resource extends Resource
      */
      protected function dataWidget(): \LVP\Widgets\DataWidgets\DataWidget
     {
-        return DataTableWidget::make()
+        return \LVP\Widgets\DataWidgets\DataTable\DataTableWidget::make()
             ->columns([
                
             ])

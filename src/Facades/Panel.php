@@ -364,13 +364,7 @@ class Panel
                     $saved_menus[] = $menu;
                 }
             }
-            usort($saved_menus, function ($a, $b) {
 
-                if ($a['position'] == $b['position']) {
-                    return 0;
-                }
-                return ($a['position'] < $b['position']) ? -1 : 1;
-            });
 
             $nav_menu = [
                 [
@@ -410,11 +404,26 @@ class Panel
 
     public function getNavMenu()
     {
-        return $this->_nav_menu;
+        $saved_menus = usort($this->_nav_menu, function ($a, $b) {
+
+            if ($a['position'] == $b['position']) {
+                return 0;
+            }
+            return ($a['position'] < $b['position']) ? -1 : 1;
+        });
+        return $saved_menus;
+    }
+    public function addNavMenu(array $nav_menu)
+    {
+        return $this->_nav_menu[] = $nav_menu;
+    }
+    public function setUserMenu(array $nav_menu)
+    {
+        return $nav_menu;
     }
     public function getUserMenu()
     {
-        return $this->_user_menu;
+        return $this->setUserMenu($this->_user_menu);
     }
 
     public static function getInstance()

@@ -24,7 +24,7 @@ class DataTableWidget extends DataWidget
     protected DataFilter $_filter;
     protected int $_col_span = 3;
     protected array $_columns;
-    protected array $_searchable_fields;
+    protected array $_searchable_fields = [];
     protected DataFilterType $_filter_type = DataFilterType::POPOVER;
     protected string $_widget_type = 'data-table';
 
