@@ -9,25 +9,18 @@
       <div class=""></div>
     </div>
     <div class="lvp-card-body">
-      <div class="grid"
-        :style="`grid-template-columns: repeat(${_props.cols.all}, minmax(0, 1fr));gap:${_props.gap}px`">
-        <template v-for="(field, i) in _props.fields">
+      <div class="grid mb-5" :class="`${_grid_cols[grid_cols]} ${_gaps[gap]}`">
+        <div v-for="(field, i) in fields" :class="`col-span-${field.props.colspan}`">
           <component :is="form_fields[field.type]" v-bind="field.props" v-model="_formData[field.name]"
-            :errorText="errorIsArray($page.props.errors, field.name)" @change="
-              updateField(field.name, $event, field.eventsListeners.change)
-              " class="mb-3" :class="[
-                `col-span-${field.colspan}`,
-                {
-                  'col-span-full': field.colspan == 'full',
-                },
-              ]" />
-        </template>
+            :formData="_formData" :errorText="errorIsArray($page.props.errors, field.name)" class="my-2"
+            @change="updateField(field.name, $event, field.eventsListeners.change)" />
+        </div>
       </div>
     </div>
     <div class="lvp-card-footer" :class="{ 'pt-4': !_props.isCard }">
       <SimpleButton class="" type="submit" :class="_props.submitBtnClass">{{
         _props.submitBtnLabel
-      }}</SimpleButton>
+        }}</SimpleButton>
       <slot name="footer"></slot>
     </div>
   </form>
@@ -36,15 +29,18 @@
 </template>
 <script setup lang="ts">
 import { router, usePage } from "@inertiajs/vue3";
+import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
+import { inject, reactive, ref } from "vue";
+import ConfirmationModal from "../Dialogs/ConfirmationModal.vue";
+
 import FormSelectField from "lvp/Components/Forms/FormSelectField.vue";
 import TextField from "lvp/Components/Forms/TextField.vue";
 import TextAreaField from "lvp/Components/Forms/TextAreaField.vue";
-import SimpleButton from "lvp/Components/Buttons/SimpleButton.vue";
 import FileUploader from "lvp/Components/Forms/FileUploader.vue";
-import { reactive, ref } from "vue";
 import DatePicker from "lvp/Components/Forms/DatePicker.vue";
 import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
-import ConfirmationModal from "../Dialogs/ConfirmationModal.vue";
+import TextEditor from "../Forms/TiptapEditor/Editor.vue";
+import SectionWidget from "../Forms/SectionWidget.vue";
 
 const _props = defineProps({
   fields: {
@@ -62,6 +58,10 @@ const _props = defineProps({
   },
   isHeadless: Boolean,
   confirmBeforeSubmit: Boolean,
+  defaultData: {
+    type: Object,
+    required: true,
+  },
   title: {
     type: String,
     default: "Title",
@@ -110,17 +110,24 @@ const _props = defineProps({
     type: Number,
     default: 4,
   },
+  grid_cols: {
+    type: Number,
+    required: 1,
+  },
 });
+const plugins_fields = <{ [k: string]: any }>inject('lvp_form_fields');
 const form_fields = <{ [k: string]: any }>{
   "text": TextField,
   "text-area": TextAreaField,
-  "text-editor": TextAreaField,
+  "text-editor": TextEditor,
   "select": FormSelectField,
   "date": DatePicker,
   "file": FileUploader,
   "image": FileUploader,
   "toggle": SwitchToggle,
   "checkbox": TextAreaField,
+  "section": SectionWidget,
+  ...plugins_fields
 };
 
 const errorIsArray = (errors: any, field: string): string | null => {
@@ -159,6 +166,28 @@ const submit = () => {
   }
 };
 
+
+
+const confirmation_modal = reactive({
+  show: false,
+  title: _props.confirmationTitle,
+  body: _props.confirmationMessage,
+  onConfirm: (rsp: boolean) => {
+    if (rsp) {
+      submit();
+    }
+    confirmation_modal.show = false;
+  },
+  onCancel: () => {
+    confirmation_modal.show = false;
+    confirmation_modal.title = "";
+    confirmation_modal.body = "";
+  },
+});
+
+const askConfirmation = () => {
+  confirmation_modal.show = true;
+};
 const updateField = (
   field: string,
   new_val: any,
@@ -182,25 +211,34 @@ const updateField = (
     }, listener.debounce);
   });
 };
-
-const confirmation_modal = reactive({
-  show: false,
-  title: _props.confirmationTitle,
-  body: _props.confirmationMessage,
-  onConfirm: (rsp: boolean) => {
-    if (rsp) {
-      submit();
-    }
-    confirmation_modal.show = false;
-  },
-  onCancel: () => {
-    confirmation_modal.show = false;
-    confirmation_modal.title = "";
-    confirmation_modal.body = "";
-  },
-});
-
-const askConfirmation = () => {
-  confirmation_modal.show = true;
+const _grid_cols = {
+  "1": `grid-cols-1`,
+  "2": `grid-cols-2`,
+  "3": `grid-cols-3`,
+  "4": `grid-cols-4`,
+  "5": `grid-cols-5`,
+  "6": `grid-cols-6`,
+  "7": `grid-cols-7`,
+  "8": `grid-cols-8`,
+  "9": `grid-cols-9`,
+  "10": `grid-cols-10`,
+  "11": `grid-cols-11`,
+  "12": `grid-cols-12`,
 };
+
+const _gaps = {
+  "1": `gap-1`,
+  "2": `gap-2`,
+  "3": `gap-3`,
+  "4": `gap-4`,
+  "5": `gap-5`,
+  "6": `gap-6`,
+  "7": `gap-7`,
+  "8": `gap-8`,
+  "9": `gap-9`,
+  "10": `gap-10`,
+  "11": `gap-11`,
+  "12": `gap-12`,
+};
+
 </script>

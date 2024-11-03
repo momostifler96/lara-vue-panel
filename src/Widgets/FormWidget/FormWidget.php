@@ -261,7 +261,7 @@ class FormWidget extends LVPWidget
         foreach ($this->_fields as $field) {
             $this->buildFormDataFields($formData, $field);
         }
-        if (!empty($this->_default_data)) {
+        if (!empty($this->_default_data) && !empty($this->_default_data['id'])) {
             $formData['id'] = $this->_default_data['id'];
         }
         $this->_formData = $formData;

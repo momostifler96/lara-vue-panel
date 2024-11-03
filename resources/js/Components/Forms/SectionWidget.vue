@@ -10,8 +10,9 @@
         <div :class="`lvp-card-body grid grid-cols-${props.cols} gap-${props.gap}`">
             <div v-for="(section, i) in sections" :key="`header-${i}`">
                 <component v-for="(field, i) in section" :is="form_fields[field.type]" v-bind="field.props"
-                    :key="`field-${field.type}-${i}`" class="mb-3" v-model="formData[field.props.name]"
-                    :formData="formData" />
+                    v-model="formData[field.name]" :formData="formData"
+                    :errorText="errorIsArray($page.props.errors, field.name)" class="my-2" />
+
             </div>
         </div>
     </div>
@@ -74,6 +75,38 @@ const form_fields = <{ [k: string]: any }>{
     "checkbox": TextAreaField,
     "section": SectionWidget,
     ...plugins_fields
+};
+
+// const csl = (val: any) => {
+//     console.log('val dd', val, props.formData);
+// }
+const field_debounce = <{ [k: string]: any }>{};
+const updateField = (
+    field: string,
+    new_val: any,
+    listeners: {
+        fields: string;
+        action: string;
+        func: string;
+        debounce: number;
+    }[]
+) => {
+    if (field_debounce[field]) clearTimeout(field_debounce[field]);
+    listeners.forEach((listener) => {
+        field_debounce[field] = setTimeout(() => {
+            if (listener.action == "fill") {
+                props.formData[listener.fields] = new_val;
+            } else if (listener.action == "clear") {
+                props.formData[listener.fields] = null;
+            } else if (listener.action == "call") {
+                const rs = eval(listener.func.replace("params", new_val));
+            }
+        }, listener.debounce);
+    });
+};
+const errorIsArray = (errors: any, field: string): string | null => {
+    const error = errors[field];
+    return error ? (Array.isArray(error) ? error[0] : error) : null;
 };
 
 </script>

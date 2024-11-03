@@ -38,6 +38,8 @@ import LineChart from "lvp/Components/Widgets/Chats/LineChart.vue";
 import BaseChart from "lvp/Components/Widgets/Chats/BaseChart.vue";
 import FormWidget from "lvp/Components/Widgets/FormWidget.vue";
 import ActionEngine from "./ActionEngine.vue";
+import FormEngine from "lvp/Components/Widgets/FormEngine.vue";
+
 interface Titles {
   title: string;
   meta_title: string;
