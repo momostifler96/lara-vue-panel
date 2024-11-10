@@ -87,7 +87,8 @@ class Install extends Command
                 '@tiptap/extension-underline',
                 '@tiptap/extension-dropcursor',
                 '@tiptap/extension-placeholder',
-                '',
+                ,
+
             ];
             foreach ($npm_pakages as $key => $npm_pakage) {
                 $npm_pakage_prc = new Process(['npm', 'install', '--save', $npm_pakage]);
