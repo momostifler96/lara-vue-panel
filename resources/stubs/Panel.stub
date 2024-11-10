@@ -10,7 +10,7 @@ class {{class}}Panel extends \LVP\Providers\PanelProvider
         $panel->id('{{id}}')
             ->routeName('{{id}}')
             ->routePath('{{id}}')
-            ->loginPage();
+            ->login();
     }
 
 
