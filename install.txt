@@ -97,6 +97,8 @@ copy and past the following code in your tsconfig file on compilerOptions.paths
 Step 7 - Stetup app.ts file
 Add the following code in your app.ts file after imported Modules
 ```
+import LVP from 'lvp/Plugins/lvp/index';
+
 import { lvp_plugins_options } from './Utils/plugins_options';
 ````
 Add the following code in your app.ts file on plugins
