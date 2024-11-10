@@ -22,7 +22,7 @@ trait Geters
     public function getRouteNames()
     {
         $routes = [
-            'index' => $this->route_name . '.index',
+            'index' => $this->route_name,
         ];
 
         if (in_array('post', $this->http_methods)) {

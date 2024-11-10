@@ -133,9 +133,10 @@ const props = defineProps({
   routes: {
     type: Object,
     required: true,
-  }, searchables: {
+  },
+  searchables: {
     type: Object,
-    required: true,
+    default: [],
   },
   filter_type: {
     type: Object as () => 'popover' | 'grid',
