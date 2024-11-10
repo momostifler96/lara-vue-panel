@@ -133,7 +133,7 @@ const props = defineProps({
     default: false,
   },
   aspect_ratio: {
-    type: String,
+    type: Object as () => any,
     default: 1,
   }, max_upload: {
     type: Number,
@@ -172,7 +172,7 @@ const uploadedFilesInfos = ref<FileInfo[]>([]);
 const cropper = reactive({
   show: false,
   currentFile: <number | null>null,
-  image: <string | null>null,
+  image: <string | undefined>undefined,
   croppedImage: <File | null>null,
   imageName: <string | null>null,
 });

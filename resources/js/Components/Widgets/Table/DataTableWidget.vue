@@ -44,13 +44,17 @@
       <div class="flex items-center justify-between" v-if="paginated">
         <Pagination :total-items="data.pagination.total" :items-per-page="data.pagination.per_page"
           :modelValue="data.pagination.current_page" @update:modelValue="navigate" />
-        <Select @update:modelValue="navigatePerpage" :modelValue="data.pagination.per_page" class="h-8 w-44"
+
+        <Select @update:modelValue="navigatePerpage" :modelValue="data.pagination.per_page.toString()" class="h-8 w-44"
           placeholder="Par page" :options="[5, 10, 20, 50, 100]" />
       </div>
     </template>
   </LVPTable>
 
-  <DynamicFormModal v-bind="form_modal" @close="form_modal.show = false" :show="form_modal.show" />
+  <DynamicFormModal :grid_cols="1" :gap="1" :title="form_modal.title"
+    :submit_button_label="form_modal.submit_button_label" :cancel_button_label="form_modal.cancel_button_label"
+    :fields="form_modal.fields" :hasPassword="form_modal.has_password" @close="form_modal.show = false"
+    :show="form_modal.show" />
 </template>
 <script setup lang="ts">
 import icons, { TrashIcon, EditIcon, EyeIcon } from "lvp/svg_icons";
@@ -315,14 +319,23 @@ const table_single_item_actions = <SingleItemAction>{
 };
 
 const execAction = (action: string, item: any) => {
-  table_single_item_actions[action]({
-    showConfirmation: showConfirmation,
-    item,
-    showToast: useToast,
-    route_list: props.routes,
-    router: router,
-  });
+  table_single_item_actions[action] = (option: any) => {
+    option.showConfirmation({
+      title: option.confirmation.title,
+      body: option.confirmation.body,
+      onConfirm: () => {
+        option.router.post(route(option.route_list.exec_actions), {
+          item_id: option.item.id,
+          value: option.value,
+          field: option.field,
+          action: 'update_col',
+        });
+      },
+    });
+  };
 };
+
+
 
 //------------------Actions-----------
 

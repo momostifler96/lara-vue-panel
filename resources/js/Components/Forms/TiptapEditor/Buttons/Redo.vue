@@ -11,7 +11,7 @@ import { Editor } from '@tiptap/vue-3'
 
 defineProps({
     editor: {
-        type: Editor,
+        type: Object as () => any,
         required: true
     }
 })

@@ -18,50 +18,31 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import FormModal from '../Dialogs/FormModal.vue';
-import { CloseIcon } from 'lvp/svg_icons';
-import { TransitionRoot, TransitionChild } from "@headlessui/vue";
 import FormEngine from '../Widgets/FormEngine.vue';
 import { router } from "@inertiajs/vue3";
 import LVPModal from '../Dialogs/LVPModal.vue';
+import type { WidgetPropsTypes } from "lvp/helpers/types";
 
-
-const props = defineProps({
+interface Props {
     form: {
-        type: Object,
-        required: true,
-    },
-    label: {
-        type: String,
-        required: true,
-    },
-    btn_class: {
-        type: String,
-        required: true,
-    },
-    icon_position: {
-        type: String as () => "left" | "right",
-        required: true,
-    },
-    icon: {
-        type: String,
-        required: true,
-    },
-})
+        props: WidgetPropsTypes.FormEngine
+    };
+    label: string;
+    btn_class: string;
+    icon_position: string;
+    icon: string;
+}
+const props = defineProps<Props>()
 
 const showModal = ref(false);
 
-console.log('props', props);
 const formData = ref({
     action: props.form.props.action,
 });
 
 
-const form_grids = <{ [k: string]: any }>{
-
-}
-
 const submit = () => {
+    if (!props.form.props.method || !props.form.props.submit_url) return;
     router[props.form.props.method](props.form.props.submit_url, formData.value, {
         onSuccess: () => {
             showModal.value = false;

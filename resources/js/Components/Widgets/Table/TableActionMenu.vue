@@ -3,8 +3,8 @@
     class="w-8 h-8 hover:bg-[#F5F5F5] transition-colors text-black rounded flex-center focus:ring-0 outline-0 p-1"
     v-html="icons['menu_2']"></button>
   <Menu ref="tableActionMenu" :model="{
-    items: tableActions,
-  }" :popup="true" class="">
+    items: props.tableActions,
+  } as any" :popup="true" class="">
     <template #item="{ item, props }">
       <TableActionButton v-for="action in item" class="w-full" :icon="action_icons[action.icon]" :label="action.label"
         :action="action.action" :color="action.color" :item="tableItem"
@@ -34,6 +34,12 @@ const tableActionMenu = ref();
 const showMenu = (event: any) => {
   tableActionMenu.value.toggle(event);
 };
+
+const menu_items = ref<any>(
+  {
+    items: props.tableActions as any,
+  }
+);
 
 const lvp_plugin_icons = <Record<string, any>>inject("lvp_icons");
 

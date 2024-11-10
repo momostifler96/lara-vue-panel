@@ -6,9 +6,9 @@
 <script setup lang="ts">
 import TableColumnEngine from '../../TableColumnEngine.vue';
 
-defineProps<{
+(defineProps<{
   field: string;
-  data: string;
+  data: { [k: string]: any };
   column: any;
-}>();
+}>());
 </script>

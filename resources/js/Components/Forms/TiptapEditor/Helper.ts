@@ -25,7 +25,7 @@ const createDropdown = (btn: HTMLButtonElement, dropdown: HTMLDivElement, closeC
         // dropdown.style.top = `${btnRect.top}px`;
         dropdown.style.left = `0px`;
     });
-    const closeDropdown = (e: Event) => {
+    const closeDropdown = (e: any) => {
         e.preventDefault();
         if (closeClickIn) {
             if (dropdown && dropdown.classList.contains('editor-dropdown-open')) {

@@ -1,3 +1,5 @@
+import { ShowConfirmation } from "./Types";
+
 const formatFileSize = (bytes: number) => {
     if (bytes === 0) {
         return "0 Bytes";
@@ -11,17 +13,8 @@ const formatFileSize = (bytes: number) => {
 };
 
 
-interface ConfirmationModalOption {
-    title: string,
-    body: string,
-    cancel_button_label?: string,
-    confirm_button_label?: string,
-    has_password?: string,
-    icon?: string,
-    onCancel?: () => void,
-    onConfirm: (data: { password: string }) => void,
-}
-const showConfirmation = (option: ConfirmationModalOption) => {
+
+const showConfirmation = (option: ShowConfirmation): void => {
     const event = new CustomEvent('show-lvp-confirmation', {
         detail: option
     });

@@ -95,6 +95,33 @@ interface ConfirmationModalOption {
     onResponse: (rsp: boolean) => {},
 }
 
+
+namespace WidgetPropsTypes {
+    export interface FormEngine {
+        fields: {
+            type: string;
+            props: any;
+            name: string;
+            eventsListeners: {
+                change: {
+                    fields: string;
+                    action: string;
+                    func: string;
+                    debounce: number;
+                }[];
+            };
+        }[];
+        action?: string;
+        method?: 'get' | 'post' | 'put' | 'delete';
+        formData: any;
+        defaultData?: any;
+        grid_cols?: number;
+        gap?: number | string;
+        cancelBtnLabel?: string;
+        submitBtnLabel?: string;
+        submit_url?: string;
+    }
+}
 interface SingleItemActionsOptions {
     item: any,
     route_list: any,
@@ -168,4 +195,4 @@ interface FolderInterface {
 }
 
 
-export type { TableColumn, LVPActionMenuOption, TableData, ActionsList, SelectedActionsList, FormField, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface }
+export type { TableColumn, LVPActionMenuOption, TableData, ActionsList, SelectedActionsList, FormField, SelectedItemsActionOptions, SingleItemActionsOptions, ActionMenu, FileInfo, PageProps, FolderInterface, WidgetPropsTypes }

@@ -42,79 +42,53 @@ import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 import TextEditor from "../Forms/TiptapEditor/Editor.vue";
 import SectionWidget from "../Forms/SectionWidget.vue";
 
-const _props = defineProps({
-  fields: {
-    type: Array<any>,
-    required: true,
-  },
-  formData: {
-    type: Object,
-    required: true,
-  },
-  isCard: Boolean,
-  preventSubmit: {
-    type: Boolean,
-    default: false,
-  },
-  isHeadless: Boolean,
-  confirmBeforeSubmit: Boolean,
-  defaultData: {
-    type: Object,
-    required: true,
-  },
-  title: {
-    type: String,
-    default: "Title",
-  },
-  lvpAction: {
-    type: String,
-    default: "",
-  },
-  action: {
-    type: String,
-    default: "store",
-  },
-  onSubmit: {
-    type: String,
-    default: "store",
-  },
-  submitBtnLabel: {
-    type: String,
-    default: "Submit",
-  },
-  route: {
-    type: String,
-    default: "",
-  },
-  submitBtnClass: {
-    type: String,
-    default: "btn-primary",
-  },
-  confirmationTitle: {
-    type: String,
-    default: "Confirmation",
-  },
-  confirmationMessage: {
-    type: String,
-    default: "Are you sure?",
-  },
-  method: {
-    type: String as () => "get" | "post" | "put" | "delete" | "patch",
-    default: "post",
-  },
-  cols: {
-    type: Object,
-    default: 2,
-  },
-  gap: {
-    type: Number,
-    default: 4,
-  },
-  grid_cols: {
-    type: Number,
-    required: 1,
-  },
+interface Props {
+  fields: any[];
+  formData: any;
+  isCard: boolean;
+  cancelBtnLabel: string;
+  submitBtnLabel: string;
+  submit_url: string;
+  preventSubmit: boolean;
+  isHeadless: boolean;
+  confirmBeforeSubmit: boolean;
+  defaultData: any;
+  title: string;
+  lvpAction: string;
+  action: string;
+  route: string;
+  onSubmit: string;
+  submitBtnClass: string;
+  confirmationTitle: string;
+  confirmationMessage: string;
+  method: "post" | "get" | "put" | "delete" | "patch";
+  cols: number;
+  gap: number;
+  grid_cols: number;
+}
+
+const _props = withDefaults(defineProps<Props>(), {
+  isCard: false,
+  preventSubmit: false,
+  isHeadless: false,
+  confirmBeforeSubmit: false,
+  defaultData: {},
+  title: "Title",
+  lvpAction: "",
+  action: "store",
+  onSubmit: "store",
+  submitBtnLabel: "Submit",
+  route: "",
+  submitBtnClass: "btn-primary",
+  confirmationTitle: "Confirmation",
+  confirmationMessage: "Are you sure?",
+  method: "post",
+  cols: 2,
+  gap: 4,
+  grid_cols: 1,
 });
+
+
 const plugins_fields = <{ [k: string]: any }>inject('lvp_form_fields');
 const form_fields = <{ [k: string]: any }>{
   "text": TextField,
@@ -211,7 +185,7 @@ const updateField = (
     }, listener.debounce);
   });
 };
-const _grid_cols = {
+const _grid_cols = <{ [k: string]: any }>{
   "1": `grid-cols-1`,
   "2": `grid-cols-2`,
   "3": `grid-cols-3`,
@@ -226,7 +200,7 @@ const _grid_cols = {
   "12": `grid-cols-12`,
 };
 
-const _gaps = {
+const _gaps = <{ [k: string]: any }>{
   "1": `gap-1`,
   "2": `gap-2`,
   "3": `gap-3`,

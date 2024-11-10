@@ -27,7 +27,10 @@
     :body="confirmation_modal.body" :hasPassword="confirmation_modal.has_password"
     :cancelLabel="confirmation_modal.cancel_button_label" :confirmLabel="confirmation_modal.confirm_button_label"
     @onResponse="confirmation_modal.onResponse" />
-  <DynamicFormModal v-bind="form_modal" @close="form_modal.show = false" :show="form_modal.show" />
+  <DynamicFormModal :title="form_modal.title" :description="form_modal.description" :fields="form_modal.fields"
+    :hasPassword="form_modal.has_password" :cancel_button_label="form_modal.cancel_button_label"
+    :submit_button_label="form_modal.submit_button_label" :gap="form_modal.gap" :grid_cols="form_modal.grid_cols"
+    @close="form_modal.show = false" :show="form_modal.show" />
 </template>
 <script setup lang="ts">
 import { TrashIcon, EditIcon, EyeIcon } from "lvp/svg_icons";
@@ -73,7 +76,7 @@ const props = defineProps({
     type: String,
     required: true,
   }, card_type: {
-    type: String,
+    type: String as () => any,
     required: true,
   },
   fixe_last_column: {
@@ -93,7 +96,7 @@ const props = defineProps({
     required: true,
   },
   data: {
-    type: Object as () => TableData,
+    type: Object as () => any,
     required: true,
   },
   filterData: {
@@ -181,19 +184,10 @@ const seletedItems = ref([]);
 
 //------------------------—
 
-const datatable_item_actions = <SingleItemAction>(
-  inject("lvp.actions.datatable.item")
-);
-
 const datatable_item_col_actions_ = <SingleItemAction>(
   inject("lvp.actions.datatable.item_col")
 );
-const datatable_item_col_actions = {
-  update_col: (opt: any) => {
-    opt.router.post(route(opt.route_list.exec_actions), opt.data);
-  },
-  ...datatable_item_col_actions_
-}
+
 const datatable_selected_item_actions = <SelectedItemsActions>(
   inject("lvp.actions.datatable.bulk")
 );
@@ -206,7 +200,7 @@ const confirmation_modal = reactive({
   has_password: false,
   cancel_button_label: "Cancel",
   confirm_button_label: "Confirm",
-  onResponse: (rsp: boolean) => { },
+  onResponse: (rsp: boolean, password: string) => { },
 });
 //------------------Confirmation modal-----------
 const form_modal = reactive({
@@ -217,99 +211,15 @@ const form_modal = reactive({
   has_password: false,
   cancel_button_label: "Cancel",
   submit_button_label: "Confirm",
+  gap: 3,
+  grid_cols: 1,
   onCancel: () => { },
-  onSubmit: (data: { [k: string]: any }) => {
-
-  },
+  onSubmit: (data: { [k: string]: any }) => { },
+  defaultData: {}, // {{ edit_1 }} Add this line to provide defaultData
 });
 //------------------Actions-----------
 
 
-const execColAction = (action: string, data: any) => {
-  datatable_item_col_actions[action]({
-    showConfirmation: (option) => {
-      confirmation_modal.title = option.title;
-      confirmation_modal.body = option.body;
-      confirmation_modal.cancel_button_label = option.cancel_button_label;
-      confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.has_password = option.has_password;
-      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
-        if (rsp) {
-          option.onConfirm(password);
-        } else {
-          option.onCancel();
-        }
-        confirmation_modal.show = false;
-        confirmation_modal.title = "";
-        confirmation_modal.body = "";
-      };
-      confirmation_modal.show = true;
-    },
-    data,
-    showToast: useToast,
-    route_list: props.routes,
-    router: router,
-  });
-}
-const table_single_item_actions = <SingleItemAction>{
-  edit: ({ route_list, item }) => {
-    emit("edit", item);
-  },
-  view: (opt: any) => {
-    opt.router.get(route(opt.route_list.show, { id: opt.item.id }));
-  },
-  delete: (opt) => {
-    opt.showConfirmation({
-      title: "Delete",
-      body: "Are you sure you want to delete this item?",
-      onConfirm: () => {
-        emit("delete", opt.item);
-        // router.delete(route(opt.route_list.delete, { id: opt.item.id }));
-      },
-    });
-  },
-  "resource.delete": (opt) => {
-    opt.showConfirmation({
-      title: "Delete",
-      body: "Are you sure you want to delete this item?",
-      onConfirm: (password: string) => {
-        opt.router.delete(route(opt.route_list.delete, { id: opt.item.id }));
-      },
-    });
-  },
-  update_col: (opt: any) => {
-    opt.router.post(route(opt.route_list.exec_actions, { id: opt.item.id }));
-  },
-  ...datatable_item_actions,
-};
-
-const execAction = (action: string, item: any) => {
-  table_single_item_actions[action]({
-    showConfirmation: (option) => {
-      confirmation_modal.title = option.title;
-      confirmation_modal.body = option.body;
-      confirmation_modal.cancel_button_label = option.cancel_button_label;
-      confirmation_modal.confirm_button_label = option.confirm_button_label;
-      confirmation_modal.has_password = option.has_password;
-      confirmation_modal.onResponse = (rsp: boolean, password: string) => {
-        if (rsp) {
-          option.onConfirm(password);
-        } else {
-          option.onCancel();
-        }
-        confirmation_modal.show = false;
-        confirmation_modal.title = "";
-        confirmation_modal.body = "";
-      };
-      confirmation_modal.show = true;
-    },
-
-    item,
-    showToast: useToast,
-    route_list: props.routes,
-    router: router,
-  });
-};
 
 //------------------Actions-----------
 

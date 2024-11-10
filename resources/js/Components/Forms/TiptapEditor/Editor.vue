@@ -69,8 +69,12 @@ const props = defineProps({
         type: String as () => string | null | undefined,
         default: null,
     }, tools: {
-        type: Array,
+        type: Array as () => any[],
         default: [],
+    },
+    id: {
+        type: String,
+        default: null,
     },
 
     required: Boolean,

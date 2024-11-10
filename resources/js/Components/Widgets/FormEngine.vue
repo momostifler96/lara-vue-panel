@@ -17,32 +17,14 @@ import SwitchToggle from "lvp/Components/Forms/SwitchToggle.vue";
 import TextEditor from "../Forms/TiptapEditor/Editor.vue";
 import { inject } from "vue";
 import SectionWidget from "../Forms/SectionWidget.vue";
+import { WidgetPropsTypes } from "lvp/helpers/types";
 
-const _props = defineProps({
-    fields: {
-        type: Object,
-        required: true,
-    },
-    action: {
-        type: String as () => "create" | "edit",
-        required: true,
-    },
-    formData: {
-        type: Object,
-        required: true,
-    },
-    defaultData: {
-        type: Object,
-        required: true,
-    },
-    grid_cols: {
-        type: Number,
-        required: 1,
-    }, gap: {
-        type: Number,
-        required: 3,
-    },
+const _props = withDefaults(defineProps<WidgetPropsTypes.FormEngine>(), {
+    grid_cols: 1,
+    gap: 3,
 });
+
+
 const plugins_fields = <{ [k: string]: any }>inject('lvp_form_fields');
 const form_fields = <{ [k: string]: any }>{
     "text": TextField,
@@ -89,7 +71,7 @@ const updateField = (
     });
 };
 
-const _grid_cols = {
+const _grid_cols = <{ [k: string]: any }>{
     "1": `grid-cols-1`,
     "2": `grid-cols-2`,
     "3": `grid-cols-3`,
@@ -104,7 +86,7 @@ const _grid_cols = {
     "12": `grid-cols-12`,
 };
 
-const _gaps = {
+const _gaps = <{ [k: string]: any }>{
     "1": `gap-1`,
     "2": `gap-2`,
     "3": `gap-3`,

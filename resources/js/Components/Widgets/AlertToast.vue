@@ -1,21 +1,10 @@
-<template>
-    <LvpToast />
-    <!-- <Toast /> -->
-    <template v-if="$page.props.flash.success">
-        <span>{{ showSuccess($page.props.flash.success) }}</span>
-    </template>
-    <template v-else-if="$page.props.flash.error">
-        <span>{{ showError($page.props.flash.error) }}</span>
-    </template>
-    <template v-else-if="$page.props.flash.warning">
-        <span>{{ showWarning($page.props.flash.warning) }}</span>
-    </template>
-    <template v-else-if="$page.props.flash.info">
-        <span>{{ showInfo($page.props.flash.info) }}</span>
-    </template>
-</template>
 <script setup lang="ts">
+// Import necessary types
 import { useToast } from "lvp/Plugins/toast";
+import { usePage } from "@inertiajs/vue3";
+
+// Use the context in your component
+const page = usePage() as any; // Assuming usePage() returns the context
 
 const showSuccess = ($message: string) => {
     useToast({
@@ -24,6 +13,7 @@ const showSuccess = ($message: string) => {
         title: "Success",
     });
 };
+
 const showError = ($message: string) => {
     useToast({
         type: "error",
@@ -31,6 +21,7 @@ const showError = ($message: string) => {
         title: "Erreur",
     });
 };
+
 const showWarning = ($message: string) => {
     useToast({
         type: "warning",
@@ -38,6 +29,7 @@ const showWarning = ($message: string) => {
         title: "Attention",
     });
 };
+
 const showInfo = ($message: string) => {
     useToast({
         type: "info",
@@ -46,3 +38,19 @@ const showInfo = ($message: string) => {
     });
 };
 </script>
+
+<template>
+    <LvpToast />
+    <template v-if="page.props.flash.success">
+        <span>{{ showSuccess(page.props.flash.success) }}</span>
+    </template>
+    <template v-else-if="page.props.flash.error">
+        <span>{{ showError(page.props.flash.error) }}</span>
+    </template>
+    <template v-else-if="page.props.flash.warning">
+        <span>{{ showWarning(page.props.flash.warning) }}</span>
+    </template>
+    <template v-else-if="page.props.flash.info">
+        <span>{{ showInfo(page.props.flash.info) }}</span>
+    </template>
+</template>

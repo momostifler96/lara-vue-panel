@@ -1,11 +1,6 @@
 <template>
-    <component
-        v-for="(widget, i) in widgets"
-        class="mt-5"
-        :is="_widgets[widget.widget_type]"
-        v-bind="widget"
-        :key="`widget-${widget.widget_type}-${i}`"
-    />
+    <component v-if="_widgets" v-for="(widget, i) in widgets" class="mt-5" :is="_widgets[widget.widget_type] ?? 'div'"
+        :key="`widget-${widget.widget_type}-${i}`" />
 </template>
 <script setup lang="ts">
 import { inject } from "vue";
@@ -15,6 +10,5 @@ defineProps({
         required: true,
     },
 });
-const _widgets = inject<Record<string, any>>("lvp_widgets");
-console.log("_widgets", _widgets);
+const _widgets = inject<{ [k: string]: any }>("lvp_widgets");
 </script>

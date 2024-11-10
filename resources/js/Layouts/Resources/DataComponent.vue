@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";
 import { router } from "@inertiajs/vue3";
-import { ActionsList } from "lvp/Types";
 import { inject } from "vue";
 import DataGridWidget from "lvp/Components/Widgets/DataGridWidget.vue";
 
@@ -32,18 +31,17 @@ const emit = defineEmits(["edit", "submit"]);
 //------------------Actions-----------
 
 
-const actions = <ActionsList>inject("lvp.actions.datatable.item");
 
 const deteleItem = (item: any) => {
-  router.delete(route(props.routes.delete, { id: item.id }));
+  router.delete(route(props.routes.delete, { id: item.id }) as unknown as string);
 };
 
 const exectDataEvent = (event: any) => {
-  router.post(route(props.routes.exec_actions, event));
+  router.post(route(props.routes.exec_actions, event) as unknown as string);
 };
 
 
 const execBulkAction = (event: any) => {
-  router.post(route(props.routes.exec_actions, event));
+  router.post(route(props.routes.exec_actions, event) as unknown as string);
 };
 </script>

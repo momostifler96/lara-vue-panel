@@ -28,7 +28,10 @@ import ImageCropper from "./ImageCropper.vue";
 const props = defineProps({
   show: Boolean,
   canChangeRatio: Boolean,
-  image: String,
+  image: {
+    type: String,
+    default: "",
+  },
   aspectRatio: Number,
   maxUpload: Number,
 });

@@ -29,7 +29,7 @@
       <div class="flex items-center justify-between" v-if="paginated">
         <Pagination :total-items="data.pagination.total" :items-per-page="data.pagination.per_page"
           :modelValue="data.pagination.current_page" @update:modelValue="navigate" />
-        <Select @update:modelValue="navigatePerpage" :modelValue="data.pagination.per_page" class="h-8 w-44"
+        <Select @update:modelValue="navigatePerpage" :modelValue="data.pagination.per_page.toString()" class="h-8 w-44"
           placeholder="Par page" :options="[5, 10, 20, 50, 100]" />
       </div>
     </template>

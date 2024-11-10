@@ -10,7 +10,7 @@
       <PopoverPanel class="absolute right-0 z-10 px-4 mt-3 transform sm:px-0">
         <div class="lvp-popover-overlay w-[250px]">
           <div class="lvp-popover-overlay-content">
-            <Link v-for="(menu, i) in $page.props.user_menu" :href="menu.path" class="lvp-popover-link">
+            <Link v-for="(menu, i) in $page.props.user_menu as any[]" :href="menu.path" class="lvp-popover-link">
             <span v-html="UserIcon" class="w-5 h-5 mr-2" aria-hidden="true" />
             {{ menu.label }}
             </Link>

@@ -72,11 +72,12 @@ interface ResourceFormPageProps {
     action: "create" | "edit";
     page_titles: ResourceFormTitles;
     form_data: { [key: string]: any };
+    titles: { [key: string]: any };
     form_component: {
         type: string;
         label: string;
         props: {
-            fields: ResourceFormField[];
+            fields: any[];
             type: string;
             label: string;
             formData: { [key: string]: any };
@@ -86,6 +87,7 @@ interface ResourceFormPageProps {
         submit: string;
         index: string;
         cancel: string;
+        delete: string;
     };
     resource_data: { [key: string]: any };
     fields: ResourceFormField[];

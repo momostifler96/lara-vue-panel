@@ -36,7 +36,7 @@ import { createDropdown } from '../Helper';
 
 const props = defineProps({
     editor: {
-        type: Editor,
+        type: Object as () => any,
         required: true
     }
 })
@@ -44,7 +44,7 @@ const props = defineProps({
 const btn = ref()
 const dropdown = ref()
 
-const onValidated = (e: InputEvent) => {
+const onValidated = (e: KeyboardEvent) => {
     const url = (e.target as HTMLInputElement).value
     props.editor
         .chain()
@@ -55,7 +55,7 @@ const onValidated = (e: InputEvent) => {
     dropdown.value.classList.remove('editor-dropdown-open')
     btn.value.classList.remove('active')
 }
-const onClear = (e: InputEvent) => {
+const onClear = (e: any) => {
     props.editor
         .chain()
         .focus()

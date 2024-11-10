@@ -1,17 +1,7 @@
 <template>
-    <Card
-        :label="label"
-        :title="title"
-        :has-header="title && title.length > 0"
-        :class="`col-span-${col_span}`"
-    >
+    <Card :label="label" :title="title" :has-header="!!(title && title.length > 0)" :class="`col-span-${col_span}`">
         <div class="">
-            <apexchart
-                :height="height"
-                :options="options"
-                :type="type"
-                :series="series"
-            ></apexchart>
+            <apexchart :height="height" :options="options" :type="type" :series="series"></apexchart>
         </div>
     </Card>
 </template>

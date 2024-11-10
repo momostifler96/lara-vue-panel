@@ -14,11 +14,9 @@
                     <input type="text" placeholder="url" @keypress.enter="onValidated"
                         class="w-full h-7 px-1 text-sm border-b rounded border-gray-200 focus:outline-none" />
                 </div>
-
             </div>
         </div>
     </div>
-
 </template>
 <script setup lang="ts">
 import { Editor } from '@tiptap/vue-3'
@@ -27,7 +25,7 @@ import { createDropdown } from '../Helper';
 
 const props = defineProps({
     editor: {
-        type: Editor,
+        type: Object as () => any,
         required: true
     }
 })
@@ -35,7 +33,8 @@ const props = defineProps({
 const btn = ref()
 const dropdown = ref()
 
-const onValidated = (e: InputEvent) => {
+// Change InputEvent to KeyboardEvent
+const onValidated = (e: KeyboardEvent) => {
     const url = (e.target as HTMLInputElement).value
     console.log('url', url);
     props.editor
@@ -46,11 +45,9 @@ const onValidated = (e: InputEvent) => {
     dropdown.value.classList.remove('editor-dropdown-open')
     btn.value.classList.remove('active')
 }
-const onClear = (e: InputEvent) => {
-
+const onClear = (e: KeyboardEvent) => {
     dropdown.value.classList.remove('editor-dropdown-open')
     btn.value.classList.remove('active')
-
 }
 onMounted(() => {
     btn.value.addEventListener('click', (e: Event) => {

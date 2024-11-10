@@ -25,7 +25,7 @@ import { createDropdown } from '../Helper';
 
 const props = defineProps({
     editor: {
-        type: Editor,
+        type: Object as () => any,
         required: true
     }
 })

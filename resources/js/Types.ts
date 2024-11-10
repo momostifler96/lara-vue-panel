@@ -8,30 +8,34 @@ interface ToastOption {
     message: string;
     type: "success" | "error" | "warning" | "info";
 }
+type ShowConfirmation = {
+    title: string;
+    body: string;
+    cancel_button_label?: string;
+    confirm_button_label?: string;
+    has_password?: boolean;
+    onConfirm: (password: string) => void;
+    onCancel?: () => void;
+}
+
+type ShowFormModal = {
+    title: string;
+    description: string;
+    cancel_button_label?: string;
+    submit_button_label?: string;
+    fields: { type: string, props: { [k: string]: any } }[];
+    has_password?: boolean;
+    onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
+    onCancel?: () => void;
+}
+
 interface DataTableItemActionOptions {
     item: any;
     route_list: any;
     router: typeof router;
     showToast: (option: ToastOption) => void;
-    showConfirmation: {
-        title: string;
-        body: string;
-        cancel_button_label?: string;
-        confirm_button_label?: string;
-        has_password?: boolean;
-        onConfirm: (password: string) => void;
-        onCancel?: () => void;
-    };
-    showFormModal: {
-        title: string;
-        description: string;
-        cancel_button_label?: string;
-        submit_button_label?: string;
-        fields: { type: string, props: { [k: string]: any } }[];
-        has_password?: boolean;
-        onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
-        onCancel?: () => void;
-    };
+    showConfirmation: (opt: ShowConfirmation) => void;
+    showFormModal: (opt: ShowFormModal) => void;
 }
 interface DataTableItemColActionOptions {
     data: any;
@@ -64,15 +68,8 @@ interface DataTableSelectedItemsActionOptions {
     route_list: any;
     router: typeof router;
     showToast: (option: ToastOption) => void;
-    showConfirmation: {
-        title: string;
-        body: string;
-        cancel_button_label: string;
-        confirm_button_label: string;
-        onConfirm: () => void;
-        onCancel: () => void;
-    };
-    showFormModal: {
+    showConfirmation: (option: ShowConfirmation) => void;
+    showFormModal: (option: {
         title: string;
         description: string;
         cancel_button_label?: string;
@@ -81,7 +78,7 @@ interface DataTableSelectedItemsActionOptions {
         has_password?: boolean;
         onSubmit: (option: { password: string, formData: { [k: string]: any } }) => void;
         onCancel?: () => void;
-    };
+    }) => void;
 }
 
 interface TableColumn {
@@ -232,5 +229,51 @@ interface LVPPluginOptions {
     data_grid_cards?: { [key: string]: Component };
 }
 
+export interface User {
+    id: number;
+    name: string;
+    phone: string;
+    email: string;
+    email_verified_at: string;
+}
 
-export type { LVPPluginOptions, TableColumn, TableData, SingleItemAction, SelectedItemsActions, ActionMenu, FileInfo, PageProps, FolderInterface, TableFilter }
+
+namespace NavMenu {
+    export interface NavLink {
+        label: string;
+        path: string;
+        icon: string;
+    }
+    export interface NavGroup {
+        label: string;
+        path: string;
+        dismisable: boolean;
+        children: NavLink[];
+    }
+}
+
+
+type NavMenuItem = NavMenu.NavLink | NavMenu.NavGroup
+
+interface PageProps {
+    auth: {
+        user: User;
+    };
+    notifications: number;
+    admin_logo: string;
+    currentPath: string;
+    panel_data: any;
+    user_menu: any;
+    flash: {
+        info: string | null;
+        status: string | null;
+        error: string | null;
+        success: string | null;
+        warning: string | null;
+        alert: string | null;
+    };
+    nav_menu: NavMenuItem[];
+};
+
+
+export type { LVPPluginOptions, TableColumn, TableData, SingleItemAction, SelectedItemsActions, ActionMenu, NavMenu, FileInfo, PageProps, FolderInterface, TableFilter, ShowConfirmation }

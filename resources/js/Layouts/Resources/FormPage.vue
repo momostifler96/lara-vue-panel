@@ -6,12 +6,12 @@
     </template>
 
     <form class="" @submit.prevent="submit" ref="formRef">
-      <FormEngine v-bind="props.form_component.props" :form-data="_formData.formData" />
+      <FormEngine :fields="props.form_component.props.fields" :formData="_formData.formData" />
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
             props.page_titles.submit
-          }}</SimpleButton>
+            }}</SimpleButton>
           <SimpleButton v-if="props.action == 'create'" type="submit" @click="submitForm('reload')">
             {{
               props.page_titles.submit_and_create

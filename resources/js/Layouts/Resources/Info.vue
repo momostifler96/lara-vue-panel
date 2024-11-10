@@ -62,6 +62,7 @@ interface ResourceIndexPage {
   model_infos: Object | any;
   before_data_widgets: any[];
   info_widgets: any[];
+  widgets: any[];
   after_data_widgets: any[];
 }
 

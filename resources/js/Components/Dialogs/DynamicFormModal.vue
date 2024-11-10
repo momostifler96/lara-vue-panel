@@ -9,44 +9,36 @@ import { ref, onMounted, watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import FormModal from "lvp/Components/Dialogs/FormModal.vue";
 import FormEngine from "lvp/Components/Widgets/FormEngine.vue";
-const props = defineProps({
-  show: Boolean,
-  title: {
-    type: String,
-    required: true,
-  },
-  submit_button_label: {
-    type: String,
-    required: true,
-  }, cancel_button_label: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  fields: {
-    type: Object,
-    required: true,
-  }, grid_cols: {
-    type: Number,
-    default: 1,
-  }, gap: {
-    type: Number,
-    default: 3,
-  },
-  has_password: {
-    type: Boolean,
-    default: false,
-  },
 
-  defaultData: {
-    type: Object as () => any,
-    required: true,
-  },
-  errors: Object,
+interface Props {
+  show: boolean;
+  title: string;
+  submit_button_label: string;
+  cancel_button_label: string;
+  fields: {
+    type: string;
+    props: any;
+    name: string;
+    eventsListeners: {
+      change: {
+        fields: string;
+        action: string;
+        func: string;
+        debounce: number;
+      }[];
+    };
+  }[];
+  grid_cols: number;
+  gap: number | string;
+  defaultData?: any;
+  errors?: any;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  grid_cols: 1,
+  gap: 3,
 });
+
 const formData = ref({});
 const updateLoadErrors = ($errors: any) => {
   formErrors.value = $errors;

@@ -13,7 +13,7 @@ import AlignRight from './AlignRight.vue';
 
 defineProps({
     editor: {
-        type: Editor,
+        type: Object as () => any,
         required: true
     }
 })

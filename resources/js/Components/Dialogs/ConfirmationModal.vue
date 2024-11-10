@@ -34,7 +34,7 @@ const props = defineProps({
   show: Boolean,
   hasPassword: Boolean,
   icon: {
-    type: String,
+    type: String as () => "info" | "warning" | "delete" | "success",
     default: "info",
   },
   title: {

@@ -80,7 +80,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-
+import 'cropperjs';
 import {
   CloseIcon,
   ValidateIcon,

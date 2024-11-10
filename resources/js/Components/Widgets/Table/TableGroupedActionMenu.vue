@@ -11,7 +11,7 @@
         </button>
         <Menu ref="tableActionMenu" :model="{
             items: actions.actions,
-        }" :popup="true" class="">
+        } as any" :popup="true" class="">
             <template #item="{ item, props }">
                 <TableActionButton v-for="action in item" class="w-full" :icon="action_icons[action.icon]"
                     :label="action.label" :action="action.action" :color="action.color" :item="null"
@@ -39,12 +39,12 @@ import icons, {
 const props = defineProps({
     label: {
         type: String,
-        required: true,
+        required: false,
     }, icon: {
         type: String,
-        required: true,
+        required: false,
     },
-    actions: Object as () => ActionMenu,
+    actions: Object as () => any,
 });
 
 const tableActions = [
