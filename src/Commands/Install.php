@@ -67,7 +67,7 @@ class Install extends Command
 
             $npm_pakages = [
                 'apexcharts',
-                'vue3-apexcharts ',
+                'vue3-apexcharts',
                 'primevue ',
                 'cropperjs:^2.0.0-rc.2',
                 '@primevue/themes',
