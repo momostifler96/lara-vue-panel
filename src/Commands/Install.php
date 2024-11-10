@@ -66,11 +66,11 @@ class Install extends Command
             $this->info('Intall npm packages');
 
             $npm_pakages = [
+                'primevue',
+                '@primevue/themes',
                 'apexcharts',
                 'vue3-apexcharts',
-                'primevue ',
                 'cropperjs:^2.0.0-rc.2',
-                '@primevue/themes',
                 '@headlessui/vue',
                 'vue-awesome-paginate',
                 'maska',
@@ -88,6 +88,8 @@ class Install extends Command
                 '@tiptap/extension-dropcursor',
                 '@tiptap/extension-placeholder',
                 ,
+
+
 
             ];
             foreach ($npm_pakages as $key => $npm_pakage) {

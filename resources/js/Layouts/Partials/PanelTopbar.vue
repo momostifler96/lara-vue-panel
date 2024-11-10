@@ -18,7 +18,7 @@
           <NotificationIcon />
         </span>
         <span>
-          <UserMenu />
+          <UserMenu v-if="$page.props.user" />
         </span>
       </span>
     </nav>
