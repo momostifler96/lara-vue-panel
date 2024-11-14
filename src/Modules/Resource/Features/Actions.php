@@ -12,13 +12,8 @@ use Illuminate\Support\Facades\Log;
 use LVP\Form\FileUploadField;
 use LVP\Form\ImageUploadField;
 use LVP\Modules\Panel\Panel;
-use LVP\Support\Info;
 use LVP\Utils\CreateLVPAction;
-use LVP\Widgets\DataWidgets\DataGridField;
-use LVP\Widgets\DataWidgets\DataGridWidget;
-use LVP\Widgets\DataWidgets\DataTableWidget;
 use LVP\Widgets\FormWidget\Fields\FileUploadFieldWidget;
-use LVP\Widgets\FormWidget\Fields\SectionWidget;
 use LVP\Widgets\FormWidget\Fields\SwithToggleFieldWidget;
 
 trait Actions
@@ -33,8 +28,6 @@ trait Actions
          */
 
         $fields = $this->formFields();
-        // dd($old_data);
-        // dd($action->value);
         foreach ($fields as $key => $field) {
             if ($action->value == 'create' && $field->canfillOnCreate()) {
 
@@ -44,32 +37,12 @@ trait Actions
                     $this->_request_files[$field->field()] = $request[$field->field()];
                     $this->saveFiles($model_data, $field->field(), $request);
                 } else {
-                    // dd($field);
                     $field->onStoreData($model_data, $request);
                 }
             } else if ($action->value == 'edit' && $field->canfillOnEdit()) {
                 $field->onUpdateData($model_data, $request, $old_data);
-
-                // if (!empty($field->onEditData())) {
-                //     $_fields = explode('.', $field->onEditData());
-                //     $_fd = $old_data;
-                //     foreach ($_fields as $key => $value) {
-                //         if (isset($_fields[$key - 1]) && $_fields[$key - 1] == '*') {
-                //             $_fd = array_map(function ($it) use ($value) {
-                //                 return $it[$value];
-                //             }, $_fd);
-                //         } else if ($value != '*') {
-                //             $_fd = $_fd[$value];
-                //         }
-                //     }
-                //     $model_data[$field->field()] = $_fd;
-                //     $model_data[$field->field()] = $field->onUpdate($request[$field->field()], $_fd);
-                // } else {
-                //     $field->onUpdateData($model_data, $request, $old_data);
-                // }
             }
         }
-        // dd($model_data);
         return $model_data;
     }
 
@@ -277,22 +250,8 @@ trait Actions
     }
     private function buildDataWidget(Request $request)
     {
-        // $columns = $this->buildDataColumns();
         $query = $this->buildQuery($request);
-        // dd($this->dataWidget()->setData($query));
         $data = $this->dataWidget()->setQuery($query)->paginated()->render();
-        // $data = DataGridWidget::make($query->paginate(), $this->model_primary_key)->propsFields($this->buildItemFormFields())->dataField([
-        //     DataGridField::make('slug'),
-        //     DataGridField::make('name'),
-        //     DataGridField::make('picture'),
-        //     DataGridField::make('stock'),
-        //     DataGridField::make('sku'),
-        //     DataGridField::make('created_date'),
-        //     DataGridField::make('category', 'category.name'),
-        //     DataGridField::make('brand', 'brand.name'),
-        // ])->cardType('product-card')->filters($this->dataFilters())->filterType($this->data_filter_type)->autoSubmitFilter($this->auto_submit_filter)->actions($this->dataActions())->actionsGroup($this->dataActionsGroup())->render();
-
-        // $data = [];
         return $data;
     }
     protected function buildDataColumns(): array
@@ -311,29 +270,6 @@ trait Actions
          */
         $query = $this->model::query();
         $this->beforeBuildQuery($query, $request);
-
-        // if ($request->has('search')) {
-        //     $searchable_columns = $this->getSearchableFields();
-        //     if (!empty($searchable_columns)) {
-        //         $query->whereAny($searchable_columns, 'LIKE', $request->get('search') . '%');
-        //     }
-        // }
-        // $data_filters = $this->dataFilters();
-
-        // $request_array_data = $request->toArray();
-        // for ($i = 0; $i < count($data_filters); $i++) {
-        //     $data_filters[$i]->apply($query, $request_array_data);
-        // }
-
-        // foreach ($columns as $key => $column) {
-        //     if (str_starts_with($column['field'], 'related.')) {
-        //         $related = explode('.', substr($column['field'], strlen('related.')));
-        //         $query->with($related[0]);
-        //     } else if (str_starts_with($column['field'], 'count.')) {
-        //         $related = substr($column['field'], strlen('count.'));
-        //         $query->withCount($related);
-        //     }
-        // }
 
         $this->afterBuildQuery($query, $request);
         return $query;

@@ -5,6 +5,7 @@ namespace LVP\Modules\Resource\Features;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Log;
 use LVP\Enums\LVPAction;
 use LVP\Utils\CreateLVPAction;
 
@@ -107,7 +108,6 @@ trait Http
                 }
             },
             function ($exception) use ($request, $formData) {
-                dd($exception);
                 $this->onStoreModelFail($exception, $formData, $request);
                 return redirect()->back()->with('error', lvp_translation('some_wrong', $this->_translations));
             }
@@ -175,7 +175,7 @@ trait Http
             $action->exec($this->model, $request);
             return back()->with('success', $action->on_success_message);
         } catch (\Throwable $th) {
-            dd($th);
+            Log::error($th->getMessage());
             return back()->with('error', $action->on_fail_message);
         }
 
