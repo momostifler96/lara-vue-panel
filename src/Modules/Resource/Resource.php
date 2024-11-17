@@ -5,6 +5,7 @@ namespace LVP\Modules\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use LVP\Enums\DataFilterType;
+use LVP\Enums\LVPMenu;
 use LVP\Modules\Resource\Features\Booting;
 use LVP\Modules\Resource\Features\Hooks;
 use LVP\Modules\Resource\Features\Http;
@@ -67,6 +68,7 @@ class Resource
     protected string $form_type = 'modal';
 
 
+    protected LVPMenu $menu_type = LVPMenu::PRINCIPAL;
     protected DataFilterType $data_filter_type = DataFilterType::POPOVER;
     protected bool $auto_submit_filter = true;
 

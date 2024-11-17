@@ -6,6 +6,7 @@ use LVP\Modules\Resource\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use LVP\Enums\LVPMenu;
 
 class {{class}}Resource extends Resource
 {
@@ -22,6 +23,9 @@ class {{class}}Resource extends Resource
     protected string $menu_icon = 'stack';
     protected string $menu_group;
     protected int $menu_position =1;
+
+    protected LVPMenu $menu_type = LVPMenu::PRINCIPAL;
+
 
     protected string $form_type = 'modal'; // modal or page
 

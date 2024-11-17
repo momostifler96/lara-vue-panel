@@ -81,6 +81,8 @@ interface ResourceFormPageProps {
             type: string;
             label: string;
             formData: { [key: string]: any };
+            grid_cols?: number;
+            gap?: number;
         };
     };
     routes: {

@@ -29,17 +29,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
-        // $this->loadPanels();
-        // dd($this->panels);
+
         URL::forceScheme(env('APP_SCHEME', 'http'));
+        $this->publishes([
+            __DIR__ . '/../config/laravue-panel.php' => config_path('laravue-panel.php'),
+        ]);
         $this->bootPanels();
-        // /**
-        //  * @var PanelProvider $current_panel
-        //  */
-        // $current_panel = app(LVPCurrentPanel::class);
-        // dd($current_panel->panel);
-        // $current_panel->setupNavMenus();
-        // dd($current_panel->getNavMenu());
+
     }
 
     protected function registerPanelsProviders()
@@ -49,21 +45,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $customProvidersPath = app_path('Providers/Lvp');
         // Récupère tous les fichiers PHP du dossier
         $providerFiles = File::glob($customProvidersPath . '/*.php');
-        // dd($customProvidersPath, $providerFiles, basename($providerFiles[0], '.php'));
 
         $panels = [];
         foreach ($providerFiles as $providerFile) {
             // Obtenir le nom de la classe du provider
 
             $providerClass = 'App\\Providers\\Lvp\\' . basename($providerFile, '.php');
-            // dd($providerClass);
             // Vérifie si la classe existe et enregistre le provider
             if (class_exists($providerClass)) {
                 $panels[] = $providerClass;
                 $this->app->register($providerClass);
             }
         }
-        // dd($panels);
     }
 
     protected function load()

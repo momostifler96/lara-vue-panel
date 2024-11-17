@@ -12,6 +12,9 @@ class {{class}}Page extends Page
     protected string $short_label;
     protected string $nav_menu_label;
 
+    protected LVPMenu $menu_type = LVPMenu::PRINCIPAL;
+
+
     
     protected function beforeContent(Request $request): array
     {

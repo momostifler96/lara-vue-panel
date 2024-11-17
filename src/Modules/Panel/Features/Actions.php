@@ -8,11 +8,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use LVP\Middlewares\PanelGuestInertiaMiddleware;
-use LVP\Middlewares\PanelInertiaMiddleware;
 use LVP\Middlewares\PanelTenancyMiddleware;
 use LVP\Support\PanelNavLink;
-use Spatie\Multitenancy\Contracts\IsTenant;
 
 trait Actions
 {
@@ -33,11 +30,7 @@ trait Actions
     }
     public function registerRoutes()
     {
-        // dd($this->getPanelRouteName());
-        // dd(app(IsTenant::class)::checkCurrent());
-        // if ($this->_is_tenancy && IsTenant::checkCurrent()) {
-        //     dd(IsTenant::checkCurrent());
-        // }
+
         Route::middleware($this->_middlewares)->group(function () {
             if (!empty($this->_login_page_class)) {
                 Route::middleware($this->_guest_middlewares)->prefix($this->getPanelRoutePath())->as($this->getPanelRouteName())->group(function () {
@@ -142,9 +135,11 @@ trait Actions
     {
         $nav_menu_cache_id = 'lvp-nav-menu-panel-' . $this->_id;
         $nav_menu = config('laravue-panel.env') == 'local' ? [] : cache($nav_menu_cache_id);
+        $saved_user_menus = [];
         if (empty($nav_menu)) {
             $saved_menus = [];
             $simple_menus = [];
+            $user_menus = [];
             foreach ($this->_resources as $key => $resource) {
                 if ($resource->canShowMenu()) {
                     $menu_group = $resource->getMenuGroup();
@@ -152,7 +147,11 @@ trait Actions
                     if (!empty($menu_group)) {
                         $resource_menu['group'] = $menu_group;
                     }
-                    $simple_menus[] = $resource_menu;
+                    if ($resource_menu['menu'] == 'principal') {
+                        $simple_menus[] = $resource_menu;
+                    } elseif ($resource_menu['menu'] == 'user') {
+                        $user_menus[] = $resource_menu;
+                    }
                 }
 
             }
@@ -163,15 +162,27 @@ trait Actions
                     if (!empty($menu_group)) {
                         $page_menu['group'] = $menu_group;
                     }
-                    $simple_menus[] = $page_menu;
+                    if ($page_menu['menu'] == 'principal') {
+                        $simple_menus[] = $page_menu;
+                    } elseif ($page_menu['menu'] == 'user') {
+                        $user_menus[] = $page_menu;
+                    }
                 }
+
+
             }
+
+
+            if ($this->_route_name == 'account') {
+                // dd($this->_pages);
+            }
+
+
             if (!empty($this->_custom_nav_links)) {
                 foreach ($this->_custom_nav_links as $key => $menu) {
                     $simple_menus[] = $menu->render();
                 }
             }
-
             usort($simple_menus, function ($a_c, $b_c) {
                 if ($a_c['position'] == $b_c['position']) {
                     return 0;
@@ -185,7 +196,27 @@ trait Actions
                     $saved_menus[] = $menu;
                 }
             }
-            usort($saved_menus, function ($a, $b) use ($saved_menus) {
+            usort($user_menus, function ($a_c, $b_c) {
+                if ($a_c['position'] == $b_c['position']) {
+                    return 0;
+                }
+                return ($a_c['position'] < $b_c['position']) ? -1 : 1;
+            });
+            foreach ($user_menus as $key => $menu) {
+                if (!empty($menu['group'])) {
+                    $this->addChildToGroup($saved_user_menus, $menu['group'], $menu);
+                } else {
+                    $saved_user_menus[] = $menu;
+                }
+            }
+
+            usort($saved_menus, function ($a, $b) {
+                if ($a['position'] == $b['position']) {
+                    return 0;
+                }
+                return ($a['position'] < $b['position']) ? -1 : 1;
+            });
+            usort($saved_user_menus, function ($a, $b) {
                 if ($a['position'] == $b['position']) {
                     return 0;
                 }
@@ -201,14 +232,17 @@ trait Actions
                 ],
                 ...$saved_menus
             ];
+
+
             if (config('laravue-panel.env') != 'local') {
                 cache()->forever($nav_menu_cache_id, $nav_menu);
             }
+
+
         }
 
         $this->_nav_menu = $nav_menu;
         $user_menu_cache_id = 'lvp-user-menu-panel-' . $this->_id;
-
         $user_menu = config('laravue-panel.env') == 'local' ? [] : cache($user_menu_cache_id, []);
         if (empty($user_menu)) {
             if (!empty($this->login)) {
@@ -217,11 +251,16 @@ trait Actions
             $user_menu = array_map(function ($menu) {
                 return $menu->getNavMenu();
             }, $this->_user_menu);
-            $this->_user_menu = $user_menu;
+
+            $_user_menu = array_merge($user_menu, $saved_user_menus);
+
+            $this->_user_menu = $_user_menu;
             if (config('laravue-panel.env') != 'local') {
-                cache()->forever($user_menu_cache_id, $user_menu);
+                cache()->forever($user_menu_cache_id, $_user_menu);
             }
         }
+
+
     }
     public function configureGuards()
     {
@@ -277,9 +316,6 @@ trait Actions
             return new SessionGuard($name, $provider, $app['session.store']);
         });
 
-        // Auth::provider($this->_id . '_provider', function ($app, array $config) {
-        //     return new EloquentUserProvider($app->make(Hasher::class), $config['model']);
-        // });
     }
 
 

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use LVP\Defaults\LoginPage;
 use LVP\Defaults\RegisterPage;
+use LVP\Enums\LVPMenu;
 use LVP\Middlewares\PanelInertiaMiddleware;
 use LVP\Modules\Page\Features\Actions;
 use LVP\Modules\Page\Features\Booting;
@@ -61,6 +62,7 @@ class Page
     protected string $local = 'en';
     protected array $_translations = [];
 
+    protected LVPMenu $menu_type = LVPMenu::PRINCIPAL;
 
     protected \Illuminate\Foundation\Auth\User|null $current_user;
 

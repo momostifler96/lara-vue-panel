@@ -6,12 +6,13 @@
     </template>
 
     <form class="" @submit.prevent="submit" ref="formRef">
-      <FormEngine :fields="props.form_component.props.fields" :formData="_formData.formData" />
+      <FormEngine :fields="props.form_component.props.fields" :formData="_formData.formData"
+        :grid_cols="props.form_component.props.grid_cols" :gap="props.form_component.props.gap" />
       <div class="flex justify-between">
         <div class="flex gap-2">
           <SimpleButton type="submit" @click="submitForm('leave')">{{
             props.page_titles.submit
-            }}</SimpleButton>
+          }}</SimpleButton>
           <SimpleButton v-if="props.action == 'create'" type="submit" @click="submitForm('reload')">
             {{
               props.page_titles.submit_and_create
@@ -67,7 +68,6 @@ const submitForm = (type: "reload" | "leave") => {
   _formData.after_save = type;
   submit();
 };
-
 const _formData = reactive<{ [k: string]: any }>({
   props: props,
   formData: {

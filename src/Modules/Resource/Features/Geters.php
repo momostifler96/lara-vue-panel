@@ -2,7 +2,6 @@
 
 namespace LVP\Modules\Resource\Features;
 
-use LVP\Actions\ButtonAction;
 use LVP\Enums\HttpMethod;
 use LVP\Widgets\FormWidget\FormWidget;
 
@@ -45,6 +44,7 @@ trait Geters
             'position' => $this->menu_position,
             'icon' => $this->menu_icon,
             'path' => '/' . $this->slug,
+            'menu' => $this->menu_type->value,
         ];
     }
     public function getMenuGroup(): null|string

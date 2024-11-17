@@ -37,10 +37,8 @@ class PanelInertiaMiddleware extends Middleware
          */
 
         $current_panel = app('lvp-current');
-        // dd($current_panel->getData());
-        // dd(auth($current_panel->getId())->user());
-        // dd($current_panel->getNavMenu());
-        // dd(auth($current_panel->getId())->check());
+
+
         $shared_data = [
             ...parent::share($request),
             'auth' => [
@@ -55,13 +53,13 @@ class PanelInertiaMiddleware extends Middleware
             'nav_menu' => $current_panel->getNavMenu(),
             'user_menu' => $current_panel->getUserMenu()
         ];
+
         if (auth($current_panel->getId())->check()) {
             $shared_data['auth']['user'] = auth($current_panel->getId())->user();
             $shared_data['auth']['role'] = auth($current_panel->getId())->user()->role;
             $shared_data['auth']['permissions'] = auth($current_panel->getId())->user()->permissions;
             $shared_data['notifications'] = auth($current_panel->getId())->user()->unreadNotifications->count();
         }
-        // dd($shared_data);
 
         return $shared_data;
     }

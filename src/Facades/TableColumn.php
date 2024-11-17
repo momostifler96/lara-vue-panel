@@ -37,7 +37,7 @@ class TableColumn
     {
         $instance = new static();
         $instance->_field = $field;
-        $instance->_label = str($field)->camel();
+        $instance->_label = str($field)->camel()->ucfirst();
         $instance->_align = Alignment::LEFT->value;
         $instance->_editable = false;
         $instance->_sortable = false;
@@ -68,7 +68,7 @@ class TableColumn
 
     public function label(string $value)
     {
-        $this->_label = $value;
+        $this->_label = str($value)->ucfirst();
         return $this;
     }
 
