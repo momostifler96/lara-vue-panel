@@ -1,6 +1,6 @@
 <template>
   <Dropdown v-if="!column.multiple" :options="column.options" :modelValue="data" option-value="value"
-    option-label="label" @change="onSelect" class="w-full" />
+    option-label="label" @change="onSelect" class="w-full" :class="column.value_colors[data]" />
   <MultiSelect v-else :options="column.options" :modelValue="data" option-value="value" option-label="label"
     :max-selected-labels="column.maxShow" @change="onSelect" class="w-full" />
 </template>
@@ -14,7 +14,6 @@ const props = defineProps<{
   column: any;
 }>();
 const emit = defineEmits(["dataEvent"]);
-
 const onSelect = (value: any) => {
   emit("dataEvent", {
     event: "change_dropdown",
