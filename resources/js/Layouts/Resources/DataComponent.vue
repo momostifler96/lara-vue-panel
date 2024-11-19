@@ -1,6 +1,6 @@
 <template>
   <component :is="dataComponents[props.type]" v-bind="props.props" :routes="routes" key="data-widget" class="col-span-3"
-    @dataEvent="exectDataEvent" @bulkAction="execBulkAction" @edit="emit('edit', $event)" @delete="deteleItem" />
+    @dataEvent="exectDataEvent" @bulkAction="execBulkAction" @action="emit('edit', $event)" @delete="deteleItem" />
 </template>
 <script setup lang="ts">
 import DataTableWidget from "lvp/Components/Widgets/Table/DataTableWidget.vue";

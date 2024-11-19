@@ -2,6 +2,7 @@
 
 namespace LVP\Widgets\FormWidget\Fields;
 
+use Illuminate\Http\Request;
 use LVP\Widgets\FormWidget\FormWidget;
 
 
@@ -276,7 +277,7 @@ class FormFieldWidget
         ];
     }
 
-    public function onStoreData(&$formData, $request)
+    public function onStoreData(&$formData, Request $request)
     {
         $formData[$this->_name] = $request[$this->_name];
     }

@@ -58,15 +58,13 @@ trait Geters
 
     public function currentUser(): \Illuminate\Foundation\Auth\User|null
     {
-        if (empty($this->current_user)) {
-            /**
-             * @var \LVP\Providers\PanelProvider $current_panel
-             */
-            $current_panel = app('lvp-current');
-            $this->current_user = auth($current_panel->getId())->user();
-        }
+        /**
+         * @var \LVP\Providers\PanelProvider $current_panel
+         */
+        $current_panel = app('lvp-current');
+        $current_user = auth($current_panel->getId())->user();
 
-        return $this->current_user;
+        return $current_user;
     }
     public function getRoutePath()
     {

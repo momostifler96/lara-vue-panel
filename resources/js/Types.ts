@@ -276,4 +276,4 @@ interface PageProps {
 };
 
 
-export type { LVPPluginOptions, TableColumn, TableData, SingleItemAction, SelectedItemsActions, ActionMenu, NavMenu, FileInfo, PageProps, FolderInterface, TableFilter, ShowConfirmation }
+export type { LVPPluginOptions, TableColumn, TableData, SingleItemAction, SelectedItemsActions, ActionMenu, NavMenu, FileInfo, PageProps, FolderInterface, TableFilter, ShowConfirmation, DataTableItemActionOptions }

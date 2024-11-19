@@ -2,6 +2,8 @@
 
 namespace LVP\Widgets\FormWidget\Fields;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use LVP\Widgets\FormWidget\Fields\Traits\HasPlaceholder;
 use LVP\Widgets\FormWidget\Fields\Traits\HasType;
 use LVP\Widgets\FormWidget\FormWidget;
@@ -79,11 +81,17 @@ class SectionWidget extends FormFieldWidget
     }
 
 
-    public function onStoreData(&$formData, $request)
+    public function onStoreData(&$formData, Request $request)
     {
         foreach ($this->_sections as $section) {
             foreach ($section as $field) {
-                $field->onStoreData($formData, $request);
+                if ($field instanceof SwithToggleFieldWidget && empty($request[$field->field()])) {
+                    $formData[$field->field()] = $field->onStore(0);
+                } else if ($field instanceof FileUploadFieldWidget && !empty($request[$field->field()])) {
+                    $this->saveFiles($formData, $field->field(), $request);
+                } else {
+                    $field->onStoreData($formData, $request);
+                }
             }
         }
     }
@@ -94,6 +102,22 @@ class SectionWidget extends FormFieldWidget
                 $field->onUpdateData($formData, $request, $oldData);
             }
         }
+    }
+
+    function saveFiles(array &$formData, string $field, Request $request)
+    {
+        /**
+         * @var \Illuminate\Http\UploadedFile $file
+         */
+        if (is_array($request[$field])) {
+            foreach ($request[$field] as $file) {
+                $formData[$field][] = Storage::disk(config('laravue-panel.uploaded-file-disk', 'public'))->url($file->store(null, ['disk' => config('laravue-panel.uploaded-file-disk', 'public')]));
+            }
+        } else {
+            $file = $request[$field];
+            $formData[$field] = Storage::disk(config('laravue-panel.uploaded-file-disk', 'public'))->url($file->store(null, ['disk' => config('laravue-panel.uploaded-file-disk', 'public')]));
+        }
+
     }
 
     public function getSections()

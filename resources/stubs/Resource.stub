@@ -53,13 +53,12 @@ class {{class}}Resource extends Resource
              ->hiddenFields([
 
             ])
-            ->actions([
-               \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('edit'),
-                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete')->color('text-lvp-danger'),
+          ->actions([
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('edit-resource')->icon('edit')->label('Edit'),
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete-resource')->icon('delete')->label('Delete')->color('text-lvp-danger'),
             ])
             ->bulkActions([
-                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete')->color('text-lvp-danger'),
-
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete-resource')->icon('delete')->label('Delete')->color('text-lvp-danger'),
             ])
             ->filters([
 

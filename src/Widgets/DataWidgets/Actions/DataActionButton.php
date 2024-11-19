@@ -62,8 +62,8 @@ class DataActionButton
 
     public function render()
     {
-        return  [
-            'label' => $this->_label,
+        return [
+            'label' => ucfirst($this->_label ?? $this->_action),
             'action' => $this->_action,
             'icon' => $this->_icon,
             'color' => $this->_color,

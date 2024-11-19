@@ -5,6 +5,7 @@ namespace LVP\Modules\Resource\Features;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use LVP\Enums\LVPAction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,6 @@ trait Actions
                 if ($field instanceof SwithToggleFieldWidget && empty($request[$field->field()])) {
                     $model_data[$field->field()] = $field->onStore(0);
                 } else if ($field instanceof FileUploadFieldWidget && !empty($request[$field->field()])) {
-                    $this->_request_files[$field->field()] = $request[$field->field()];
                     $this->saveFiles($model_data, $field->field(), $request);
                 } else {
                     $field->onStoreData($model_data, $request);
@@ -150,11 +150,17 @@ trait Actions
 
     function saveFiles(array &$formData, string $field, Request $request)
     {
+
         /**
-         * @var \Illuminate\Http\UploadedFile[] $files
+         * @var \Illuminate\Http\UploadedFile $file
          */
-        foreach ($request[$field] as $file) {
-            $formData[$field][] = $file->store(null, ['disk' => 'public']);
+        if (is_array($request[$field])) {
+            foreach ($request[$field] as $file) {
+                $formData[$field][] = Storage::disk(config('laravue-panel.uploaded-file-disk', 'public'))->url($file->store(null, ['disk' => config('laravue-panel.uploaded-file-disk', 'public')]));
+            }
+        } else {
+            $file = $request[$field];
+            $formData[$field] = Storage::disk(config('laravue-panel.uploaded-file-disk', 'public'))->url($file->store(null, ['disk' => config('laravue-panel.uploaded-file-disk', 'public')]));
         }
     }
 

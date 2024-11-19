@@ -34,7 +34,7 @@
         <div class="flex gap-2">
           <TableActionButton v-for="action in column.data.actions" :icon="action_icons[action.icon]"
             :label="action.label" :action="action" :color="action.color" :item="item"
-            @click="$emit('action', action.action, item)" />
+            @exec="execAction($event, item)" />
         </div>
       </template>
       <TableActionMenu v-else-if="column.data.type == 'dropdown'" :tableItem="item" :tableActions="column.data.actions"
@@ -148,10 +148,10 @@ const props = defineProps({
   },
 });
 const emit = defineEmits([
-  "delete",
+  "delete-resource",
   "search",
   "filtering",
-  "edit",
+  "edit-resource",
   "action",
   "groupAction",
   "dataEvent",
@@ -287,18 +287,18 @@ const execColAction = (action: string, data: any) => {
 
 }
 const table_single_item_actions = <SingleItemAction>{
-  edit: ({ route_list, item }) => {
-    emit("edit", item);
+  'edit-resource': ({ route_list, item }) => {
+    emit("edit-resource", item);
   },
   view: (opt: any) => {
     opt.router.get(route(opt.route_list.show, { id: opt.item.id }));
   },
-  delete: (opt) => {
+  'delete-resource': (opt) => {
     opt.showConfirmation({
       title: "Delete",
       body: "Are you sure you want to delete this item?",
       onConfirm: () => {
-        emit("delete", opt.item);
+        emit("delete-resource", opt.item);
         // router.delete(route(opt.route_list.delete, { id: opt.item.id }));
       },
     });
@@ -319,22 +319,25 @@ const table_single_item_actions = <SingleItemAction>{
 };
 
 const execAction = (action: string, item: any) => {
-  table_single_item_actions[action] = (option: any) => {
-    option.showConfirmation({
-      title: option.confirmation.title,
-      body: option.confirmation.body,
-      onConfirm: () => {
-        option.router.post(route(option.route_list.exec_actions), {
-          item_id: option.item.id,
-          value: option.value,
-          field: option.field,
-          action: 'update_col',
-        });
-      },
-    });
-  };
+  console.log('table_single_item_actions', table_single_item_actions[action], action);
+  table_single_item_actions[action]({
+    item,
+    showConfirmation: showConfirmation,
+    showFormModal: (option: any) => {
+      form_modal.title = option.title;
+      form_modal.description = option.description;
+      form_modal.cancel_button_label = option.cancel_button_label;
+      form_modal.submit_button_label = option.submit_button_label;
+      form_modal.has_password = option.has_password;
+      form_modal.fields = option.fields;
+      form_modal.onSubmit = option.onSubmit;
+      form_modal.show = true;
+    },
+    showToast: useToast,
+    route_list: props.routes,
+    router: router,
+  });
 };
-
 
 
 //------------------Actions-----------

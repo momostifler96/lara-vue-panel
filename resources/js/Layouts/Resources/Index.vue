@@ -12,7 +12,8 @@
         v-bind="widget" :key="`widget-${widget.widget_type}-${i}`" :class="`col-span-${widget.col_span}`" />
     </div> -->
     <div class="">
-      <DataComponent v-bind="props.data_widget" key="data-widget" :routes="props.routes" @edit="editResource" />
+      <DataComponent v-bind="props.data_widget" key="data-widget" :routes="props.routes"
+        @edit-resource="editResource" />
     </div>
 
     <div v-if="props.after_data_widgets.length > 0" class="grid grid-cols-3 gap-3 mt-10 mb-10">
@@ -112,7 +113,10 @@ const form_modal = reactive({
 const modal_form_data = ref<any>()
 const creatResource = () => {
   if (props.value.form_type === "modal") {
-    modal_form_data.value = props.value.modal_form.form_widget.props.formData;
+    const _form_data = props.value.modal_form.form_widget.props.formData;
+    modal_form_data.value = null;
+    console.log('_form_data', _form_data);
+    modal_form_data.value = _form_data;
     form_modal.action = "create";
     form_modal.show = true;
   } else {
@@ -136,6 +140,7 @@ const editResource = (item: any) => {
     router.get(route(props.value.routes.edit, { id: item.id }));
   }
 };
+
 
 //------------------Widgets-----------
 </script>

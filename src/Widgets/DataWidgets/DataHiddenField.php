@@ -34,4 +34,13 @@ class DataHiddenField
     {
         return $this->_load_data_from;
     }
+
+    public function render()
+    {
+        return [
+            'field' => $this->_field,
+            'load_data_from' => $this->_load_data_from ?? null,
+            'type' => 'hidden'
+        ];
+    }
 }
