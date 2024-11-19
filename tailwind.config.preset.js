@@ -5,7 +5,7 @@ export default {
     content: [
         './vendor/momoledev/laravue-panel/resources/js/**/*.{js,ts,vue}',
         './vendor/momoledev/laravue-panel/resources/views/**/*.blade.php',
-        './vendor/momoledev/laravue-panel/src/**/*.php',
+        // './vendor/momoledev/laravue-panel/src/**/*.php',
     ],
     theme: {
         extend: {
@@ -21,6 +21,7 @@ export default {
                 'lvp-info': '#227BFF',
                 'lvp-purple': '#a855f7',
                 'lvp-pink': '#ec4899',
+                'lvp-disabled': '#B4B4B4FF',
 
             },
 
@@ -39,7 +40,13 @@ export default {
         }, {
             pattern: /col-span-(\d+)/,
             variants: ['md', 'lg', 'xl'],
-        }
+        },
+        'text-lvp-primary',
+        'text-lvp-warn',
+        'text-lvp-disabled',
+        'text-lvp-success',
+        // 'text-(lvp-primary|lvp-red|lvp-danger|lvp-green|lvp-success|lvp-blue|lvp-yellow|lvp-warn|lvp-info|lvp-purple|lvp-pink|lvp-disabled)',
+        // 'bg-(lvp-primary|lvp-red|lvp-danger|lvp-green|lvp-success|lvp-blue|lvp-yellow|lvp-warn|lvp-info|lvp-purple|lvp-pink|lvp-disabled)',
     ],
     plugins: [forms]
 };
