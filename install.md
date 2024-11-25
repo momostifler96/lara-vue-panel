@@ -32,18 +32,6 @@ php artisan lvp:install
 
 ## Install codes
 
-```javascript
-// copy and past the following code in your vite config file after imported Modules
-import path from 'path';
-
-// copy and past the following code in your vite config file after plugins
-resolve: {
-        alias: {
-            lvp: path.resolve(__dirname, 'vendor/momoledev/laravue-panel/resources/js'),
-        }
-    };
-```
-
 ## Intall tailwind config
 
 ```javascript
@@ -105,21 +93,30 @@ import path from "path";
 export default defineConfig({
   plugins: [
     laravel({
-      input: [
-        "resources/js/app.ts",
-        "resources/js/Components/**/*.vue",
-        "resources/js/Pages/**/*.vue",
-        "resources/js/Layouts/**/*.vue",
-        "resources/js/Pages/**/*.vue",
-        "resources/js/Pages/**/*.vue",
-      ],
+      input: "resources/js/app.ts",
       refresh: true,
     }),
-    vue(),
+    vue({
+      template: {
+        transformAssetUrls: {
+          base: null,
+          includeAbsolute: false,
+        },
+      },
+    }),
   ],
+  build: {
+    rollupOptions: {
+      external: ["cropperjs"],
+    },
+  },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./resources/js"),
+      lvp: path.resolve(
+        __dirname,
+        "vendor/momoledev/laravue-panel/resources/js"
+      ),
+      "@": path.resolve(__dirname, "resources/js"),
     },
   },
 });
@@ -130,6 +127,8 @@ export default defineConfig({
 ```javascript
 // copy and past the following code in your tsconfig file on compilerOptions.paths
 "lvp/*": ["./vendor/momoledev/laravue-panel/resources/js/*"],
+"@/*": ["./resources/js/*"],
+"ziggy-js": ["./vendor/tightenco/ziggy"]
 ```
 
 ## Stetup app.ts file
