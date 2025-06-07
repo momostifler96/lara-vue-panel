@@ -105,3 +105,6 @@ Add the following code in your app.ts file on plugins
 ```
 .use(LVP)
 ```
+Step 8 - Copy nesesary files to resources/js/Pages/Lvp : Execute this commande to copy layoutes
+````
+cp vendor/momoledev/lara-vue-panel/resources/js/BaseLayoutes resources/js/Layoutes/Lvp
