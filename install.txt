@@ -1,6 +1,6 @@
 Step 1 - Install  package
 
-composer require momoledev/laravue-panel --dev
+composer require momoledev/lara-vue-panel --dev
 
 Step 2 - Intall panel module
 php artisan lvp:install
