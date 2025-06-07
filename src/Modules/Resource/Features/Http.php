@@ -41,7 +41,6 @@ trait Http
             'after_data_widgets' => $this->buildAfterDataWidget($request),
         ];
         return Inertia::render('LVP/ResourceInfo', $props);
-
     }
     private function create()
     {
@@ -143,13 +142,10 @@ trait Http
                 return redirect()->back()->with('error', lvp_translation('some_wrong', $this->_translations));
             }
         );
-
     }
     protected function actions(): array
     {
-        return [
-
-        ];
+        return [];
     }
     protected function buildInActions(): array
     {
@@ -158,7 +154,6 @@ trait Http
                 $model::where($this->model_primary_key, $request->item_id)->first($this->model_primary_key)->update([
                     $request->field => $request->value
                 ]);
-
             }, lvp_translation('update_col_success', $this->_translations), lvp_translation('update_col_fail', $this->_translations)),
 
         ];
@@ -178,7 +173,6 @@ trait Http
             Log::error($th->getMessage());
             return back()->with('error', $action->on_fail_message);
         }
-
     }
     private function delete(Request $request)
     {
@@ -193,10 +187,10 @@ trait Http
                 $this->afterDeleteModel($ids, $request);
 
                 if ($request->has('redirect_to')) {
-                    session()->flash('success', lvp_translation('delation_success', $this->_translations));
+                    session()->flash('success', lvp_translation('resource.deleted', $this->_translations, ['label' => $this->getLabel()]));
                     return to_route($request->input('redirect_to'));
                 } else {
-                    return redirect()->back()->with('success', lvp_translation('delation_success', $this->_translations));
+                    return redirect()->back()->with('success', lvp_translation('resource.deleted', $this->_translations, ['label' => $this->getLabel()]));
                 }
             },
             function (\Exception $exception) use ($ids, $request) {
