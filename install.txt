@@ -34,7 +34,7 @@ copy and past the following code in your vite config file after plugins
 ```
 resolve: {
         alias: {
-            lvp: path.resolve(__dirname, 'vendor/momoledev/laravue-panel/resources/js'),
+            lvp: path.resolve(__dirname, 'vendor/momoledev/lara-vue-panel/resources/js'),
         }
     };
 ```
@@ -45,15 +45,15 @@ copy and past the following code in your tailwind config file
 ```
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
-import lvpPreset from './vendor/momoledev/laravue-panel/tailwind.config.preset';
+import lvpPreset from './vendor/momoledev/lara-vue-panel/tailwind.config.preset';
 
 /** @type {import('tailwindcss').Config} */
 export default {
     presets: [lvpPreset],
     content: [
-        './vendor/momoledev/laravue-panel/resources/js/**/*.{js,ts,vue}',
-        './vendor/momoledev/laravue-panel/resources/views/**/*.blade.php',
-        './vendor/momoledev/laravue-panel/src/**/*.php',
+        './vendor/momoledev/lara-vue-panel/resources/js/**/*.{js,ts,vue}',
+        './vendor/momoledev/lara-vue-panel/resources/views/**/*.blade.php',
+        './vendor/momoledev/lara-vue-panel/src/**/*.php',
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
@@ -91,7 +91,7 @@ Step 6 - Intall tsconfig
 copy and past the following code in your tsconfig file on compilerOptions.paths
 
 ```
-"lvp/*": ["./vendor/momoledev/laravue-panel/resources/js/*"],
+"lvp/*": ["./vendor/momoledev/lara-vue-panel/resources/js/*"],
 ```
 
 Step 7 - Stetup app.ts file
