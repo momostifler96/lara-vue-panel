@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use LVP\Enums\LVPMenu;
 
+use LVP\Widgets\DataWidgets\DataTable\Columns\TextColumn;
+use LVP\Widgets\FormWidget\Fields\FileUploadFieldWidget;
+use LVP\Widgets\FormWidget\Fields\TextEditorFieldWidget;
+use LVP\Widgets\FormWidget\Fields\TextFieldWidget;
+
+use LVP\Widgets\DataWidgets\DataTable\Columns\TextColumn;
+
+
 class {{class}}Resource extends Resource
 {
 
@@ -54,11 +62,11 @@ class {{class}}Resource extends Resource
 
             ])
           ->actions([
-                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('edit-resource')->icon('edit')->label('Edit'),
-                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete-resource')->icon('delete')->label('Delete')->color('text-lvp-danger'),
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('resource.edit')->icon('edit')->label('Edit'),
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('resource.delete')->icon('delete')->label('Delete')->color('text-lvp-danger'),
             ])
             ->bulkActions([
-                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('delete-resource')->icon('delete')->label('Delete')->color('text-lvp-danger'),
+                \LVP\Widgets\DataWidgets\Actions\DataActionButton::make('resource.delete')->icon('delete')->label('Delete')->color('text-lvp-danger'),
             ])
             ->filters([
 
